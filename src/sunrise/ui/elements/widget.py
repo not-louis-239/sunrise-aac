@@ -43,7 +43,6 @@ class DrawContext:
 
     # typography
     font: pg.font.Font
-    text_inset: int = 5
 
 
 class Widget(ABC):
