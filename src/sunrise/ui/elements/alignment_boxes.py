@@ -49,7 +49,23 @@ class _Box(Widget):
 
 class HBox(_Box):
     def preferred_size(self) -> tuple[int, int]:
-        raise NotImplementedError  # TODO: implement abstract methods
+        total_w = 0
+        max_h = 0
+
+        # calculate preferred size of children
+        for child in self.children:
+            w, h = child.preferred_size()
+            total_w += w
+            max_h = max(max_h, h)
+
+        # add gap between children
+        total_w += self.gap * max(0, len(self.children) - 1)
+
+        # add padding
+        total_w += self.padding * 2
+        total_h = max_h + self.padding * 2
+
+        return (total_w, total_h)
 
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
@@ -83,8 +99,8 @@ class HBox(_Box):
                 flex_widths[c] = remaining * (c.flex / total_flex)
 
         # place children
-        for i, child in enumerate(self.children):
-            w, h = child.preferred_size()
+        for child in self.children:
+            w, _ = child.preferred_size()
 
             if child in flex_widths:
                 w = int(flex_widths[child])
@@ -95,4 +111,60 @@ class HBox(_Box):
             x += w + self.gap
 
 class VBox(_Box):
-    pass  # TODO: implement abstract methods
+    def preferred_size(self) -> tuple[int, int]:
+        total_h = 0
+        max_w = 0
+
+        # calculate preferred size of children
+        for child in self.children:
+            w, h = child.preferred_size()
+            total_h += h
+            max_w = max(max_w, w)
+
+        # add gaps
+        total_h += self.gap * max(0, len(self.children) - 1)
+
+        # add padding
+        total_h += self.padding * 2
+        total_w = max_w + self.padding * 2
+
+        return total_w, total_h
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+        x = rect.x + self.padding
+        y = rect.y + self.padding
+        width = rect.width - 2 * self.padding
+
+        total_fixed_height = 0
+        flex_children = []
+
+        for child in self.children:
+            flex = getattr(child, "flex", None)
+            if flex is not None:
+                flex_children.append(child)
+            else:
+                _, h = child.preferred_size()
+                total_fixed_height += h
+
+        total_gaps = self.gap * max(0, len(self.children) - 1)
+        remaining = rect.height - 2 * self.padding - total_fixed_height - total_gaps
+
+        total_flex = sum(getattr(c, "flex", 0) for c in flex_children)
+        flex_heights = {}
+
+        if total_flex > 0:
+            for c in flex_children:
+                flex_heights[c] = remaining * (c.flex / total_flex)
+
+        for child in self.children:
+            _, h = child.preferred_size()
+
+            if child in flex_heights:
+                h = int(flex_heights[child])
+
+            child_rect = pg.Rect(x, y, width, h)
+            child.layout(child_rect)
+
+            y += h + self.gap
