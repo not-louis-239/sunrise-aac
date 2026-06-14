@@ -57,6 +57,9 @@ class InputBox(Widget):
         h = self.font.get_linesize() + 2 * self.text_inset
         return (w, h)
 
+    def layout(self, rect) -> None:
+        self.rect = rect
+
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
         # Passing the colours into the method instead of
         # as attributes because these suckers shouldn't really need to know

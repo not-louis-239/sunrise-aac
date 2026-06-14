@@ -16,10 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pygame as pg
+
+from sunrise.ui.elements.widget import DrawContext
+
 from .widget import Widget
+
 
 class Panel(Widget):
     def __init__(self, *, padding: int = 0, child: Widget) -> None:
         super().__init__()
         self.padding = padding
         self.child = child
+
+    def preferred_size(self) -> tuple[int, int]:
+        cw, ch = self.child.preferred_size()
+        return (cw + 2 * self.padding, ch + 2 * self.padding)
+
+    def layout(self, rect: pg.Rect) -> None:
+        child_rect = rect.inflate(-2 * self.padding, -2 * self.padding)
+        self.child.layout(child_rect)
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        # background
+        pg.draw.rect(surface, ctx.bg, self.rect)
+
+        # border
+        pg.draw.rect(surface, ctx.border, self.rect, ctx.border_w)
+
+        # child
+        self.child.draw(surface, ctx)

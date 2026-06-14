@@ -23,6 +23,8 @@ from abc import abstractmethod
 
 import pygame as pg
 
+from sunrise.ui.elements.widget import DrawContext
+
 from .widget import Widget
 
 
@@ -32,24 +34,52 @@ class _UIButton(Widget):
         raise NotImplementedError
 
 class RectangularUIButton(_UIButton):
-    def __init__(self, x: int, y: int, w: int, h: int) -> None:
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.rect = pg.Rect(x, y, w, h)
+    def __init__(self, text: str, font: pg.font.Font, inset: int, fixed_size: tuple[int, int] | None = None) -> None:
+        super().__init__()
+        self.text = text
+        self.font = font
+        self.inset = inset
+        self.fixed_size = fixed_size
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
-        return (
-            self.x <= mouse_pos[0] <= self.x + self.w
-            and self.y <= mouse_pos[1] <= self.y + self.h
-        )
+        return self.rect.collidepoint(mouse_pos)
+
+    def preferred_size(self) -> tuple[int, int]:
+        if self.fixed_size is not None:
+            return self.fixed_size
+
+        fw, fh = self.font.size(self.text)
+        return (fw + 2 * self.inset, fh + 2 * self.inset)
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        # Draw the button's background
+        bg_colour = ctx.active_bg if self.active else ctx.bg
+        pg.draw.rect(surface, bg_colour, self.rect)
+
+        # Draw border
+        pg.draw.rect(surface, ctx.border, self.rect, width=ctx.border_w)
+
+        # Draw text
+        text_surface = ctx.font.render(self.text, True, ctx.fg if self.active else ctx.disabled_fg)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        surface.blit(text_surface, text_rect)
 
 class CircularUIButton(_UIButton):
-    def __init__(self, centre_x: int, centre_y: int, r: int) -> None:
-        self.centre_x = centre_x
-        self.centre_y = centre_y
+    def __init__(self, r: int) -> None:
         self.r = r
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
-        return (mouse_pos[0] - self.centre_x) ** 2 + (mouse_pos[1] - self.centre_y) ** 2 <= self.r ** 2
+        return mouse_pos[0] ** 2 + mouse_pos[1] ** 2 <= self.r ** 2
+
+    def preferred_size(self) -> tuple[int, int]:
+        return (self.r * 2, self.r * 2)
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        # Draw background
+        pg.draw.circle(surface, ctx.active_bg if self.active else ctx.bg, self.rect.center, self.r)
