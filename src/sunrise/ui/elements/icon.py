@@ -17,24 +17,36 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from typing import Final
 from pathlib import Path
 import pygame as pg
 
 from .widget import Widget, DrawContext
+from sunrise.core.custom_types import Colour, IntCoord2
+from sunrise.ui.utils import make_tinted_surface
+
 
 class Icon(Widget):
     def __init__(self, *, img_path: Path, size: tuple[int, int]) -> None:
         super().__init__()
         self.img_path = img_path
-        self.native_size = size  # remembers its original dimensions
-        self.size = size  # changes dynamically
-        self._cached: pg.Surface | None = None
+        self.native_size: Final[IntCoord2] = size  # remembers its original dimensions - DO NOT TOUCH
+        self.size = size                           # changes dynamically
+        self._cached: pg.Surface | None = None     # cache for the generic, untinted image surface
+        self._tint_cache: dict[tuple[Colour, IntCoord2], pg.Surface] = {}  # {(colour, size): tinted_surface}
         self._refresh_cache()
 
     def _refresh_cache(self) -> None:
+        # Update cache if cached surface is not present or if it is not the same size as `self`'s size
         if self._cached is None or self._cached.get_size() != self.size:
             self._cached = pg.image.load(str(self.img_path)).convert_alpha()
             self._cached = pg.transform.scale(self._cached, self.size)
+
+    def _get_tinted_surface(self, surface: pg.Surface, colour: Colour) -> pg.Surface:
+        access_obj: tuple[Colour, IntCoord2] = (colour, self.size)
+        if access_obj not in self._tint_cache:
+            self._tint_cache[access_obj] = make_tinted_surface(surface, colour)
+        return self._tint_cache[access_obj]
 
     def preferred_size(self) -> tuple[int, int]:
         return self.native_size
@@ -69,4 +81,5 @@ class Icon(Widget):
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
         self._refresh_cache()
         assert self._cached is not None
-        surface.blit(self._cached, self.rect.topleft)
+        tinted_surf = self._get_tinted_surface(self._cached, ctx.fg[:3])  # ignoring alpha here for simplicity
+        surface.blit(tinted_surf, self.rect.topleft)
