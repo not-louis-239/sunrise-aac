@@ -76,7 +76,7 @@ class Button:
 
 @dataclass(kw_only=True)
 class Node:
-    # TODO: Potential idea: if we made this a dict,
+    # TODO: Potential idea: if we made this a dict of {(x, y): Button},
     # then button lookup from coordinates could become O(1) instead
     # of O(W * H), this would be great.
 

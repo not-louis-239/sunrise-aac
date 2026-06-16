@@ -20,8 +20,10 @@
 
 
 from abc import abstractmethod
+from pathlib import Path
 
 import pygame as pg
+from pygame.font import Font
 
 from sunrise.ui.elements.widget import DrawContext
 
@@ -29,27 +31,37 @@ from .widget import Widget
 
 
 class _UIButton(Widget):
+    def __init__(
+            self, *, flex: int = 0, text: str, font: pg.font.Font,
+            inset: int, min_size: tuple[int, int],
+            icon_path: Path | None = None
+        ) -> None:
+        super().__init__(flex=flex)
+        self.text = text
+        self.font = font
+        self.inset = inset
+        self.min_size = min_size
+        self.icon_path = icon_path
+        self._cached_icon: pg.Surface | None = None
+        self._refresh_img_cache()
+
+    def _refresh_img_cache(self) -> None:
+        if self._cached_icon is None and self.icon_path is not None:
+            self._cached_icon = pg.image.load(str(self.icon_path))
+
     @abstractmethod
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
         raise NotImplementedError
 
 class RectangularUIButton(_UIButton):
-    def __init__(self, text: str, font: pg.font.Font, inset: int, fixed_size: tuple[int, int] | None = None) -> None:
-        super().__init__()
-        self.text = text
-        self.font = font
-        self.inset = inset
-        self.fixed_size = fixed_size
+    def __init__(self, *, text: str, font: Font, inset: int, min_size: tuple[int, int], icon_path: Path | None = None) -> None:
+        super().__init__(text=text, font=font, inset=inset, min_size=min_size, icon_path=icon_path)
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
         return self.rect.collidepoint(mouse_pos)
 
     def preferred_size(self) -> tuple[int, int]:
-        if self.fixed_size is not None:
-            return self.fixed_size
-
-        fw, fh = self.font.size(self.text)
-        return (fw + 2 * self.inset, fh + 2 * self.inset)
+        return self.min_size
 
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
@@ -58,6 +70,11 @@ class RectangularUIButton(_UIButton):
         # Draw the button's background
         bg_colour = ctx.active_bg if self.active else ctx.bg
         pg.draw.rect(surface, bg_colour, self.rect)
+
+        # Draw icon (expand so it fits inside the button)
+        if self.icon_path is not None:
+            self._refresh_img_cache()
+            # TODO: Implement icon scaling and positioning
 
         # Draw border
         pg.draw.rect(surface, ctx.border, self.rect, width=ctx.border_w)

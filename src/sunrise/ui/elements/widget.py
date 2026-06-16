@@ -46,11 +46,12 @@ class DrawContext:
 
 
 class Widget(ABC):
-    def __init__(self) -> None:
+    def __init__(self, *, flex: int = 0) -> None:
         # Where am I relative to the last `rect` from the last `layout()` call?
         # x, y = where am I relative to my parent's rect
         # w, h = how big do I get to be?
         self.rect: pg.Rect = pg.Rect(0, 0, 0, 0)
+        self.flex = flex
 
         # What's my family?
         self.children: list[Widget] = []
@@ -59,7 +60,6 @@ class Widget(ABC):
         # What's my current state?
         self.visible: bool = True            # Will I be visible?
         self.active: bool = False            # Will I accept user input?
-        self.layout_is_dirty: bool = False   # Do I need to refresh my layout?
 
     @abstractmethod
     def preferred_size(self) -> tuple[int, int]:

@@ -24,7 +24,7 @@ from sunrise.ui.elements.widget import DrawContext
 from .widget import Widget
 
 class _Box(Widget):
-    # Generic base class to store attributes common to both `HBox`es and `VBox`es
+    """Generic base class to store attributes common to both `HBox`es and `VBox`es"""
 
     def __init__(self, *, padding: int = 0, gap: int = 0, children: list[Widget] | None = None) -> None:
         """Initialises a new box.
@@ -34,7 +34,6 @@ class _Box(Widget):
         self.padding = padding
         self.gap = gap
 
-        self.children = []
         if children is not None:
             for child in children:
                 self.add_child(child)
@@ -70,17 +69,13 @@ class HBox(_Box):
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
 
-        x = rect.x + self.padding
-        y = rect.y + self.padding
-        height = rect.height - 2 * self.padding
-
         # measure fixed sizes
         total_fixed_width = 0
-        flex_children = []
+        flex_children: list[Widget] = []
 
         for child in self.children:
-            flex: int | None = getattr(child, "flex", None)
-            if flex is not None:
+            flex = child.flex
+            if flex:
                 flex_children.append(child)
                 continue
             w, _ = child.preferred_size()
@@ -91,7 +86,7 @@ class HBox(_Box):
         remaining = rect.width - 2 * self.padding - total_fixed_width - total_gaps
 
         # assign flex space
-        total_flex = sum(getattr(c, "flex", 0) for c in flex_children)
+        total_flex = sum(c.flex for c in flex_children)
         flex_widths = {}
 
         if total_flex > 0:
@@ -99,13 +94,17 @@ class HBox(_Box):
                 flex_widths[c] = remaining * (c.flex / total_flex)
 
         # place children
+        h = rect.height - 2 * self.padding
+        x = rect.x + self.padding
+        y = rect.y + self.padding
+
         for child in self.children:
             w, _ = child.preferred_size()
 
             if child in flex_widths:
                 w = int(flex_widths[child])
 
-            child_rect = pg.Rect(x, y, w, height)
+            child_rect = pg.Rect(x, y, w, h)
             child.layout(child_rect)
 
             x += w + self.gap
@@ -133,16 +132,12 @@ class VBox(_Box):
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
 
-        x = rect.x + self.padding
-        y = rect.y + self.padding
-        width = rect.width - 2 * self.padding
-
         total_fixed_height = 0
         flex_children = []
 
         for child in self.children:
-            flex = getattr(child, "flex", None)
-            if flex is not None:
+            flex = child.flex
+            if flex:
                 flex_children.append(child)
             else:
                 _, h = child.preferred_size()
@@ -151,12 +146,18 @@ class VBox(_Box):
         total_gaps = self.gap * max(0, len(self.children) - 1)
         remaining = rect.height - 2 * self.padding - total_fixed_height - total_gaps
 
-        total_flex = sum(getattr(c, "flex", 0) for c in flex_children)
+        total_flex = sum(c.flex for c in flex_children)
         flex_heights = {}
 
+        # Assign flex space
         if total_flex > 0:
             for c in flex_children:
                 flex_heights[c] = remaining * (c.flex / total_flex)
+
+        # place children
+        w = rect.width - 2 * self.padding
+        x = rect.x + self.padding
+        y = rect.y + self.padding
 
         for child in self.children:
             _, h = child.preferred_size()
@@ -164,7 +165,7 @@ class VBox(_Box):
             if child in flex_heights:
                 h = int(flex_heights[child])
 
-            child_rect = pg.Rect(x, y, width, h)
+            child_rect = pg.Rect(x, y, w, h)
             child.layout(child_rect)
 
             y += h + self.gap
