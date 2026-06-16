@@ -23,7 +23,7 @@ import pygame as pg
 from .widget import Widget, DrawContext
 
 class Icon(Widget):
-    def __init__(self, img_path: Path, size: tuple[int, int]) -> None:
+    def __init__(self, *, img_path: Path, size: tuple[int, int]) -> None:
         super().__init__()
         self.img_path = img_path
         self.native_size = size  # remembers its original dimensions

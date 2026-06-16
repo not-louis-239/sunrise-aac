@@ -44,8 +44,9 @@ class Fonts:
 
         self.sentence_bar_font = pg.font.Font(self._ui_font_path, 60)
         self.talk_button_font = pg.font.Font(self._button_font_path, 16)
-        self.ui_button_font = pg.font.Font(self._ui_font_path, 32)
-
+        self.ui_text_font = pg.font.Font(self._ui_font_path, 35)
+        self.title_font = pg.font.Font(self._ui_font_path, 60)
+        self.ui_button_font = pg.font.Font(self._ui_font_path, 40)
 
 class Images:
     def __init__(self) -> None:
