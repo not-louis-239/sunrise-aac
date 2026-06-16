@@ -24,17 +24,19 @@ from .widget import Widget
 
 
 class Panel(Widget):
-    def __init__(self, *, padding: int = 0, child: Widget) -> None:
+    def __init__(self, *, horiz_padding: int = 0, vert_padding: int = 0, child: Widget) -> None:
         super().__init__()
-        self.padding = padding
+        self.horiz_padding = horiz_padding
+        self.vert_padding = vert_padding
         self.child = child
 
     def preferred_size(self) -> tuple[int, int]:
         cw, ch = self.child.preferred_size()
-        return (cw + 2 * self.padding, ch + 2 * self.padding)
+        return (cw + 2 * self.horiz_padding, ch + 2 * self.vert_padding)
 
     def layout(self, rect: pg.Rect) -> None:
-        child_rect = rect.inflate(-2 * self.padding, -2 * self.padding)
+        self.rect = rect
+        child_rect = rect.inflate(-2 * self.horiz_padding, -2 * self.vert_padding)
         self.child.layout(child_rect)
 
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
@@ -42,7 +44,8 @@ class Panel(Widget):
         pg.draw.rect(surface, ctx.bg, self.rect)
 
         # border
-        pg.draw.rect(surface, ctx.border, self.rect, ctx.border_w)
+        if ctx.border_w > 0:
+            pg.draw.rect(surface, ctx.border, self.rect, ctx.border_w)
 
         # child
         self.child.draw(surface, ctx)

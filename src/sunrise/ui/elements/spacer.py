@@ -24,8 +24,7 @@ from .widget import Widget, DrawContext
 
 class Spacer(Widget):
     def __init__(self, *, flex: int = 0, min_w: int = 0, min_h: int = 0):
-        super().__init__()
-        self.flex = flex  # How much do I want to grow, given extra space?
+        super().__init__(flex=flex)
         self.min_w = min_w
         self.min_h = min_h
 

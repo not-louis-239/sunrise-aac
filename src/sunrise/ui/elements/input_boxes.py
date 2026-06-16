@@ -16,24 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import pygame as pg
 from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
 
 from .widget import Widget, DrawContext
 
 
-DEFAULT_INPUT_WIDTH = 200
-
 class InputBox(Widget):
-    def __init__(self, font: pg.font.Font, text_inset: int) -> None:
-        super().__init__()
+    def __init__(self, *, flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, text_inset: int) -> None:
+        # Creates a left-aligned InputBox
+
+        super().__init__(flex=flex)
         self.text = ""
-        self.text_inset = text_inset
+        self.min_size = min_size
         self.font = font  # needed so that it can auto-adjust text width while drawing
+        self.text_inset = text_inset
         self.active = False
         self.delete_timer: float = DELETE_DELAY
 
     def _handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
+        # Handle KEYDOWN events
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self.active = self.rect.collidepoint(event.pos)
@@ -44,38 +47,34 @@ class InputBox(Widget):
                     elif event.key not in (pg.K_RETURN, pg.K_ESCAPE, pg.K_TAB):
                         # Append character
                         self.text += event.unicode
+
+        # Handle delete
         if keys[pg.K_BACKSPACE]:
             self.delete_timer -= dt_s
             if self.delete_timer <= 0:
                 self.text = self.text[:-1]
                 self.delete_timer += DELETE_INTERVAL
         else:
+            # If delete is not held down, reset the delete timer
             self.delete_timer = DELETE_DELAY
 
     def preferred_size(self) -> tuple[int, int]:
-        w = DEFAULT_INPUT_WIDTH + 2 * self.text_inset
-        h = self.font.get_linesize() + 2 * self.text_inset
-        return (w, h)
+        return self.min_size
 
     def layout(self, rect) -> None:
         self.rect = rect
 
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
-        # Passing the colours into the method instead of
-        # as attributes because these suckers shouldn't really need to know
-        # what colour they are, and it makes multiple themes harder
-        # because then you'd need to change the colour of the `InputBox`es
-        # every time you wanted to change theme
-
         # Draw the background and border
         bg_colour = ctx.active_bg if self.active else ctx.bg
         pg.draw.rect(surface, bg_colour, self.rect)
 
-        # Text
-        last_127_chars = self.text[-127:]  # drawing only last 127 characters for performance
+        # Text - rendering only last 127 chars for performance
+        last_127_chars = self.text[-127:]
         text_surf = self.font.render(last_127_chars, True, ctx.fg)
         text_visual_width = self.rect.width - 2 * self.text_inset
 
+        # Draws the text aligned to left-centre
         source_rect = pg.Rect(
             self.rect.x + self.text_inset,
             self.rect.centery - text_surf.get_height() // 2,
