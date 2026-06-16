@@ -28,6 +28,9 @@ class Label(Widget):
         self.text = text
         self.font = font
 
+    def set_text(self, text: str) -> None:
+        self.text = text
+
     def preferred_size(self) -> tuple[int, int]:
         w, h = self.font.size(self.text)
         return (w, h)
@@ -36,6 +39,7 @@ class Label(Widget):
         self.rect = rect
 
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        # Draws text aligned within `self`'s rect
         font_surface = ctx.font.render(self.text, True, ctx.fg)
         if len(ctx.fg) == 4 and ctx.fg[3] < 255:
             font_surface.set_alpha(ctx.fg[3])

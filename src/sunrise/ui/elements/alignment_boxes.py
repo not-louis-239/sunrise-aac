@@ -17,11 +17,25 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from enum import StrEnum
+
 import pygame as pg
 
 from sunrise.ui.elements.widget import DrawContext
 
 from .widget import Widget
+
+
+class HAlign(StrEnum):
+    LEFT = "left"
+    CENTRE = "centre"
+    RIGHT = "right"
+
+class VAlign(StrEnum):
+    TOP = "top"
+    CENTRE = "centre"
+    BOTTOM = "bottom"
+
 
 class _Box(Widget):
     """Generic base class to store attributes common to both `HBox`es and `VBox`es"""
@@ -169,3 +183,58 @@ class VBox(_Box):
             child.layout(child_rect)
 
             y += h + self.gap
+
+class SBox(_Box):
+    def __init__(
+            self, child: Widget, *,
+            forced_width: int | None, forced_height: int | None,
+            h_align: HAlign = HAlign.CENTRE,
+            v_align: VAlign = VAlign.CENTRE
+        ) -> None:
+        super().__init__()
+        self.child = child
+        self.forced_width = forced_width
+        self.forced_height = forced_height
+        self.h_align = h_align
+        self.v_align = v_align
+
+    def preferred_size(self) -> tuple[int, int]:
+        # Ask the child what it wants, but override it if we have a forced constraint
+        child_w, child_h = self.child.preferred_size()
+        w = self.forced_width if self.forced_width is not None else child_w
+        h = self.forced_height if self.forced_height is not None else child_h
+        return (w, h)
+
+    def layout(self, rect: pg.Rect):
+        child_rect = rect.copy()
+
+        # Clamp child width to forced width
+        if self.forced_width is not None:
+            child_rect.width = min(rect.width, self.forced_width)
+
+        if self.forced_height is not None:
+            child_rect.height = min(rect.height, self.forced_height)
+
+        # Horizontal alignment
+        match self.h_align:
+            case HAlign.LEFT:
+                child_rect.left = rect.left
+            case HAlign.CENTRE:
+                child_rect.centerx = rect.centerx
+            case HAlign.RIGHT:
+                child_rect.right = rect.right
+
+        # Vertical alignment
+        match self.v_align:
+            case VAlign.TOP:
+                child_rect.top = rect.top
+            case VAlign.CENTRE:
+                child_rect.centery = rect.centery
+            case VAlign.BOTTOM:
+                child_rect.bottom = rect.bottom
+
+        self.rect = rect
+        self.child.layout(child_rect)
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        self.child.draw(surface, ctx)
