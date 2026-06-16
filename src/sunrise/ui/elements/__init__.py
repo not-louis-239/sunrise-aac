@@ -18,16 +18,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 from . import (
-    hbox,
-    vbox,
-    spacer,
+    alignment_boxes,
+    icon,
     input_boxes,
-    labels
+    labels,
+    panel,
+    spacer,
+    ui_buttons
 )
 
-HBox = hbox.HBox
-VBox = vbox.VBox
-Spacer = spacer.Spacer
+HBox = alignment_boxes.HBox
+VBox = alignment_boxes.VBox
+Icon = icon.Icon
 InputBox = input_boxes.InputBox
 Label = labels.Label
+Panel = panel.Panel
+Spacer = spacer.Spacer
+CircularUIButton = ui_buttons.CircularUIButton
+RectangularUIButton = ui_buttons.RectangularUIButton

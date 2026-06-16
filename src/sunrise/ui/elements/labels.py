@@ -16,9 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class Label:
-    def __init__(self, text: str = "") -> None:
-        self.text = text
+import pygame as pg
 
-    def set_text(self, text: str) -> None:
+from sunrise.ui.elements.widget import DrawContext
+from .widget import Widget
+
+
+class Label(Widget):
+    def __init__(self, *, text: str = "", font: pg.font.Font) -> None:
+        super().__init__()
         self.text = text
+        self.font = font
+
+    def preferred_size(self) -> tuple[int, int]:
+        w, h = self.font.size(self.text)
+        return (w, h)
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        font_surface = ctx.font.render(self.text, True, ctx.fg)
+        if len(ctx.fg) == 4 and ctx.fg[3] < 255:
+            font_surface.set_alpha(ctx.fg[3])
+        surface.blit(font_surface, self.rect)

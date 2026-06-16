@@ -52,7 +52,6 @@ class Images:
         self.proceed_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "proceed.png", colour_attr="ok_colour")
         self.lock_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "lock.png", colour_attr="warn_colour")
 
-        # TODO: implement
         self.property_icons: dict[str, dict[Theme, pg.Surface]] = {
             PropertyIconID.TEXT: self._load(UI_IMAGES_DIR / "text.png"),
             PropertyIconID.DEST: self._load(UI_IMAGES_DIR / "dest.png"),

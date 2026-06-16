@@ -21,9 +21,9 @@ from pygame.key import ScancodeWrapper
 
 from sunrise.core.asset_manager import Assets
 from sunrise.core.engine import AACEngine
-from sunrise.core.visuals import AACVisuals
+from sunrise.ui.visuals import AACVisuals
 from sunrise.core.bus import Bus, EventID
-from sunrise.core.constants import THEMES, Theme
+from sunrise.ui.themes import THEMES, Theme
 from sunrise.ui.states import (
     State,
     InspectState,

@@ -1,0 +1,171 @@
+# UI boxes
+
+# repo at: https://github.com/not-louis-239/sunrise-aac
+# Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+import pygame as pg
+
+from sunrise.ui.elements.widget import DrawContext
+
+from .widget import Widget
+
+class _Box(Widget):
+    """Generic base class to store attributes common to both `HBox`es and `VBox`es"""
+
+    def __init__(self, *, padding: int = 0, gap: int = 0, children: list[Widget] | None = None) -> None:
+        """Initialises a new box.
+        padding = space between the box's edge and the first or last child
+        gap     = space between children in the box"""
+        super().__init__()
+        self.padding = padding
+        self.gap = gap
+
+        if children is not None:
+            for child in children:
+                self.add_child(child)
+
+    def add_child(self, child: Widget) -> None:
+        self.children.append(child)
+        child.parent = self
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        for child in self.children:
+            child.draw(surface, ctx)
+
+class HBox(_Box):
+    def preferred_size(self) -> tuple[int, int]:
+        total_w = 0
+        max_h = 0
+
+        # calculate preferred size of children
+        for child in self.children:
+            w, h = child.preferred_size()
+            total_w += w
+            max_h = max(max_h, h)
+
+        # add gap between children
+        total_w += self.gap * max(0, len(self.children) - 1)
+
+        # add padding
+        total_w += self.padding * 2
+        total_h = max_h + self.padding * 2
+
+        return (total_w, total_h)
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+        # measure fixed sizes
+        total_fixed_width = 0
+        flex_children: list[Widget] = []
+
+        for child in self.children:
+            flex = child.flex
+            if flex:
+                flex_children.append(child)
+                continue
+            w, _ = child.preferred_size()
+            total_fixed_width += w
+
+        total_gaps = self.gap * max(0, len(self.children) - 1)
+
+        remaining = rect.width - 2 * self.padding - total_fixed_width - total_gaps
+
+        # assign flex space
+        total_flex = sum(c.flex for c in flex_children)
+        flex_widths = {}
+
+        if total_flex > 0:
+            for c in flex_children:
+                flex_widths[c] = remaining * (c.flex / total_flex)
+
+        # place children
+        h = rect.height - 2 * self.padding
+        x = rect.x + self.padding
+        y = rect.y + self.padding
+
+        for child in self.children:
+            w, _ = child.preferred_size()
+
+            if child in flex_widths:
+                w = int(flex_widths[child])
+
+            child_rect = pg.Rect(x, y, w, h)
+            child.layout(child_rect)
+
+            x += w + self.gap
+
+class VBox(_Box):
+    def preferred_size(self) -> tuple[int, int]:
+        total_h = 0
+        max_w = 0
+
+        # calculate preferred size of children
+        for child in self.children:
+            w, h = child.preferred_size()
+            total_h += h
+            max_w = max(max_w, w)
+
+        # add gaps
+        total_h += self.gap * max(0, len(self.children) - 1)
+
+        # add padding
+        total_h += self.padding * 2
+        total_w = max_w + self.padding * 2
+
+        return total_w, total_h
+
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+
+        total_fixed_height = 0
+        flex_children = []
+
+        for child in self.children:
+            flex = child.flex
+            if flex:
+                flex_children.append(child)
+            else:
+                _, h = child.preferred_size()
+                total_fixed_height += h
+
+        total_gaps = self.gap * max(0, len(self.children) - 1)
+        remaining = rect.height - 2 * self.padding - total_fixed_height - total_gaps
+
+        total_flex = sum(c.flex for c in flex_children)
+        flex_heights = {}
+
+        # Assign flex space
+        if total_flex > 0:
+            for c in flex_children:
+                flex_heights[c] = remaining * (c.flex / total_flex)
+
+        # place children
+        w = rect.width - 2 * self.padding
+        x = rect.x + self.padding
+        y = rect.y + self.padding
+
+        for child in self.children:
+            _, h = child.preferred_size()
+
+            if child in flex_heights:
+                h = int(flex_heights[child])
+
+            child_rect = pg.Rect(x, y, w, h)
+            child.layout(child_rect)
+
+            y += h + self.gap

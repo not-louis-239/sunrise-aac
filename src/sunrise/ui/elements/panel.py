@@ -16,17 +16,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import pygame as pg
+
+from sunrise.ui.elements.widget import DrawContext
+
+from .widget import Widget
 
 
-from .hbox import HBox
-from .vbox import VBox
+class Panel(Widget):
+    def __init__(self, *, horiz_padding: int = 0, vert_padding: int = 0, child: Widget) -> None:
+        super().__init__()
+        self.horiz_padding = horiz_padding
+        self.vert_padding = vert_padding
+        self.child = child
 
-class Panel:
-    def __init__(self, chidren: list[HBox | VBox] | None = None) -> None:
-        if chidren is None:
-            self.children: list[HBox | VBox] = []
-        else:
-            self.children: list[HBox | VBox] = chidren
+    def preferred_size(self) -> tuple[int, int]:
+        cw, ch = self.child.preferred_size()
+        return (cw + 2 * self.horiz_padding, ch + 2 * self.vert_padding)
 
-    def add_child(self, child: HBox | VBox) -> None:
-        self.children.append(child)
+    def layout(self, rect: pg.Rect) -> None:
+        self.rect = rect
+        child_rect = rect.inflate(-2 * self.horiz_padding, -2 * self.vert_padding)
+        self.child.layout(child_rect)
+
+    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+        # background
+        pg.draw.rect(surface, ctx.bg, self.rect)
+
+        # border
+        if ctx.border_w > 0:
+            pg.draw.rect(surface, ctx.border, self.rect, ctx.border_w)
+
+        # child
+        self.child.draw(surface, ctx)

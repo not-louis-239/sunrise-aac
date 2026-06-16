@@ -17,7 +17,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-class Spacer:
-    def __init__(self, w: int = 0, h: int = 0):
-        self.w = w
-        self.h = h
+from pygame import Rect, Surface
+
+from .widget import Widget, DrawContext
+
+
+class Spacer(Widget):
+    def __init__(self, *, flex: int = 0, min_w: int = 0, min_h: int = 0):
+        super().__init__(flex=flex)
+        self.min_w = min_w
+        self.min_h = min_h
+
+    def preferred_size(self) -> tuple[int, int]:
+        return (self.min_w, self.min_h)
+
+    def layout(self, rect: Rect) -> None:
+        self.rect = rect  # I eat all the space, haha!
+
+    def draw(self, surface: Surface, ctx: DrawContext) -> None:
+        pass  # I'm just empty space, so nothing to see here!
