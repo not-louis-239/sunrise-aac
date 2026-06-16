@@ -29,7 +29,7 @@ from ..elements.ui_buttons import CircularUIButton, RectangularUIButton
 from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.load_nodes import Button, save_language_tree
-from sunrise.core.constants import WN_W, WN_H, UI_PADDING, ICON_SIZE, UI_MARGIN, BORDER_WIDTH
+from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_S, ICON_SIZE, BORDER_WIDTH
 from sunrise.ui.utils import crop_text_to_fit
 
 
@@ -44,36 +44,7 @@ class InspectState(State):
         self.node_label: str | None = None
         self.aac_inst.bus.subscribe(EventID.SET_INSPECT_BUTTON, self.set_button_and_node)
 
-        min_x, min_y = int(UI_PADDING), int(UI_PADDING)
-        popup_w, popup_h = int(WN_W - 2 * UI_PADDING), int(WN_H - 2 * UI_PADDING)
-        self.popup_rect = pg.Rect(min_x, min_y, popup_w, popup_h)
-
-        centre_x = WN_W - UI_PADDING - ICON_SIZE
-        center_y = UI_PADDING + ICON_SIZE
-        self.close_button = CircularUIButton(centre_x=centre_x, centre_y=center_y, r=ICON_SIZE // 2)
-
-        button_row_h = int(WN_H * 0.85)
-        button_w = int(popup_w // 4)
-        button_h = int(WN_H * 0.08)
-
-        x, y, w, h = int(WN_W * 0.2 - button_w // 2), button_row_h, button_w, button_h
-        self.move_button = RectangularUIButton(x=x, y=y, w=w, h=h)
-
-        x, y, w, h = int(WN_W * 0.5 - button_w // 2), button_row_h, button_w, button_h
-        self.modify_button = RectangularUIButton(x=x, y=y, w=w, h=h)
-
-        x, y, w, h = int(WN_W * 0.8 - button_w // 2), button_row_h, button_w, button_h
-        self.delete_button = RectangularUIButton(x=x, y=y, w=w, h=h)
-
-        self.title_font = pg.font.Font(self.aac_inst.assets.fonts.ui_font, 35)
-        self.button_font = pg.font.Font(self.aac_inst.assets.fonts.ui_font, 25)
-
-        # Delete confirmation buttons
-        self.black_overlay_surface = pg.Surface((WN_W, WN_H), pg.SRCALPHA)
-        self.black_overlay_surface.fill((0, 0, 0, 128))
-        self.yes_button = RectangularUIButton(x=int(WN_W * 0.25 - button_w // 2), y=int(WN_H * 0.6 - button_h // 2), w=button_w, h=button_h)
-        self.no_button = RectangularUIButton(x=int(WN_W * 0.75 - button_w // 2), y=int(WN_H * 0.6 - button_h // 2), w=button_w, h=button_h)
-        self.in_delete_confirmation = False
+        
 
     def set_button_and_node(self, button: Button, node_label: str) -> None:
         self.button = button

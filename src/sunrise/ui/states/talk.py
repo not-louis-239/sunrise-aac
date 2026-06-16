@@ -32,9 +32,11 @@ from sunrise.core.paths import IMAGES_DIR
 from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (
     MOVE_HOLD_DELAY,
+)
+from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
-    UI_PADDING,
+    UI_MARGIN_XS,
     BORDER_WIDTH,
     BUTTON_FONT_SIZE,
     GRID_W,

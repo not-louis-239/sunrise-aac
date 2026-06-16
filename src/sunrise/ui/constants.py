@@ -22,22 +22,22 @@
 WN_W, WN_H = 1280, 720
 
 # UI margin presets
-UI_MARGIN_XL = int(WN_W * 0.09)
-UI_MARGIN_L = int(WN_W * 0.075)
+UI_MARGIN_L = int(WN_W * 0.08)
 UI_MARGIN_M = int(WN_W * 0.06)
-UI_MARGIN_S = int(WN_W * 0.045)
-UI_MARGIN_XS = int(WN_W * 0.03)
+UI_MARGIN_S = int(WN_W * 0.04)
 
 # Other visual settings
-GRID_W, GRID_H = 10, 6
-BORDER_WIDTH = 2  # border width for UI elements
+GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
+BORDER_WIDTH = 2        # border width for UI elements
 
 # Sizes
 SENTENCE_BAR_H = 80
 BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN_XS) / GRID_H * 0.65)
 ICON_SIZE = int(WN_W * 0.025)  # size for UI icons
 
-# Allowed button types
+# Allowed button types - Only these button types will have a supporting colour.
+#                        Unwhitelisted button types will default to the `default` colour
+#                        and will display a warning when the LanguageTree is linted.
 ALLOWED_BUTTON_TYPES = [
     "pronoun",
     "noun",

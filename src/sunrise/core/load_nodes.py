@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 import json
 
-from sunrise.core.constants import ALLOWED_BUTTON_TYPES
+from sunrise.ui.constants import ALLOWED_BUTTON_TYPES
 from sunrise.core.paths import NODES_FILE
 from sunrise.core.terminal_formatting import COL_ERR, COL_WARN, COL_INFO, COL_END
 

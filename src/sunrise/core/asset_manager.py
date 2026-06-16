@@ -23,7 +23,8 @@ import pygame as pg
 
 from sunrise.ui.utils import make_tinted_surface
 from sunrise.core.paths import FONTS_DIR, UI_IMAGES_DIR
-from sunrise.core.constants import THEMES, ICON_SIZE, Theme
+from sunrise.ui.themes import THEMES, Theme
+from sunrise.ui.constants import ICON_SIZE
 
 
 class PropertyIconID(StrEnum):
@@ -38,8 +39,12 @@ class PropertyIconID(StrEnum):
 
 class Fonts:
     def __init__(self) -> None:
-        self.button_font: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
-        self.ui_font: Path = FONTS_DIR / "AtkinsonHyperlegible-Regular.ttf"
+        self._button_font_path: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
+        self._ui_font_path: Path = FONTS_DIR / "AtkinsonHyperlegible-Regular.ttf"
+
+        self.sentence_bar_font = pg.font.Font(self._ui_font_path, 60)
+        self.talk_button_font = pg.font.Font(self._button_font_path, 16)
+        self.ui_button_font = pg.font.Font(self._ui_font_path, 32)
 
 
 class Images:
