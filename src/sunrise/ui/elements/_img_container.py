@@ -35,10 +35,10 @@ class ImageContainer:
 
     def __init__(self, img_path: Path, start_size: IntCoord2):
         self.img_path = img_path
+        self.start_size = start_size
 
         self._base_cache: pg.Surface = pg.image.load(str(self.img_path)).convert_alpha()  # the untinted, unscaled original image - not to be modified after it is set
         self._base_cache = pg.transform.scale(self._base_cache, start_size)
-        self.start_size = start_size
 
         self._tint_size_cache: _TintSizeCache = {}
 
