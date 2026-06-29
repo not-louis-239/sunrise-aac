@@ -18,7 +18,7 @@
 
 import pygame as pg
 
-from sunrise.core.custom_types import Colour
+from sunrise.core.custom_types import Colour, IntCoord2
 
 
 def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
@@ -47,10 +47,15 @@ def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
 
     return known_good
 
-def make_tinted_surface(surface: pg.Surface, colour: Colour) -> pg.Surface:
-    """Tints the given surface with a given colour."""
+def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | None = None) -> pg.Surface:
+    """Tints the given surface with a given colour and resizes it using
+    pg.transform.scale() if a size is provided."""
     tinted = surface.copy()
     colour_surface = pg.Surface(tinted.get_size(), pg.SRCALPHA)
     colour_surface.fill(colour)
     tinted.blit(colour_surface, (0, 0), special_flags=pg.BLEND_RGBA_MULT)
+
+    if size:
+        tinted = pg.transform.scale(tinted, size)
+
     return tinted
