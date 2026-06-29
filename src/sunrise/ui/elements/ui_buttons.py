@@ -62,8 +62,11 @@ class _UIButton(Widget):
         raise NotImplementedError
 
 class RectangularUIButton(_UIButton):
-    def __init__(self, *, text: str, font: Font, inset: int, min_size: tuple[int, int], icon_path: Path | None = None) -> None:
-        super().__init__(text=text, font=font, inset=inset, fixed_size=min_size, img_path=icon_path)
+    def __init__(
+            self, *, text: str, font: Font, inset: int,
+            fixed_size: tuple[int, int] | None = None, icon_path: Path | None = None
+        ) -> None:
+        super().__init__(text=text, font=font, inset=inset, fixed_size=fixed_size, img_path=icon_path)
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
         return self.rect.collidepoint(mouse_pos)

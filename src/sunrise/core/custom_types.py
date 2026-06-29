@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import TypeAlias
+type Colour = tuple[int, int, int]
+type AColour = tuple[int, int, int, int]
 
-Colour: TypeAlias = tuple[int, int, int]
-AColour: TypeAlias = tuple[int, int, int, int]
+type IntCoord2 = tuple[int, int]
