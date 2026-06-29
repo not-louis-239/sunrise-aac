@@ -23,30 +23,19 @@ import pygame as pg
 
 from .widget import Widget, DrawContext
 from sunrise.core.custom_types import Colour, IntCoord2
-from sunrise.ui.utils import make_tinted_surface
+from sunrise.ui.elements._img_container import ImageContainer
 
 
 class Icon(Widget):
     def __init__(self, *, img_path: Path, size: tuple[int, int]) -> None:
         super().__init__()
-        self.img_path = img_path
-        self.native_size: Final[IntCoord2] = size  # remembers its original dimensions - DO NOT TOUCH
-        self.size = size                           # changes dynamically
-        self._cached: pg.Surface | None = None     # cache for the generic, untinted image surface
-        self._tint_cache: dict[tuple[Colour, IntCoord2], pg.Surface] = {}  # {(colour, size): tinted_surface}
-        self._refresh_cache()
+        self.img_container = ImageContainer(img_path=img_path, start_size=size)
 
-    def _refresh_cache(self) -> None:
-        # Update cache if cached surface is not present or if it is not the same size as `self`'s size
-        if self._cached is None or self._cached.get_size() != self.size:
-            self._cached = pg.image.load(str(self.img_path)).convert_alpha()
-            self._cached = pg.transform.scale(self._cached, self.size)
+        # remembers its original dimensions - do not touch after creation please
+        self.native_size: Final[IntCoord2] = size
 
-    def _get_tinted_surface(self, surface: pg.Surface, colour: Colour) -> pg.Surface:
-        access_obj: tuple[Colour, IntCoord2] = (colour, self.size)
-        if access_obj not in self._tint_cache:
-            self._tint_cache[access_obj] = make_tinted_surface(surface, colour)
-        return self._tint_cache[access_obj]
+        # changes dynamically to exhibit shrink-to-fit behaviour
+        self.size = size
 
     def preferred_size(self) -> tuple[int, int]:
         return self.native_size
@@ -79,7 +68,5 @@ class Icon(Widget):
         self.rect.center = rect.center
 
     def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
-        self._refresh_cache()
-        assert self._cached is not None
-        tinted_surf = self._get_tinted_surface(self._cached, ctx.fg[:3])  # ignoring alpha here for simplicity
+        tinted_surf = self.img_container.get_tinted_scaled_img(ctx.fg[:3], self.size)  # ignoring alpha here for simplicity
         surface.blit(tinted_surf, self.rect.topleft)
