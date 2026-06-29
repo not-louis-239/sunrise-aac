@@ -58,14 +58,14 @@ class Images:
         self.proceed_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "proceed.png", colour_attr="ok_colour")
         self.lock_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "lock.png", colour_attr="warn_colour")
 
-        self.property_icons: dict[str, dict[Theme, pg.Surface]] = {
-            PropertyIconID.TEXT: self._load(UI_IMAGES_DIR / "text.png"),
-            PropertyIconID.DEST: self._load(UI_IMAGES_DIR / "dest.png"),
-            PropertyIconID.FUNC: self._load(UI_IMAGES_DIR / "func.png"),
-            PropertyIconID.IMAGE: self._load(UI_IMAGES_DIR / "image.png"),
-            PropertyIconID.LABEL: self._load(UI_IMAGES_DIR / "label.png"),
-            PropertyIconID.MAP_PIN: self._load(UI_IMAGES_DIR / "map_pin.png"),
-            PropertyIconID.TYPE: self._load(UI_IMAGES_DIR / "type.png")
+        self.property_icons: dict[str, Path] = {
+            PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",
+            PropertyIconID.DEST: UI_IMAGES_DIR / "dest.png",
+            PropertyIconID.FUNC: UI_IMAGES_DIR / "func.png",
+            PropertyIconID.IMAGE: UI_IMAGES_DIR / "image.png",
+            PropertyIconID.LABEL: UI_IMAGES_DIR / "label.png",
+            PropertyIconID.MAP_PIN: UI_IMAGES_DIR / "map_pin.png",
+            PropertyIconID.TYPE: UI_IMAGES_DIR / "type.png"
         }
 
     def _load(
