@@ -33,12 +33,13 @@ from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (
     MOVE_HOLD_DELAY,
 )
+
+from sunrise.ui.themes import ThemeKey
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
-    UI_MARGIN_XS,
+    UI_MARGIN_S,
     BORDER_WIDTH,
-    BUTTON_FONT_SIZE,
     GRID_W,
     GRID_H,
     WN_W,
@@ -65,8 +66,8 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
 
     x, y = screen_coords
 
-    min_x = UI_PADDING
-    min_y = SENTENCE_BAR_H + UI_PADDING
+    min_x = UI_MARGIN_S
+    min_y = SENTENCE_BAR_H + UI_MARGIN_S
 
     # Calculate individual button dimensions
     area_w = WN_W - min_x
@@ -87,7 +88,7 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
     button_start_y = min_y + by * button_h
 
     # Check if the click fell into the padding gap at the right or bottom of the button
-    if (x >= button_start_x + (button_w - UI_PADDING)) or (y >= button_start_y + (button_h - UI_PADDING)):
+    if (x >= button_start_x + (button_w - UI_MARGIN_S)) or (y >= button_start_y + (button_h - UI_MARGIN_S)):
         return None
 
     # Safety check to ensure floating-point rounding didn't push us out of bounds
@@ -114,7 +115,6 @@ class _Renderer:
     def __init__(self, assets: Assets, aac_inst: AAC):
         self.aac_inst = aac_inst
         self.assets = assets
-        self.sentence_bar_font: pg.font.Font = pg.font.Font(assets.fonts.ui_font, int(SENTENCE_BAR_H * 0.5))
 
     def retrieve_img(self, rel_path: str) -> Surface | None:
         """Load an image from an images manager and
@@ -145,8 +145,8 @@ class _Renderer:
         bx, by = button.coords
         bx, by = bx % GRID_W, by % GRID_H  # normalise negative coordinates
 
-        min_x = UI_PADDING
-        min_y = SENTENCE_BAR_H + UI_PADDING
+        min_x = UI_MARGIN_S
+        min_y = SENTENCE_BAR_H + UI_MARGIN_S
 
         # The size of the button area, minus the left/top margins
         area_w = WN_W - min_x
@@ -157,7 +157,7 @@ class _Renderer:
 
         screen_x = min_x + bx * button_w
         screen_y = min_y + by * button_h
-        return pg.Rect(screen_x, screen_y, button_w - UI_PADDING, button_h - UI_PADDING)
+        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN_S, button_h - UI_MARGIN_S)
 
     def _draw_button(self, screen: pg.Surface, button: Button) -> None:
         # Draw button rect
@@ -169,7 +169,7 @@ class _Renderer:
         # Draw the actual rect first
         pg.draw.rect(screen, colour, rect)
         # Now border
-        pg.draw.rect(screen, theme.fg_colour, rect, BORDER_WIDTH)
+        pg.draw.rect(screen, theme.mapping[ThemeKey.BORDER], rect, BORDER_WIDTH)
 
         # Now the image
         if button.img:
@@ -179,7 +179,7 @@ class _Renderer:
 
         if img is not None:
             img_rect = img.get_rect()
-            img_rect.center = (rect.centerx, int(rect.centery + BUTTON_FONT_SIZE // 2))
+            img_rect.center = (rect.centerx, int(rect.centery + self.aac_inst.assets.fonts.talk_button_font_size // 2))
             screen.blit(img, img_rect)
 
         # Now the text
@@ -189,17 +189,18 @@ class _Renderer:
         else:
             text_y = rect.top
 
+        # Draw the button label
         draw_text(
             surface=screen, pos=(text_centre_x, text_y),
-            horiz_align="centre", vert_align="top" if img else "centre", colour=theme.fg_colour,
-            text=str(button.label), font_family=(self.aac_inst.assets.fonts.button_font, int(BUTTON_FONT_SIZE))
+            horiz_align="centre", vert_align="top" if img else "centre", colour=theme[ThemeKey.FG],
+            text=str(button.label), font_family=self.aac_inst.assets.fonts.talk_button_font
         )
 
     def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool = False) -> None:
         theme = self.aac_inst.get_current_theme()
 
         # Draw the line for the sentence bar
-        pg.draw.line(screen, self.aac_inst.get_current_theme().fg_colour, (0, SENTENCE_BAR_H), (WN_W, SENTENCE_BAR_H), 2)
+        pg.draw.line(screen, self.aac_inst.get_current_theme()[ThemeKey.FG], (0, SENTENCE_BAR_H), (WN_W, SENTENCE_BAR_H), 2)
 
         # If in moving state, display instructions in the sentence bar, then early return
         if in_moving_state:
@@ -207,9 +208,9 @@ class _Renderer:
             draw_text(
                 surface=screen, pos=instruction_pos,
                 horiz_align='centre', vert_align='centre',
-                font_family=(self.assets.fonts.ui_font, 25),
+                font_family=self.assets.fonts.ui_text_font,
                 text="Click on an empty spot to which to move the button, or an existing button to swap them, or Escape to cancel.",
-                colour=theme.fg_colour
+                colour=theme[ThemeKey.FG]
             )
             return
 
@@ -220,14 +221,14 @@ class _Renderer:
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
-        max_width = WN_W - 2 * UI_PADDING
-        text_surf = self.sentence_bar_font.render(sentence_bar_text[-127:], True, theme.fg_colour)
+        max_width = WN_W - 2 * UI_MARGIN_S
+        text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-127:], True, theme[ThemeKey.FG])
         if (big_width := text_surf.get_width()) > max_width:
             excess = big_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, (UI_PADDING, UI_PADDING))
+        screen.blit(text_surf, (UI_MARGIN_S, UI_MARGIN_S))
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():
@@ -325,8 +326,12 @@ class TalkState(State):
                 self.last_clicked_pos = None
 
     def draw(self, screen: Surface) -> None:
+        # Retrieve current theme and fill with background colour
         theme = self.aac_inst.get_current_theme()
-        screen.fill(theme.bg_colour)
+        screen.fill(theme[ThemeKey.BG])
 
+        # Draw sentence bar
         self.renderer.draw_sentence_bar(screen, in_moving_state=self.button_to_move is not None)
+
+        # Draw each of the buttons on the screen
         self.renderer.draw_buttons(screen)
