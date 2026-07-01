@@ -21,7 +21,7 @@ from enum import StrEnum
 
 import pygame as pg
 
-from sunrise.ui.elements.widget import DrawContext
+from sunrise.ui.themes import Theme
 
 from .widget import Widget
 
@@ -56,11 +56,13 @@ class _Box(Widget):
         self.children.append(child)
         child.parent = self
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         for child in self.children:
-            child.draw(surface, ctx)
+            child.draw(surface=surface, current_theme=current_theme)
 
 class HBox(_Box):
+    """Horizontal box"""
+
     def preferred_size(self) -> tuple[int, int]:
         total_w = 0
         max_h = 0
@@ -124,6 +126,8 @@ class HBox(_Box):
             x += w + self.gap
 
 class VBox(_Box):
+    """Vertical box"""
+
     def preferred_size(self) -> tuple[int, int]:
         total_h = 0
         max_w = 0
@@ -185,6 +189,8 @@ class VBox(_Box):
             y += h + self.gap
 
 class SBox(_Box):
+    """Sized box that forces its child into a fixed size, with alignment"""
+
     def __init__(
             self, child: Widget, *,
             forced_width: int | None, forced_height: int | None,
@@ -236,5 +242,5 @@ class SBox(_Box):
         self.rect = rect
         self.child.layout(child_rect)
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
-        self.child.draw(surface, ctx)
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
+        self.child.draw(surface=surface, current_theme=current_theme)

@@ -18,17 +18,27 @@
 
 import pygame as pg
 
-from sunrise.ui.elements.widget import DrawContext
+from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.constants import BORDER_WIDTH
 
 from .widget import Widget
 
 
 class Panel(Widget):
-    def __init__(self, *, horiz_padding: int = 0, vert_padding: int = 0, child: Widget) -> None:
+    def __init__(
+            self, *,
+            horiz_padding: int = 0, vert_padding: int = 0, child: Widget,
+            k_bg: ThemeKey = ThemeKey.BG, k_border: ThemeKey = ThemeKey.BORDER,
+            border_w: int = BORDER_WIDTH
+        ) -> None:
         super().__init__()
         self.horiz_padding = horiz_padding
         self.vert_padding = vert_padding
         self.child = child
+
+        self.k_bg = k_bg
+        self.k_border = k_border
+        self.border_w = border_w
 
     def preferred_size(self) -> tuple[int, int]:
         cw, ch = self.child.preferred_size()
@@ -39,13 +49,13 @@ class Panel(Widget):
         child_rect = rect.inflate(-2 * self.horiz_padding, -2 * self.vert_padding)
         self.child.layout(child_rect)
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         # background
-        pg.draw.rect(surface, ctx.bg, self.rect)
+        pg.draw.rect(surface, current_theme[self.k_bg], self.rect)
 
         # border
-        if ctx.border_w > 0:
-            pg.draw.rect(surface, ctx.border, self.rect, ctx.border_w)
+        if self.border_w > 0:
+            pg.draw.rect(surface, current_theme[self.k_border], self.rect, self.border_w)
 
         # child
-        self.child.draw(surface, ctx)
+        self.child.draw(surface=surface, current_theme=current_theme)

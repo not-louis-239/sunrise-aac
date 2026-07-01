@@ -26,6 +26,7 @@ import pygame as pg
 from pygame.font import Font
 
 from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.constants import BORDER_WIDTH
 
 from ._img_container import ImageContainer
 from .widget import Widget
@@ -38,7 +39,7 @@ class _UIButton(Widget):
             fixed_size: tuple[int, int] | None = None, icon_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
-            k_border: ThemeKey = ThemeKey.BORDER, border_w: int = 2
+            k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         # The k_* prefix identifies ThemeKeys.
         # Hence, they are not to be used directly in place of colours,
@@ -109,7 +110,7 @@ class CircularUIButton(_UIButton):
             fixed_size: tuple[int, int] | None = None, icon_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
-            k_border: ThemeKey = ThemeKey.BORDER, border_w: int = 2
+            k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         super().__init__(
             flex=flex, text=text, font=font, inset=inset, fixed_size=fixed_size, icon_path=icon_path,

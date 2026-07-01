@@ -18,15 +18,18 @@
 
 import pygame as pg
 
-from sunrise.ui.elements.widget import DrawContext
+from sunrise.ui.themes import Theme, ThemeKey
 from .widget import Widget
 
 
 class Label(Widget):
-    def __init__(self, *, text: str = "", font: pg.font.Font) -> None:
+    def __init__(
+            self, *, text: str = "", font: pg.font.Font, k_fg: ThemeKey = ThemeKey.FG
+        ) -> None:
         super().__init__()
         self.text = text
         self.font = font
+        self.k_fg = k_fg
 
     def set_text(self, text: str) -> None:
         self.text = text
@@ -38,9 +41,7 @@ class Label(Widget):
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         # Draws text aligned within `self`'s rect
-        font_surface = ctx.font.render(self.text, True, ctx.fg)
-        if len(ctx.fg) == 4 and ctx.fg[3] < 255:
-            font_surface.set_alpha(ctx.fg[3])
+        font_surface = self.font.render(self.text, True, current_theme[self.k_fg])
         surface.blit(font_surface, self.rect)

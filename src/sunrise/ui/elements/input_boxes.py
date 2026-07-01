@@ -19,12 +19,23 @@
 
 import pygame as pg
 from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
+from sunrise.ui.constants import BORDER_WIDTH
 
-from .widget import Widget, DrawContext
+from .widget import Widget
+from sunrise.ui.themes import Theme, ThemeKey
 
 
 class InputBox(Widget):
-    def __init__(self, *, flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, text_inset: int) -> None:
+    def __init__(
+            self, *,
+            flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, text_inset: int,
+            k_bg: ThemeKey = ThemeKey.BG,
+            k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
+            k_fg: ThemeKey = ThemeKey.FG,
+            k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
+            k_border: ThemeKey = ThemeKey.BORDER,
+            border_w: int = BORDER_WIDTH
+        ) -> None:
         # Creates a left-aligned InputBox
 
         super().__init__(flex=flex)
@@ -34,6 +45,13 @@ class InputBox(Widget):
         self.text_inset = text_inset
         self.active = False
         self.delete_timer: float = DELETE_DELAY
+
+        self.k_bg = k_bg
+        self.k_bg_active = k_bg_active
+        self.k_fg = k_fg
+        self.k_fg_active = k_fg_active
+        self.k_border = k_border
+        self.border_w = border_w
 
     def _handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
         # Handle KEYDOWN events
@@ -64,14 +82,16 @@ class InputBox(Widget):
     def layout(self, rect) -> None:
         self.rect = rect
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         # Draw the background and border
-        bg_colour = ctx.active_bg if self.active else ctx.bg
-        pg.draw.rect(surface, bg_colour, self.rect)
+        k_bg = self.k_bg_active if self.active else self.k_bg
+        k_fg = self.k_fg_active if self.active else self.k_fg
+
+        pg.draw.rect(surface, current_theme[k_bg], self.rect)
 
         # Text - rendering only last 127 chars for performance
         last_127_chars = self.text[-127:]
-        text_surf = self.font.render(last_127_chars, True, ctx.fg)
+        text_surf = self.font.render(last_127_chars, True, current_theme[k_fg])
         text_visual_width = self.rect.width - 2 * self.text_inset
 
         # Draws the text aligned to left-centre
@@ -85,4 +105,4 @@ class InputBox(Widget):
         surface.blit(text_surf, source_rect)
 
         # Border
-        pg.draw.rect(surface, ctx.border, self.rect, width=ctx.border_w)
+        pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)

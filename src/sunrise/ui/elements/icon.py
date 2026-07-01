@@ -21,13 +21,16 @@ from typing import Final
 from pathlib import Path
 import pygame as pg
 
-from .widget import Widget, DrawContext
-from sunrise.core.custom_types import Colour, IntCoord2
+from .widget import Widget
+from sunrise.core.custom_types import IntCoord2
 from sunrise.ui.elements._img_container import ImageContainer
+from sunrise.ui.themes import Theme, ThemeKey
 
 
 class Icon(Widget):
-    def __init__(self, *, img_path: Path, size: tuple[int, int]) -> None:
+    def __init__(
+            self, *, img_path: Path, size: tuple[int, int], k_fg: ThemeKey
+        ) -> None:
         super().__init__()
         self.img_container = ImageContainer(img_path=img_path, start_size=size)
 
@@ -36,6 +39,8 @@ class Icon(Widget):
 
         # changes dynamically to exhibit shrink-to-fit behaviour
         self.size = size
+
+        self.k_fg = k_fg
 
     def preferred_size(self) -> tuple[int, int]:
         return self.native_size
@@ -67,6 +72,6 @@ class Icon(Widget):
         self.rect = pg.Rect((0, 0), self.size)
         self.rect.center = rect.center
 
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
-        tinted_surf = self.img_container.get_tinted_scaled_img(ctx.fg[:3], self.size)  # ignoring alpha here for simplicity
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
+        tinted_surf = self.img_container.get_tinted_scaled_img(current_theme[self.k_fg], self.size)  # ignoring alpha here for simplicity
         surface.blit(tinted_surf, self.rect.topleft)

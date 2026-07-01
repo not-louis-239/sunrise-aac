@@ -19,7 +19,8 @@
 
 from pygame import Rect, Surface
 
-from .widget import Widget, DrawContext
+from .widget import Widget
+from sunrise.ui.themes import Theme
 
 
 class Spacer(Widget):
@@ -34,5 +35,5 @@ class Spacer(Widget):
     def layout(self, rect: Rect) -> None:
         self.rect = rect  # I eat all the space, haha!
 
-    def draw(self, surface: Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: Surface, current_theme: Theme) -> None:
         pass  # I'm just empty space, so nothing to see here!
