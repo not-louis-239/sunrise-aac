@@ -20,29 +20,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 
 import pygame as pg
 
-from sunrise.core.custom_types import Colour, AColour
-
-
-@dataclass(frozen=True, kw_only=True)
-class DrawContext:
-    # border
-    border: Colour | AColour
-    border_w: int = 2
-
-    # background
-    bg: Colour | AColour
-    active_bg: Colour | AColour
-
-    # foreground
-    fg: Colour | AColour
-    disabled_fg: Colour | AColour
-
-    # typography
-    font: pg.font.Font
+from sunrise.ui.themes import Theme
 
 
 class Widget(ABC):
@@ -76,6 +57,6 @@ class Widget(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def draw(self, surface: pg.Surface, ctx: DrawContext) -> None:
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         """Draw myself to the screen."""
         raise NotImplementedError

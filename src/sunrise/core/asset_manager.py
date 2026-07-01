@@ -53,10 +53,10 @@ class Images:
         # {relative_fp, pg.Surface} pairs
         self.cache: dict[str, pg.Surface] = {}
 
-        # {theme colour: coloured icon}
-        self.exit_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "exit.png", colour_attr="err_colour")
-        self.proceed_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "proceed.png", colour_attr="ok_colour")
-        self.lock_icons: dict[Theme, pg.Surface] = self._load(UI_IMAGES_DIR / "lock.png", colour_attr="warn_colour")
+        # paths
+        self.exit_icon: Path = UI_IMAGES_DIR / "exit.png"
+        self.proceed_icon: Path = UI_IMAGES_DIR / "proceed.png"
+        self.lock_icon: Path = UI_IMAGES_DIR / "lock.png"
 
         self.property_icons: dict[str, Path] = {
             PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",
