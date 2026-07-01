@@ -68,24 +68,6 @@ class Images:
             PropertyIconID.TYPE: UI_IMAGES_DIR / "type.png"
         }
 
-    def _load(
-            self, path: Path, *,
-            colour_attr: str = "fg_colour", size: tuple[int, int] = (ICON_SIZE, ICON_SIZE)
-        ) -> dict[Theme, pg.Surface]:
-        """Loads an image from a path, and in accordance with a list of themes,
-        makes a coloured version for the specified `colour_attr` while simultaneously
-        scaling it to a certain `size`. Returns {themes: coloured surfaces}.
-        Default attr is `fg_colour` if `colour_attr` is not specified or found."""
-        img_raw = pg.image.load(path).convert_alpha()
-        img_scaled = pg.transform.scale(img_raw, size)
-
-        img_dict: dict[Theme, pg.Surface] = {}
-        for theme in THEMES:
-            tinted = make_tinted_surface(img_scaled, getattr(theme, colour_attr, theme.fg_colour))
-            img_dict[theme] = tinted
-
-        return img_dict
-
 class Assets:
     def __init__(self) -> None:
         self.fonts = Fonts()
