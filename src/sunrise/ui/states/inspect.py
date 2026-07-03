@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 import pygame as pg
@@ -24,17 +26,31 @@ from pygame.key import ScancodeWrapper
 
 from crystallinium.text_utils import draw_text
 
+from sunrise.ui.elements import (
+    Panel,
+    HBox,
+    VBox,
+    Icon,
+    Spacer,
+    Label,
+    RectangularUIButton,
+    CircularUIButton
+)
 from .base_states import State, StateID
-from ..elements.ui_buttons import CircularUIButton, RectangularUIButton
 from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.load_nodes import Button, save_language_tree
 from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_S, ICON_SIZE, BORDER_WIDTH
 from sunrise.ui.utils import crop_text_to_fit
+from sunrise.ui.themes import ThemeKey
 
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
+
+
+def _make_icon(*, self: InspectState, prop: PropertyIconID) -> Icon:
+    return Icon(img_path=self.aac_inst.assets.images.property_icons[prop], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG)
 
 
 class InspectState(State):
@@ -44,7 +60,92 @@ class InspectState(State):
         self.node_label: str | None = None
         self.aac_inst.bus.subscribe(EventID.SET_INSPECT_BUTTON, self.set_button_and_node)
 
-        
+        ### Initialise UI components - components that need to be interacted with by `self` are bound as attributes
+
+        ## Confirmation Dialog
+
+        # Yes and No buttons
+        self.yes_button = RectangularUIButton(text="Yes", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, k_fg=ThemeKey.FG_ERROR)
+        self.no_button = RectangularUIButton(text="No", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+
+        # "Are you sure?" popup
+        self.confirmation_title = Label(font=self.aac_inst.assets.fonts.title_font)
+        self.confirm_dialog = Panel(
+            horiz_padding=UI_MARGIN_S,
+            vert_padding=UI_MARGIN_S,
+            child=VBox(
+                gap=UI_MARGIN_S,
+                children=[
+                    self.confirmation_title,
+                    HBox(
+                        children=[
+                            self.yes_button,
+                            self.no_button
+                        ]
+                    )
+                ]
+            )
+        )
+
+        ## Main Panel
+
+        # Title label
+        self.title = Label(font=self.aac_inst.assets.fonts.title_font)
+
+        # Close/continue buttons
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, img_path=self.aac_inst.assets.images.exit_icon)
+        self.continue_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, img_path=self.aac_inst.assets.images.proceed_icon)
+
+        # Move, modify, delete buttons
+        self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+        self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+        self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+
+        self.word_hbox = HBox(
+            padding=UI_MARGIN_S,
+            children=[
+                Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                SBox(
+
+                )
+            ]
+        )
+
+        # Putting together the main panel
+        self.popup = Panel(
+            horiz_padding=UI_MARGIN_S,
+            vert_padding=UI_MARGIN_S,
+
+            # Main VBox
+            child=VBox(
+                padding=UI_MARGIN_S,
+                children=[
+                    # Header HBox
+                    HBox(
+                        children=[
+                            self.title,
+                            Spacer(flex=1),
+                            self.close_button,
+                        ]
+                    ),
+
+                    # Content VBox
+                    VBox(),
+
+                    # Content -> Buttons Spacer
+                    Spacer(flex=1),
+
+                    # Buttons HBox
+                    HBox(
+                        children=[
+                            self.move_button,
+                            self.modify_button,
+                            self.delete_button,
+                        ]
+                    )
+                ]
+            )
+        )
 
     def set_button_and_node(self, button: Button, node_label: str) -> None:
         self.button = button
@@ -100,17 +201,19 @@ class InspectState(State):
 
     def draw(self, screen: Surface) -> None:
         theme = self.aac_inst.get_current_theme()
-        screen.fill(theme.bg_colour)
+        screen.fill(theme[ThemeKey.BG])
 
         if not self.button:
             return
+
+        self.popup.draw(screen, current_theme=theme)
 
         # Draw the popup background rect
         pg.draw.rect(screen, theme.fg_colour, self.popup_rect, width=BORDER_WIDTH)
 
         # Draw the close button so users can actually get out!
         topleft = (self.popup_rect.right - 2 * self.close_button.r - UI_PADDING, self.popup_rect.top + UI_PADDING)
-        screen.blit(self.aac_inst.assets.images.exit_icons[theme], topleft)
+        screen.blit(self.aac_inst.assets.images.exit_icon[theme], topleft)
 
         # Draw the popup text
         text_left, text_top = self.popup_rect.topleft[0] + UI_PADDING, self.popup_rect.topleft[1] + UI_PADDING

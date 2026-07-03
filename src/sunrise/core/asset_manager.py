@@ -59,7 +59,7 @@ class Images:
         self.proceed_icon: Path = UI_IMAGES_DIR / "proceed.png"
         self.lock_icon: Path = UI_IMAGES_DIR / "lock.png"
 
-        self.property_icons: dict[str, Path] = {
+        self.property_icons: dict[PropertyIconID, Path] = {
             PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",
             PropertyIconID.DEST: UI_IMAGES_DIR / "dest.png",
             PropertyIconID.FUNC: UI_IMAGES_DIR / "func.png",

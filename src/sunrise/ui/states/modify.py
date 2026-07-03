@@ -27,7 +27,8 @@ from sunrise.core.load_nodes import Button
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton
-from sunrise.core.constants import WN_W, WN_H, UI_PADDING, BORDER_WIDTH, ICON_SIZE, UI_MARGIN
+
+from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_S, ICON_SIZE, BORDER_WIDTH
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -36,15 +37,10 @@ class ModifyState(State):
     def __init__(self, aac_inst: AAC) -> None:
         super().__init__(aac_inst)
         self.aac_inst.bus.subscribe(EventID.SET_MODIFY_BUTTON, self.set_button_to_modify)
-        self.popup_rect = pg.Rect(UI_PADDING, UI_PADDING, WN_W - UI_PADDING * 2, WN_H - UI_PADDING * 2)
+        self.popup_rect = pg.Rect(UI_MARGIN_S, UI_MARGIN_S, WN_W - UI_MARGIN_S * 2, WN_H - UI_MARGIN_S * 2)
 
-        centre_x = WN_W - UI_PADDING - ICON_SIZE
-        center_y = UI_PADDING + ICON_SIZE
-        self.close_button = CircularUIButton(centre_x=centre_x, centre_y=center_y, r=ICON_SIZE // 2)
-
-        centre_x = WN_W - UI_PADDING - ICON_SIZE
-        center_y = WN_H - UI_PADDING - ICON_SIZE
-        self.proceed_button = CircularUIButton(centre_x=centre_x, centre_y=center_y, r=ICON_SIZE // 2)
+        self.close_button = CircularUIButton(r=ICON_SIZE // 2)
+        self.proceed_button = CircularUIButton(r=ICON_SIZE // 2)
 
         # Button = existing button to modify
         # None   = no button was selected, so making a new one
@@ -53,8 +49,8 @@ class ModifyState(State):
         self.input_box_font = pg.font.Font(self.aac_inst.assets.fonts.ui_font, 32)
 
         box_h = int(WN_H * 0.08)
-        box_y = UI_PADDING + UI_MARGIN
-        row_x = UI_PADDING + UI_MARGIN
+        box_y = UI_MARGIN_S + UI_MARGIN
+        row_x = UI_MARGIN_S + UI_MARGIN
 
         # Row 1 - input box and path/to/image box
         width = int(WN_W * 0.25)
@@ -102,14 +98,14 @@ class ModifyState(State):
         pg.draw.rect(screen, theme.fg_colour, self.popup_rect, BORDER_WIDTH)
 
         # Close button
-        rect = pg.Rect(0, 0, *self.aac_inst.assets.images.exit_icons[theme].get_size())
+        rect = pg.Rect(0, 0, *self.aac_inst.assets.images.exit_icon[theme].get_size())
         rect.center = (self.close_button.centre_x, self.close_button.centre_y)
-        screen.blit(self.aac_inst.assets.images.exit_icons[theme], rect)
+        screen.blit(self.aac_inst.assets.images.exit_icon[theme], rect)
 
         # Proceed button
-        rect = pg.Rect(0, 0, *self.aac_inst.assets.images.exit_icons[theme].get_size())
+        rect = pg.Rect(0, 0, *self.aac_inst.assets.images.exit_icon[theme].get_size())
         rect.center = (self.proceed_button.centre_x, self.proceed_button.centre_y)
-        screen.blit(self.aac_inst.assets.images.proceed_icons[theme], rect)
+        screen.blit(self.aac_inst.assets.images.proceed_icon[theme], rect)
 
         # Draw input fields
         self.label_input_box.draw(

@@ -25,8 +25,10 @@ class ThemeKey(StrEnum):
     # Background
     BG = "BG"
     BG_ACTIVE = "BG_ACTIVE"
+
     # Foreground
     FG = "FG"
+    FG_DISABLED = "FG_DISABLED"
     FG_ACTIVE = "FG_ACTIVE"
     FG_ERROR = "FG_ERROR"
     FG_ERROR_ACTIVE = "FG_ERR_ACTIVE"
@@ -34,6 +36,7 @@ class ThemeKey(StrEnum):
     FG_WARNING_ACTIVE = "FG_WARNING_ACTIVE"
     FG_SUCCESS = "FG_SUCCESS"
     FG_SUCCESS_ACTIVE = "FG_SUCCESS_ACTIVE"
+
     # Border
     BORDER = "BORDER"
 
@@ -77,6 +80,7 @@ THEMES: list[Theme] = [
             ThemeKey.BG: (255, 255, 255),
             ThemeKey.BG_ACTIVE: (240, 240, 240),
             ThemeKey.FG: (0, 0, 0),
+            ThemeKey.FG_DISABLED: (170, 170, 170),
             ThemeKey.FG_ACTIVE: (0, 0, 0),
             ThemeKey.FG_ERROR: (255, 0, 0),
             ThemeKey.FG_ERROR_ACTIVE: (255, 0, 0),
@@ -106,6 +110,7 @@ THEMES: list[Theme] = [
             ThemeKey.BG: (50, 50, 50),
             ThemeKey.BG_ACTIVE: (70, 70, 70),
             ThemeKey.FG: (255, 255, 255),
+            ThemeKey.FG_DISABLED: (123, 123, 123),
             ThemeKey.FG_ACTIVE: (255, 255, 255),
             ThemeKey.FG_ERROR: (255, 0, 0),
             ThemeKey.FG_ERROR_ACTIVE: (255, 0, 0),

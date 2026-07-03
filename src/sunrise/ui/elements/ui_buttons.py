@@ -36,7 +36,7 @@ class _UIButton(Widget):
     def __init__(
             self, *,
             flex: int = 0, text: str = "", font: pg.font.Font, inset: int = 0,
-            fixed_size: tuple[int, int] | None = None, icon_path: Path | None = None,
+            fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
@@ -59,8 +59,8 @@ class _UIButton(Widget):
         self.border_w = border_w
 
         self.img_container: ImageContainer | None = (
-            ImageContainer(img_path=icon_path, start_size=self._preferred_icon_size())
-            if icon_path is not None else None
+            ImageContainer(img_path=img_path, start_size=self._preferred_icon_size())
+            if img_path is not None else None
         )
 
     def _preferred_icon_size(self) -> tuple[int, int]:
@@ -107,13 +107,13 @@ class CircularUIButton(_UIButton):
     def __init__(
             self, *,
             r: int = 0, flex: int = 0, text: str = "", font: Font, inset: int = 0,
-            fixed_size: tuple[int, int] | None = None, icon_path: Path | None = None,
+            fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         super().__init__(
-            flex=flex, text=text, font=font, inset=inset, fixed_size=fixed_size, icon_path=icon_path,
+            flex=flex, text=text, font=font, inset=inset, fixed_size=fixed_size, img_path=img_path,
             k_fg=k_fg, k_fg_active=k_fg_active, k_bg=k_bg, k_bg_active=k_bg_active, k_border=k_border, border_w=border_w
         )
         self.r = r
