@@ -40,7 +40,7 @@ from .base_states import State, StateID
 from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.load_nodes import Button, save_language_tree
-from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_S, ICON_SIZE, BORDER_WIDTH
+from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN, ICON_SIZE, BORDER_WIDTH
 from sunrise.ui.utils import crop_text_to_fit
 from sunrise.ui.themes import ThemeKey
 
@@ -65,16 +65,16 @@ class InspectState(State):
         ## Confirmation Dialog
 
         # Yes and No buttons
-        self.yes_button = RectangularUIButton(text="Yes", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, k_fg=ThemeKey.FG_ERROR)
-        self.no_button = RectangularUIButton(text="No", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+        self.yes_button = RectangularUIButton(text="Yes", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, k_fg=ThemeKey.FG_ERROR)
+        self.no_button = RectangularUIButton(text="No", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
 
         # "Are you sure?" popup
         self.confirmation_title = Label(font=self.aac_inst.assets.fonts.title_font)
         self.confirm_dialog = Panel(
-            horiz_padding=UI_MARGIN_S,
-            vert_padding=UI_MARGIN_S,
+            horiz_padding=UI_MARGIN,
+            vert_padding=UI_MARGIN,
             child=VBox(
-                gap=UI_MARGIN_S,
+                gap=UI_MARGIN,
                 children=[
                     self.confirmation_title,
                     HBox(
@@ -93,16 +93,16 @@ class InspectState(State):
         self.title = Label(font=self.aac_inst.assets.fonts.title_font)
 
         # Close/continue buttons
-        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, img_path=self.aac_inst.assets.images.exit_icon)
-        self.continue_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S, img_path=self.aac_inst.assets.images.proceed_icon)
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.exit_icon)
+        self.continue_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.proceed_icon)
 
         # Move, modify, delete buttons
-        self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
-        self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
-        self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_S)
+        self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
+        self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
+        self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
 
         self.word_hbox = HBox(
-            padding=UI_MARGIN_S,
+            padding=UI_MARGIN,
             children=[
                 Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                 SBox(
@@ -113,12 +113,12 @@ class InspectState(State):
 
         # Putting together the main panel
         self.popup = Panel(
-            horiz_padding=UI_MARGIN_S,
-            vert_padding=UI_MARGIN_S,
+            horiz_padding=UI_MARGIN,
+            vert_padding=UI_MARGIN,
 
             # Main VBox
             child=VBox(
-                padding=UI_MARGIN_S,
+                padding=UI_MARGIN,
                 children=[
                     # Header HBox
                     HBox(

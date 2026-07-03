@@ -22,7 +22,7 @@
 WN_W, WN_H = 1280, 720
 
 # UI margin presets
-UI_MARGIN_S = int(WN_W * 0.04)
+UI_MARGIN = int(WN_W * 0.04)
 
 # Other visual settings
 GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
@@ -30,7 +30,7 @@ BORDER_WIDTH = 2        # border width for UI elements
 
 # Sizes
 SENTENCE_BAR_H = 80
-BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN_S) / GRID_H * 0.65)
+BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN) / GRID_H * 0.65)
 ICON_SIZE = int(WN_W * 0.025)  # size for UI icons
 
 # Allowed button types - Only these button types will have a supporting colour.

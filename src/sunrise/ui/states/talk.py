@@ -38,7 +38,7 @@ from sunrise.ui.themes import ThemeKey
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
-    UI_MARGIN_S,
+    UI_MARGIN,
     BORDER_WIDTH,
     GRID_W,
     GRID_H,
@@ -66,8 +66,8 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
 
     x, y = screen_coords
 
-    min_x = UI_MARGIN_S
-    min_y = SENTENCE_BAR_H + UI_MARGIN_S
+    min_x = UI_MARGIN
+    min_y = SENTENCE_BAR_H + UI_MARGIN
 
     # Calculate individual button dimensions
     area_w = WN_W - min_x
@@ -88,7 +88,7 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
     button_start_y = min_y + by * button_h
 
     # Check if the click fell into the padding gap at the right or bottom of the button
-    if (x >= button_start_x + (button_w - UI_MARGIN_S)) or (y >= button_start_y + (button_h - UI_MARGIN_S)):
+    if (x >= button_start_x + (button_w - UI_MARGIN)) or (y >= button_start_y + (button_h - UI_MARGIN)):
         return None
 
     # Safety check to ensure floating-point rounding didn't push us out of bounds
@@ -145,8 +145,8 @@ class _Renderer:
         bx, by = button.coords
         bx, by = bx % GRID_W, by % GRID_H  # normalise negative coordinates
 
-        min_x = UI_MARGIN_S
-        min_y = SENTENCE_BAR_H + UI_MARGIN_S
+        min_x = UI_MARGIN
+        min_y = SENTENCE_BAR_H + UI_MARGIN
 
         # The size of the button area, minus the left/top margins
         area_w = WN_W - min_x
@@ -157,7 +157,7 @@ class _Renderer:
 
         screen_x = min_x + bx * button_w
         screen_y = min_y + by * button_h
-        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN_S, button_h - UI_MARGIN_S)
+        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN, button_h - UI_MARGIN)
 
     def _draw_button(self, screen: pg.Surface, button: Button) -> None:
         # Draw button rect
@@ -221,14 +221,14 @@ class _Renderer:
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
-        max_width = WN_W - 2 * UI_MARGIN_S
+        max_width = WN_W - 2 * UI_MARGIN
         text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-127:], True, theme[ThemeKey.FG])
         if (big_width := text_surf.get_width()) > max_width:
             excess = big_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, (UI_MARGIN_S, UI_MARGIN_S))
+        screen.blit(text_surf, (UI_MARGIN, UI_MARGIN))
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():

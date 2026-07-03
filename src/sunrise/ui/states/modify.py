@@ -28,7 +28,7 @@ from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton
 
-from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_S, ICON_SIZE, BORDER_WIDTH
+from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN, ICON_SIZE, BORDER_WIDTH
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -37,7 +37,7 @@ class ModifyState(State):
     def __init__(self, aac_inst: AAC) -> None:
         super().__init__(aac_inst)
         self.aac_inst.bus.subscribe(EventID.SET_MODIFY_BUTTON, self.set_button_to_modify)
-        self.popup_rect = pg.Rect(UI_MARGIN_S, UI_MARGIN_S, WN_W - UI_MARGIN_S * 2, WN_H - UI_MARGIN_S * 2)
+        self.popup_rect = pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - UI_MARGIN * 2, WN_H - UI_MARGIN * 2)
 
         self.close_button = CircularUIButton(r=ICON_SIZE // 2)
         self.proceed_button = CircularUIButton(r=ICON_SIZE // 2)
@@ -49,8 +49,8 @@ class ModifyState(State):
         self.input_box_font = pg.font.Font(self.aac_inst.assets.fonts.ui_font, 32)
 
         box_h = int(WN_H * 0.08)
-        box_y = UI_MARGIN_S + UI_MARGIN
-        row_x = UI_MARGIN_S + UI_MARGIN
+        box_y = UI_MARGIN + UI_MARGIN
+        row_x = UI_MARGIN + UI_MARGIN
 
         # Row 1 - input box and path/to/image box
         width = int(WN_W * 0.25)
