@@ -30,6 +30,7 @@ class ThemeKey(StrEnum):
     FG = "FG"
     FG_DISABLED = "FG_DISABLED"
     FG_ACTIVE = "FG_ACTIVE"
+    FG_ERROR_DISABLED = "FG_ERROR_DISABLED"
     FG_ERROR = "FG_ERROR"
     FG_ERROR_ACTIVE = "FG_ERR_ACTIVE"
     FG_WARNING = "FG_WARNING"
@@ -82,6 +83,7 @@ THEMES: list[Theme] = [
             ThemeKey.FG: (0, 0, 0),
             ThemeKey.FG_DISABLED: (170, 170, 170),
             ThemeKey.FG_ACTIVE: (0, 0, 0),
+            ThemeKey.FG_ERROR_DISABLED: (255, 170, 170),
             ThemeKey.FG_ERROR: (255, 0, 0),
             ThemeKey.FG_ERROR_ACTIVE: (255, 0, 0),
             ThemeKey.FG_WARNING: (255, 208, 0),
@@ -112,6 +114,7 @@ THEMES: list[Theme] = [
             ThemeKey.FG: (255, 255, 255),
             ThemeKey.FG_DISABLED: (123, 123, 123),
             ThemeKey.FG_ACTIVE: (255, 255, 255),
+            ThemeKey.FG_ERROR_DISABLED: (128, 50, 50),
             ThemeKey.FG_ERROR: (255, 0, 0),
             ThemeKey.FG_ERROR_ACTIVE: (255, 0, 0),
             ThemeKey.FG_WARNING: (255, 208, 0),

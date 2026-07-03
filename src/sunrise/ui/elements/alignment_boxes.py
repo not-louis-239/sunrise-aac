@@ -99,7 +99,7 @@ class HBox(_Box):
 
         total_gaps = self.gap * max(0, len(self.children) - 1)
 
-        remaining = rect.width - 2 * self.padding - total_fixed_width - total_gaps
+        remaining = max(0, rect.width - 2 * self.padding - total_fixed_width - total_gaps)
 
         # assign flex space
         total_flex = sum(c.flex for c in flex_children)
@@ -162,7 +162,7 @@ class VBox(_Box):
                 total_fixed_height += h
 
         total_gaps = self.gap * max(0, len(self.children) - 1)
-        remaining = rect.height - 2 * self.padding - total_fixed_height - total_gaps
+        remaining = max(0, rect.height - 2 * self.padding - total_fixed_height - total_gaps)
 
         total_flex = sum(c.flex for c in flex_children)
         flex_heights = {}
@@ -199,6 +199,9 @@ class SBox(_Box):
         ) -> None:
         super().__init__()
         self.child = child
+        self.children = [child]
+        child.parent = self
+
         self.forced_width = forced_width
         self.forced_height = forced_height
         self.h_align = h_align

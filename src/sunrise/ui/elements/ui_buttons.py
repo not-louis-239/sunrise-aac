@@ -119,7 +119,9 @@ class CircularUIButton(_UIButton):
         )
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
-        return mouse_pos[0] ** 2 + mouse_pos[1] ** 2 <= self.r ** 2
+        dx = mouse_pos[0] - self.rect.centerx
+        dy = mouse_pos[1] - self.rect.centery
+        return dx ** 2 + dy ** 2 <= self.r ** 2
 
     def preferred_size(self) -> tuple[int, int]:
         return self.r * 2, self.r * 2
@@ -141,7 +143,7 @@ class CircularUIButton(_UIButton):
 
         # Draw the text
         text_surf = self.font.render(self.text, True, current_theme[k_fg])
-        surface.blit(surface, text_surf.get_rect(center=self.rect.center))
+        surface.blit(text_surf, text_surf.get_rect(center=self.rect.center))
 
         # Draw the border if applicable
         if self.border_w > 0:

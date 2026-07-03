@@ -35,6 +35,8 @@ class Panel(Widget):
         self.horiz_padding = horiz_padding
         self.vert_padding = vert_padding
         self.child = child
+        self.children = [child]
+        child.parent = self
 
         self.k_bg = k_bg
         self.k_border = k_border

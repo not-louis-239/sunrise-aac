@@ -26,7 +26,7 @@ def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
     Truncates with '...' at the end if necessary.
     Returns an empty string if even an ellipsis doesn't fit."""
 
-    if font.size(text)[0] < maxwidth:  # font.size(...) returns (width, height)
+    if font.size(text)[0] <= maxwidth:  # font.size(...) returns (width, height)
         return text
 
     ELLIPSIS_CHAR = '…'

@@ -95,14 +95,18 @@ class InputBox(Widget):
         text_visual_width = self.rect.width - 2 * self.text_inset
 
         # Draws the text aligned to left-centre
-        source_rect = pg.Rect(
+        dest = (
             self.rect.x + self.text_inset,
             self.rect.centery - text_surf.get_height() // 2,
+        )
+        source_rect = pg.Rect(
+            max(0, text_surf.get_width() - text_visual_width),
+            0,
             min(text_visual_width, text_surf.get_width()),
             text_surf.get_height()
         )
 
-        surface.blit(text_surf, source_rect)
+        surface.blit(text_surf, dest, source_rect)
 
         # Border
         pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)
