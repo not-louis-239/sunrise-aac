@@ -31,6 +31,7 @@ from . import (
 
 HBox = alignment_boxes.HBox
 VBox = alignment_boxes.VBox
+SBox = alignment_boxes.SBox
 Icon = icon.Icon
 InputBox = input_boxes.InputBox
 Label = labels.Label
@@ -38,3 +39,6 @@ Panel = panel.Panel
 Spacer = spacer.Spacer
 CircularUIButton = ui_buttons.CircularUIButton
 RectangularUIButton = ui_buttons.RectangularUIButton
+
+HAlign = alignment_boxes.HAlign
+VAlign = alignment_boxes.VAlign

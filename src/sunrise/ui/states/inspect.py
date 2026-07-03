@@ -30,9 +30,12 @@ from sunrise.ui.elements import (
     Panel,
     HBox,
     VBox,
+    SBox,
     Icon,
     Spacer,
     Label,
+    HAlign,
+    VAlign,
     RectangularUIButton,
     CircularUIButton
 )
@@ -49,7 +52,7 @@ if TYPE_CHECKING:
     from sunrise.core.aac import AAC
 
 
-def _make_icon(*, self: InspectState, prop: PropertyIconID) -> Icon:
+def _make_icon(self: InspectState, *, prop: PropertyIconID) -> Icon:
     return Icon(img_path=self.aac_inst.assets.images.property_icons[prop], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG)
 
 
@@ -61,6 +64,8 @@ class InspectState(State):
         self.aac_inst.bus.subscribe(EventID.SET_INSPECT_BUTTON, self.set_button_and_node)
 
         ### Initialise UI components - components that need to be interacted with by `self` are bound as attributes
+        self.black_overlay_surface = pg.Surface((WN_W, WN_H), pg.SRCALPHA)
+        self.black_overlay_surface.fill((0, 0, 0, 128))
 
         ## Confirmation Dialog
 
@@ -101,15 +106,28 @@ class InspectState(State):
         self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
         self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
 
-        self.word_hbox = HBox(
-            padding=UI_MARGIN,
-            children=[
-                Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                SBox(
-
-                )
+        self.property_hboxes: list[HBox] = [
+            HBox(
+                padding=UI_MARGIN,
+                children=[
+                    _make_icon(self, prop=prop),
+                    SBox(
+                        forced_width=180,
+                        h_align=HAlign.LEFT,
+                        v_align=VAlign.CENTRE,
+                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font, text=text),
+                    ),
+                    Label(font=self.aac_inst.assets.fonts.ui_text_font),
+                    Spacer(flex=1)
+                ]
+            ) for prop, text in [
+                (PropertyIconID.TEXT, "word:"),
+                (PropertyIconID.DEST, "dest:"),
+                (PropertyIconID.FUNC, "func:"),
+                (PropertyIconID.IMAGE, "image:"),
+                (PropertyIconID.TYPE, "type:"),
             ]
-        )
+        ]
 
         # Putting together the main panel
         self.popup = Panel(
@@ -130,7 +148,10 @@ class InspectState(State):
                     ),
 
                     # Content VBox
-                    VBox(),
+                    VBox(
+                        gap=UI_MARGIN,
+                        children=self.property_hboxes  # type: ignore
+                    ),
 
                     # Content -> Buttons Spacer
                     Spacer(flex=1),
@@ -147,9 +168,31 @@ class InspectState(State):
             )
         )
 
+    def _refresh_property_labels(self) -> None:
+        button = self.button
+        if button is None:
+            return
+
+        word = button.word
+        dest = str(button.dest) if button.dest is not None else None
+        func = button.func
+        image_path = button.img
+        btype = button.type
+
+        for text, hbox in zip([word, dest, func, image_path, btype], self.property_hboxes):
+            label = hbox.children[0]
+            assert isinstance(label, Label)
+            if text is not None:
+                label.set_text(text)
+                label.set_fg_theme_key(ThemeKey.FG)
+            else:
+                label.set_text("n/a")
+                label.set_fg_theme_key(ThemeKey.FG_DISABLED)
+
     def set_button_and_node(self, button: Button, node_label: str) -> None:
         self.button = button
         self.node_label = node_label
+        self._refresh_property_labels()
 
     def update(self, dt_s: float) -> None:
         pass
@@ -208,120 +251,6 @@ class InspectState(State):
 
         self.popup.draw(screen, current_theme=theme)
 
-        # Draw the popup background rect
-        pg.draw.rect(screen, theme.fg_colour, self.popup_rect, width=BORDER_WIDTH)
-
-        # Draw the close button so users can actually get out!
-        topleft = (self.popup_rect.right - 2 * self.close_button.r - UI_PADDING, self.popup_rect.top + UI_PADDING)
-        screen.blit(self.aac_inst.assets.images.exit_icon[theme], topleft)
-
-        # Draw the popup text
-        text_left, text_top = self.popup_rect.topleft[0] + UI_PADDING, self.popup_rect.topleft[1] + UI_PADDING
-        text = f"Button '{self.button.label}' in Node '{self.node_label}' at {self.button.coords}"
-        text_max_width = int(self.popup_rect.width - 2 * self.close_button.r - 3 * UI_PADDING)
-        text_cropped = crop_text_to_fit(text, self.title_font, text_max_width)
-
-        text_surf = self.title_font.render(text_cropped, True, theme.fg_colour)
-        screen.blit(text_surf, (text_left, text_top))
-
-        base_x, base_y = (UI_PADDING + UI_MARGIN, int(WN_H * 0.15))
-        value_offset = 150
-
-        def draw_key_value_pair(k: object, v: object, pos: tuple[int, int]) -> None:
-            px, py = pos
-
-            draw_text(
-                surface=screen, pos=(px + UI_MARGIN, py),
-                horiz_align='left', vert_align='centre',
-                font_family=self.title_font, text=str(k),
-                colour=theme.fg_colour
-            )
-
-            if v is not None:
-                v_str = str(v)
-                v_col = theme.fg_colour
-            else:
-                v_str = "n/a"
-                v_col = (*theme.fg_colour, 127)
-
-            draw_text(
-                surface=screen, pos=(px + UI_MARGIN + value_offset, py),
-                horiz_align='left', vert_align='centre',
-                font_family=self.title_font, text=v_str,
-                colour=v_col
-            )
-
-        for i, (label, attr_value, icon_id) in enumerate((
-            ("word:", self.button.word, PropertyIconID.TEXT),
-            ("dest:", self.button.dest, PropertyIconID.DEST),
-            ("func:", self.button.func, PropertyIconID.FUNC),
-            ("image:", self.button.img, PropertyIconID.IMAGE),
-            ("type:", self.button.type, PropertyIconID.TYPE),
-        )):
-            image = self.aac_inst.assets.images.property_icons[icon_id][theme]
-            pos = base_x, base_y + i * UI_MARGIN
-            img_rect = pg.Rect(0, 0, *image.get_size())
-            img_rect.center = pos
-            screen.blit(image, img_rect)
-            draw_key_value_pair(k=label, v=attr_value, pos=pos)
-
-        if self.button.immutable:
-            draw_text(
-                surface=screen, pos=(base_x, base_y + 5 * UI_MARGIN),
-                horiz_align='left', vert_align='top',
-                font_family=self.title_font, text="immutable",
-                colour=theme.warn_colour
-            )
-
-        # Draw buttons
-        for button, text in [
-            (self.move_button, "Move"),
-            (self.modify_button, "Modify"),
-            (self.delete_button, "Delete")
-        ]:
-            if button == self.move_button:
-                colour = theme.fg_colour
-            elif button == self.modify_button:
-                colour = (*theme.fg_colour, 127) if self.button.immutable else theme.fg_colour
-            elif button == self.delete_button:
-                colour = (*theme.err_colour, 127) if self.button.immutable else theme.err_colour
-            else:
-                colour = theme.fg_colour  # default so Pyright doesn't complain about possibly unbound variables
-
-            # Now draw the buttons
-            pg.draw.rect(screen, theme.fg_colour, button.rect, width=BORDER_WIDTH)
-            draw_text(
-                surface=screen, pos=button.rect.center, horiz_align='centre',
-                vert_align='centre', font_family=self.button_font, text=text,
-                colour=colour
-            )
-
         if self.in_delete_confirmation:
             screen.blit(self.black_overlay_surface, (0, 0))
-
-            pg.draw.rect(screen, theme.bg_colour, (WN_W * 0.08, WN_H * 0.4, WN_W * 0.84, WN_H * 0.3))
-            pg.draw.rect(screen, theme.fg_colour, (WN_W * 0.08, WN_H * 0.4, WN_W * 0.84, WN_H * 0.3), width=BORDER_WIDTH)
-
-            draw_text(
-                surface=screen, pos=(int(WN_W * 0.5), int(WN_H * 0.5)),
-                horiz_align='centre', vert_align='centre',
-                font_family=self.title_font, text=f"Are you sure you want to delete '{self.button.label}'?",
-                colour=theme.fg_colour
-            )
-
-            # Draw yes/no buttons
-            pg.draw.rect(screen, theme.fg_colour, self.yes_button.rect, width=BORDER_WIDTH)
-            draw_text(
-                surface=screen, pos=self.yes_button.rect.center,
-                horiz_align='centre', vert_align='centre',
-                font_family=self.title_font, text=f"Yes",
-                colour=theme.err_colour
-            )
-
-            pg.draw.rect(screen, theme.fg_colour, self.no_button.rect, width=BORDER_WIDTH)
-            draw_text(
-                surface=screen, pos=self.no_button.rect.center,
-                horiz_align='centre', vert_align='centre',
-                font_family=self.title_font, text=f"No",
-                colour=theme.fg_colour
-            )
+            self.confirm_dialog.draw(screen, current_theme=theme)

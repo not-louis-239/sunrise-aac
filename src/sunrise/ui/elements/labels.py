@@ -31,6 +31,9 @@ class Label(Widget):
         self.font = font
         self.k_fg = k_fg
 
+    def set_fg_theme_key(self, k_fg: ThemeKey) -> None:
+        self.k_fg = k_fg
+
     def set_text(self, text: str) -> None:
         self.text = text
 

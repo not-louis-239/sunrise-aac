@@ -39,14 +39,14 @@ class ModifyState(State):
         self.aac_inst.bus.subscribe(EventID.SET_MODIFY_BUTTON, self.set_button_to_modify)
         self.popup_rect = pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - UI_MARGIN * 2, WN_H - UI_MARGIN * 2)
 
-        self.close_button = CircularUIButton(r=ICON_SIZE // 2)
-        self.proceed_button = CircularUIButton(r=ICON_SIZE // 2)
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2)
+        self.proceed_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2)
 
         # Button = existing button to modify
         # None   = no button was selected, so making a new one
         self.button_to_modify: Button | None = None
 
-        self.input_box_font = pg.font.Font(self.aac_inst.assets.fonts.ui_font, 32)
+        self.input_box_font = pg.font.Font(self.aac_inst.assets.fonts.ui_button_font, 32)
 
         box_h = int(WN_H * 0.08)
         box_y = UI_MARGIN + UI_MARGIN

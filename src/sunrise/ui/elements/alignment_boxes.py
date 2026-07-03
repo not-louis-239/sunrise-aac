@@ -193,7 +193,7 @@ class SBox(_Box):
 
     def __init__(
             self, child: Widget, *,
-            forced_width: int | None, forced_height: int | None,
+            forced_width: int | None = None, forced_height: int | None = None,
             h_align: HAlign = HAlign.CENTRE,
             v_align: VAlign = VAlign.CENTRE
         ) -> None:
