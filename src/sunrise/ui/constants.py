@@ -23,6 +23,7 @@ WN_W, WN_H = 1280, 720
 
 # UI margin presets
 UI_MARGIN = int(WN_W * 0.04)
+BUTTON_GRID_MARGIN = int(WN_W * 0.01)  # specifically for the buttons in the TALK state
 
 # Other visual settings
 GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons

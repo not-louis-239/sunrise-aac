@@ -39,6 +39,7 @@ from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
     UI_MARGIN,
+    BUTTON_GRID_MARGIN,
     BORDER_WIDTH,
     GRID_W,
     GRID_H,
@@ -145,8 +146,8 @@ class _Renderer:
         bx, by = button.coords
         bx, by = bx % GRID_W, by % GRID_H  # normalise negative coordinates
 
-        min_x = UI_MARGIN
-        min_y = SENTENCE_BAR_H + UI_MARGIN
+        min_x = BUTTON_GRID_MARGIN
+        min_y = SENTENCE_BAR_H + BUTTON_GRID_MARGIN
 
         # The size of the button area, minus the left/top margins
         area_w = WN_W - min_x
@@ -157,7 +158,7 @@ class _Renderer:
 
         screen_x = min_x + bx * button_w
         screen_y = min_y + by * button_h
-        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN, button_h - UI_MARGIN)
+        return pg.Rect(screen_x, screen_y, button_w - BUTTON_GRID_MARGIN, button_h - BUTTON_GRID_MARGIN)
 
     def _draw_button(self, screen: pg.Surface, button: Button) -> None:
         # Draw button rect
@@ -208,7 +209,7 @@ class _Renderer:
             draw_text(
                 surface=screen, pos=instruction_pos,
                 horiz_align='centre', vert_align='centre',
-                font_family=self.assets.fonts.ui_text_font,
+                font_family=self.assets.fonts.ui_text_font_s,
                 text="Click on an empty spot to which to move the button, or an existing button to swap them, or Escape to cancel.",
                 colour=theme[ThemeKey.FG]
             )
@@ -228,7 +229,7 @@ class _Renderer:
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, (UI_MARGIN, UI_MARGIN))
+        screen.blit(text_surf, text_surf.get_rect(left=UI_MARGIN, centery=SENTENCE_BAR_H / 2))
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():

@@ -100,7 +100,7 @@ class RectangularUIButton(_UIButton):
         pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)
 
         # Draw text
-        text_surface = self.font.render(self.text, True, k_fg)
+        text_surface = self.font.render(self.text, True, current_theme[k_fg])
         surface.blit(text_surface, text_surface.get_rect(center=self.rect.center))
 
 class CircularUIButton(_UIButton):
@@ -112,11 +112,11 @@ class CircularUIButton(_UIButton):
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
+        self.r = r
         super().__init__(
             flex=flex, text=text, font=font, inset=inset, fixed_size=fixed_size, img_path=img_path,
             k_fg=k_fg, k_fg_active=k_fg_active, k_bg=k_bg, k_bg_active=k_bg_active, k_border=k_border, border_w=border_w
         )
-        self.r = r
 
     def check_click(self, mouse_pos: tuple[int, int]) -> bool:
         return mouse_pos[0] ** 2 + mouse_pos[1] ** 2 <= self.r ** 2

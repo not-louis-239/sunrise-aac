@@ -62,6 +62,7 @@ class InspectState(State):
         self.button: Button | None = None  # the button that `self` is currently inspecting
         self.node_label: str | None = None
         self.aac_inst.bus.subscribe(EventID.SET_INSPECT_BUTTON, self.set_button_and_node)
+        self.in_delete_confirmation = False
 
         ### Initialise UI components - components that need to be interacted with by `self` are bound as attributes
         self.black_overlay_surface = pg.Surface((WN_W, WN_H), pg.SRCALPHA)
@@ -98,8 +99,8 @@ class InspectState(State):
         self.title = Label(font=self.aac_inst.assets.fonts.title_font)
 
         # Close/continue buttons
-        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.exit_icon)
-        self.continue_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.proceed_icon)
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.exit_icon)
+        self.continue_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.proceed_icon)
 
         # Move, modify, delete buttons
         self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN)
@@ -115,9 +116,9 @@ class InspectState(State):
                         forced_width=180,
                         h_align=HAlign.LEFT,
                         v_align=VAlign.CENTRE,
-                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font, text=text),
+                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text=text),
                     ),
-                    Label(font=self.aac_inst.assets.fonts.ui_text_font),
+                    Label(font=self.aac_inst.assets.fonts.ui_text_font_m),
                     Spacer(flex=1)
                 ]
             ) for prop, text in [
@@ -168,6 +169,9 @@ class InspectState(State):
             )
         )
 
+        self.popup.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.confirm_dialog.layout(pg.Rect(UI_MARGIN, WN_H / 2 - 180, WN_W - 2 * UI_MARGIN, 360))
+
     def _refresh_property_labels(self) -> None:
         button = self.button
         if button is None:
@@ -180,8 +184,8 @@ class InspectState(State):
         btype = button.type
 
         for text, hbox in zip([word, dest, func, image_path, btype], self.property_hboxes):
-            label = hbox.children[0]
-            assert isinstance(label, Label)
+            label = hbox.children[2]  # magic index - it sucks, but too bad!
+            assert isinstance(label, Label), f"Wrong Instance Type! (Expected 'Label', got '{type(label).__name__}')"
             if text is not None:
                 label.set_text(text)
                 label.set_fg_theme_key(ThemeKey.FG)
