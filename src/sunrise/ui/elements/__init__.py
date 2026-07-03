@@ -21,6 +21,7 @@
 
 from . import (
     alignment_boxes,
+    dropdown,
     icon,
     input_boxes,
     labels,
@@ -32,11 +33,16 @@ from . import (
 HBox = alignment_boxes.HBox
 VBox = alignment_boxes.VBox
 SBox = alignment_boxes.SBox
-Icon = icon.Icon
-InputBox = input_boxes.InputBox
-Label = labels.Label
+
 Panel = panel.Panel
 Spacer = spacer.Spacer
+
+Label = labels.Label
+Icon = icon.Icon
+
+InputBox = input_boxes.InputBox
+Dropdown = dropdown.Dropdown
+
 CircularUIButton = ui_buttons.CircularUIButton
 RectangularUIButton = ui_buttons.RectangularUIButton
 

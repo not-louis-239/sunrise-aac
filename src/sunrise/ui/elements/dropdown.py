@@ -37,13 +37,11 @@ class Dropdown(Widget):
         self.k_bg_hover_options = k_bg_hover_options
         self.k_fg_hover_options = k_fg_hover_options
 
-    def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
-        for event in events:
-            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-                if self.rect.collidepoint(event.pos):
-                    self.is_open = not self.is_open
-                elif self.is_open:
-                    self.is_open = False
+    def handle_left_click(self, event: pg.event.Event) -> None:
+        if self.rect.collidepoint(event.pos):
+            self.is_open = not self.is_open
+        elif self.is_open:
+            self.is_open = False
 
     def preferred_size(self) -> tuple[int, int]:
         h = self.font.get_height()

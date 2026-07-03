@@ -19,7 +19,7 @@
 
 import pygame as pg
 from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
-from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.constants import BORDER_WIDTH, CURSOR_WIDTH, CURSOR_FLASH_INTERVAL
 
 from .widget import Widget
 from sunrise.ui.themes import Theme, ThemeKey
@@ -28,11 +28,12 @@ from sunrise.ui.themes import Theme, ThemeKey
 class InputBox(Widget):
     def __init__(
             self, *,
-            flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, text_inset: int,
+            flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, inset: int,
             k_bg: ThemeKey = ThemeKey.BG,
             k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_fg: ThemeKey = ThemeKey.FG,
             k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
+            k_cursor: ThemeKey = ThemeKey.FG,
             k_border: ThemeKey = ThemeKey.BORDER,
             border_w: int = BORDER_WIDTH
         ) -> None:
@@ -42,18 +43,25 @@ class InputBox(Widget):
         self.text = ""
         self.min_size = min_size
         self.font = font  # needed so that it can auto-adjust text width while drawing
-        self.text_inset = text_inset
+        self.text_inset = inset
         self.active = False
         self.delete_timer: float = DELETE_DELAY
+        self.cursor_flash_time: float = 0
 
         self.k_bg = k_bg
         self.k_bg_active = k_bg_active
         self.k_fg = k_fg
         self.k_fg_active = k_fg_active
+        self.k_cursor = k_cursor
         self.k_border = k_border
         self.border_w = border_w
 
     def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
+        if self.active:
+            self.cursor_flash_time = (self.cursor_flash_time + dt_s) % CURSOR_FLASH_INTERVAL
+        else:
+            self.cursor_flash_time = 0
+
         # Handle KEYDOWN events
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
@@ -94,7 +102,7 @@ class InputBox(Widget):
         text_surf = self.font.render(last_127_chars, True, current_theme[k_fg])
         text_visual_width = self.rect.width - 2 * self.text_inset
 
-        # Draws the text aligned to left-centre
+        # Draw the text aligned to left-centre
         dest = (
             self.rect.x + self.text_inset,
             self.rect.centery - text_surf.get_height() // 2,
@@ -107,6 +115,13 @@ class InputBox(Widget):
         )
 
         surface.blit(text_surf, dest, source_rect)
+
+        # Draw the cursor
+        if self.active and self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
+            cursor_x = self.rect.x + self.text_inset + min(text_visual_width, text_surf.get_width())
+            cursor_top_y = self.rect.centery - text_surf.get_height() // 2
+            cursor_bot_y = self.rect.centery + text_surf.get_height() // 2
+            pg.draw.line(surface, current_theme[self.k_cursor], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)
 
         # Border
         pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)

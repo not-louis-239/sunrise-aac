@@ -28,6 +28,8 @@ BUTTON_GRID_MARGIN = int(WN_W * 0.01)  # specifically for the buttons in the TAL
 # Other visual settings
 GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
 BORDER_WIDTH = 2        # border width for UI elements
+CURSOR_WIDTH = 2
+CURSOR_FLASH_INTERVAL = 0.8  # seconds for cursor flashing
 
 # Sizes
 SENTENCE_BAR_H = 80

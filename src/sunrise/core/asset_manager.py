@@ -35,6 +35,7 @@ class PropertyIconID(StrEnum):
     LABEL = "label"
     MAP_PIN = "map_pin"
     TYPE = "type"
+    COORDS = "coords"
 
 
 class Fonts:
@@ -47,7 +48,7 @@ class Fonts:
         self.talk_button_font = pg.font.Font(self._button_font_path, self.talk_button_font_size)
         self.ui_text_font_m = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_s = pg.font.Font(self._ui_font_path, 22)
-        self.title_font = pg.font.Font(self._ui_font_path, 60)
+        self.title_font = pg.font.Font(self._ui_font_path, 45)
         self.ui_button_font = pg.font.Font(self._ui_font_path, 40)
 
 class Images:
@@ -67,7 +68,8 @@ class Images:
             PropertyIconID.IMAGE: UI_IMAGES_DIR / "image.png",
             PropertyIconID.LABEL: UI_IMAGES_DIR / "label.png",
             PropertyIconID.MAP_PIN: UI_IMAGES_DIR / "map_pin.png",
-            PropertyIconID.TYPE: UI_IMAGES_DIR / "type.png"
+            PropertyIconID.TYPE: UI_IMAGES_DIR / "type.png",
+            PropertyIconID.COORDS: UI_IMAGES_DIR / "coords.png"
         }
 
 class Assets:
