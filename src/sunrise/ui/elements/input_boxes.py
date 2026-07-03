@@ -53,7 +53,7 @@ class InputBox(Widget):
         self.k_border = k_border
         self.border_w = border_w
 
-    def _handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
+    def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
         # Handle KEYDOWN events
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
