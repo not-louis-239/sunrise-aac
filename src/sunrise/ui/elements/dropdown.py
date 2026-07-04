@@ -45,7 +45,7 @@ class Dropdown(Widget):
 
     def preferred_size(self) -> tuple[int, int]:
         h = self.font.get_height()
-        largest_w = max(self.font.size(opt)[0] for opt in self.options)  # get the option with largest lateral size
+        largest_w = max(self.font.size(opt)[0] for opt in self.options)  # for each option's label, get the largest width
         return (largest_w + self.inset * 2, h + self.inset * 2)
 
     def layout(self, rect: pg.Rect) -> None:

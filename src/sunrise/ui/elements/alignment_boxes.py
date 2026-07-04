@@ -189,7 +189,7 @@ class VBox(_Box):
             y += h + self.gap
 
 class SBox(_Box):
-    """Sized box that forces its child into a fixed size, with alignment"""
+    """Sized box that gives its child a fixed-size slot, with alignment."""
 
     def __init__(
             self, child: Widget, *,
@@ -214,17 +214,10 @@ class SBox(_Box):
         h = self.forced_height if self.forced_height is not None else child_h
         return (w, h)
 
-    def layout(self, rect: pg.Rect):
-        child_rect = rect.copy()
+    def layout(self, rect: pg.Rect) -> None:
+        child_w, child_h = self.child.preferred_size()
+        child_rect = pg.Rect(0, 0, min(child_w, rect.width), min(child_h, rect.height))
 
-        # Clamp child width to forced width
-        if self.forced_width is not None:
-            child_rect.width = min(rect.width, self.forced_width)
-
-        if self.forced_height is not None:
-            child_rect.height = min(rect.height, self.forced_height)
-
-        # Horizontal alignment
         match self.h_align:
             case HAlign.LEFT:
                 child_rect.left = rect.left

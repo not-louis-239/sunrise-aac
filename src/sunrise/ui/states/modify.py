@@ -23,7 +23,8 @@ from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements.input_boxes import InputBox
+from sunrise.ui.elements import Panel, Label, HBox, VBox, SBox, Icon, Spacer, InputBox, HAlign, VAlign, Dropdown, RectangularUIButton
+from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.load_nodes import Button
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
@@ -46,26 +47,124 @@ class ModifyState(State):
 
         ## Set up UI popup
 
-        # Close and proceed buttons
-        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2)
-        self.proceed_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2)
+        # Title label
+        self.title_label = Label(text="Modify Button", font=self.aac_inst.assets.fonts.title_font, flex=1)
 
-        # TODO: finish the UI popup setup
+        # Close and proceed buttons
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, img_path=self.aac_inst.assets.images.exit_icon, border_w=0, k_fg=ThemeKey.FG_ERROR)
+        self.proceed_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, img_path=self.aac_inst.assets.images.proceed_icon, border_w=0, k_fg=ThemeKey.FG_SUCCESS)
+
+        # Input widgets and widgets that need to be updated for each button
+        self.label_input_box = InputBox(flex=1, min_size=(200, 30), font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.coords_label = Label(font=self.aac_inst.assets.fonts.ui_text_font_m)
+        self.move_button = RectangularUIButton(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Move", inset=UI_MARGIN)
+
+        # Put together the main panel
+        self.popup = Panel(
+            horiz_padding=UI_MARGIN,
+            vert_padding=UI_MARGIN,
+
+            # Main VBox
+            child=VBox(
+                gap=UI_MARGIN,
+                children=[
+                    # Title HBox
+                    HBox(
+                        children=[
+                            self.title_label,
+                            self.close_button
+                        ]
+                    ),
+
+                    # Content VBox
+                    VBox(
+                        gap=UI_MARGIN,
+                        children=[
+                            # 1st row
+                            HBox(
+                                gap=UI_MARGIN,
+                                children=[
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.LABEL], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.label_input_box,
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.COORDS], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    SBox(child=self.coords_label, forced_width=100, h_align=HAlign.CENTRE, v_align=VAlign.CENTRE),
+                                    self.move_button
+                                ]
+                            ),
+                            # 2nd row
+                            HBox(
+                                gap=UI_MARGIN,
+                                children=[
+                                ]
+                            ),
+                            # 3rd row
+                            HBox(
+                                gap=UI_MARGIN,
+                                children=[
+                                ]
+                            ),
+                            # 4th row
+                            HBox(
+                                gap=UI_MARGIN,
+                                children=[
+                                ]
+                            )
+                        ]
+                    ),
+
+                    # Spacer
+                    Spacer(flex=1),
+
+                    # Proceed button at bottom
+                    HBox(
+                        children=[
+                            Spacer(flex=1),
+                            self.proceed_button
+                        ]
+                    )
+                ]
+            )
+        )
+
+        self._layout_widgets()
+
+    def _layout_widgets(self) -> None:
+        self.popup.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+
+    def _set_coords_text(self, coords: tuple[int, int] | None) -> None:
+        text = f"({coords[0]}, {coords[1]})" if coords is not None else ""
+        if self.coords_label.text != text:
+            self.coords_label.set_text(text)
+            self._layout_widgets()
 
     def set_button_to_modify(self, button: Button | None, coords: tuple[int, int] | None = None) -> None:
-        # Set the button
         self.button_to_modify = button
 
-        # Pre-fill input fields if the button exists, else leave them blank
-        # TODO: Implement this part of the function
+        if self.button_to_modify is not None:
+            # Update labels
+            self.title_label.set_text(f"Modifying Button '{self.button_to_modify.label}'")
+            self._set_coords_text(self.button_to_modify.coords)
+
+            # Pre-fill input fields if the button exists, else leave them blank
+            # TODO: Implement this part of the function
+        else:
+            self.title_label.set_text("Creating New Button")
+            self._set_coords_text(coords)
+
+        self._layout_widgets()
 
     def update(self, dt_s: float) -> None:
-        pass
+        if self.button_to_modify is not None:
+            self._set_coords_text(self.button_to_modify.coords)
 
     def _handle_left_click(self, event: pg.event.Event) -> None:
+        # Check for dropdown events first
+        # TODO
+
         # Close button
         if self.close_button.check_click(event.pos):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
+            return
 
         # Proceed button
         if self.proceed_button.check_click(event.pos):
@@ -84,7 +183,14 @@ class ModifyState(State):
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self._handle_left_click(event)
 
+        for button in [
+            self.label_input_box
+        ]:
+            button.handle_input(keys=keys, events=events, dt_s=dt_s)
+
     def draw(self, screen: Surface) -> None:
         # Get current theme and draw popup
         theme = self.aac_inst.get_current_theme()
         screen.fill(theme[ThemeKey.BG])
+
+        self.popup.draw(screen, current_theme=theme)
