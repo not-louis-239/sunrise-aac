@@ -44,6 +44,9 @@ class ModifyState(State):
         # Button = existing button to modify
         # None   = no button was selected, so making a new one
         self.button_to_modify: Button | None = None
+        self.target_coords: tuple[int, int] | None = None
+        if self.button_to_modify is not None:
+            self.target_coords = self.button_to_modify.coords
 
         ## Set up UI popup
 
@@ -203,11 +206,29 @@ class ModifyState(State):
         if self.proceed_button.check_click(event.pos):
             # Existing button - update button attributes
             if self.button_to_modify is not None:
-                ...  # TODO
+                self.button_to_modify.label = self.label_input_box.text
+                self.button_to_modify.node = self.node_input_box.text
+                self.button_to_modify.dest = int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None
+                self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
+                self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
+                self.button_to_modify.type = self.type_input_box.text
+                self.button_to_modify.func = self.func_dropdown.selected_value or None
 
             # Creating a new button - save before emitting state change
             else:
-                ...  # TODO
+                assert self.target_coords is not None, "Target coordinates must be set when creating a new button."
+                new_button = Button(
+                    label=self.label_input_box.text,
+                    node=self.node_input_box.text,
+                    dest=int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None,
+                    img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
+                    word=self.word_input_box.text if self.word_input_box.text != "" else None,
+                    type=self.type_input_box.text,
+                    func=self.func_dropdown.selected_value or None,
+                    coords=self.target_coords
+                )
+                node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
+                node.buttons.append(new_button)
 
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
 
