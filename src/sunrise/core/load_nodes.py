@@ -95,13 +95,10 @@ class LanguageTree:
     def add_node(self, node_label: str) -> Node:
         """Initialise a new empty node called `node_label` in
         `self`'s nodes dictionary if it doesn't exist, before returning
-        the new node, or the node if it already exists."""
-        if node_label in self.nodes:
-            return self.nodes[node_label]
-
-        new_node = Node()
-        self.nodes[node_label] = new_node
-        return new_node
+        the new node, or the pre-existing node if it already exists."""
+        if node_label not in self.nodes:
+            self.nodes[node_label] = Node()
+        return self.nodes[node_label]
 
     def serialise_to_json(self) -> dict[str, Any]:
         return {
@@ -216,10 +213,19 @@ def lint_language_tree(lt: LanguageTree) -> list[str]:
             # Check for missing or unreadable image paths
             if button.img is not None:
                 img_path = Path("assets/images") / button.img
-                if not img_path.exists():
+
+                # TODO: test this by attempting to load in a file that is technically "a file" but is nonsense, like text or a video
+
+                try:
+                    img_path.stat()
+                    if not img_path.is_file():
+                        errors.append(_make_error(node_name, button, f"not an image file: {img_path}"))
+                except FileNotFoundError:
                     errors.append(_make_error(node_name, button, f"no such image file: {img_path}"))
-                elif not img_path.is_file():
-                    errors.append(_make_error(node_name, button, f"not an image file: {img_path}"))
+                except PermissionError:
+                    errors.append(_make_error(node_name, button, f"no read permission: {img_path}"))
+                except Exception as e:
+                    errors.append(_make_error(node_name, button, f"read error: {img_path}: {e}"))
 
             # Check for undefined function aliases
             if button.func is not None and button.func not in AACEngine.FUNC_REGISTRY:

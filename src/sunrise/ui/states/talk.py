@@ -303,7 +303,8 @@ class TalkState(State):
             self.aac_inst.bus.emit(EventID.SET_INSPECT_BUTTON, button=button, node_label=node_name)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.INSPECT)
         else:
-            self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=button)
+            # button doesn't exist - open the menu to create a new button
+            self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=button, node=self.aac_inst.engine.current_node, coords=button_coord)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:

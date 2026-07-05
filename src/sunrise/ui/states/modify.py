@@ -45,6 +45,7 @@ class ModifyState(State):
         # None   = no button was selected, so making a new one
         self.button_to_modify: Button | None = None
         self.target_coords: tuple[int, int] | None = None
+
         if self.button_to_modify is not None:
             self.target_coords = self.button_to_modify.coords
 
@@ -70,7 +71,7 @@ class ModifyState(State):
         self.func_dropdown = Dropdown(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN, options=func_options_dict, sentinel="none")
 
         self.coords_label = Label(font=self.aac_inst.assets.fonts.ui_text_font_m)
-        self.move_button = RectangularUIButton(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Move", inset=UI_MARGIN)
+        self.select_coords_button = RectangularUIButton(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Select", inset=UI_MARGIN)
 
         # Put together the main panel
         self.popup = Panel(
@@ -101,7 +102,7 @@ class ModifyState(State):
                                     self.label_input_box,
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.COORDS], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                                     SBox(child=self.coords_label, forced_width=100, h_align=HAlign.CENTRE, v_align=VAlign.CENTRE),
-                                    self.move_button
+                                    self.select_coords_button
                                 ]
                             ),
                             # 2nd row
@@ -163,7 +164,10 @@ class ModifyState(State):
             self.coords_label.set_text(text)
             self._layout_widgets()
 
-    def set_button_to_modify(self, button: Button | None, coords: tuple[int, int] | None = None) -> None:
+    def set_button_to_modify(self, button: Button | None, node: str | None = None, coords: tuple[int, int] | None = None) -> None:
+        if button is None:
+            assert node is not None and coords is not None, "When creating a new button, both node and coords must be provided."
+
         self.button_to_modify = button
 
         if self.button_to_modify is not None:
@@ -183,7 +187,17 @@ class ModifyState(State):
             self.title_label.set_text("Creating New Button")
             self._set_coords_text(coords)
 
+            # Clear all input fields, except node
+            self.label_input_box.text = ""
+            self.node_input_box.text = node or ""
+            self.dest_input_box.text = ""
+            self.img_path_input_box.text = ""
+            self.word_input_box.text = ""
+            self.type_input_box.text = ""
+            self.func_dropdown.set_from_option_str("")
+
         self._layout_widgets()
+        self.target_coords = coords if self.button_to_modify is None else self.button_to_modify.coords
 
     def update(self, dt_s: float) -> None:
         if self.button_to_modify is not None:
@@ -191,6 +205,48 @@ class ModifyState(State):
 
         self.func_dropdown.update(dt_s=dt_s)
         self.func_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
+
+    def _proceed(self) -> None:
+        # Existing button - update button attributes
+        if self.button_to_modify is not None:
+            self.button_to_modify.label = self.label_input_box.text
+            self.button_to_modify.node = self.node_input_box.text
+            self.button_to_modify.dest = int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None
+            self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
+            self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
+            self.button_to_modify.type = self.type_input_box.text
+            self.button_to_modify.func = self.func_dropdown.selected_value or None
+
+            # Move the button to the actual node in the tree
+            if self.button_to_modify.node != self.node_input_box.text:
+                # Remove from old node
+                old_node_label = self.aac_inst.engine.get_node_for_button(self.button_to_modify)
+                if old_node_label is not None:
+                    old_node = self.aac_inst.engine.tree.get(old_node_label)
+                    if old_node:
+                        old_node.buttons.remove(self.button_to_modify)
+
+                # Add to new node
+                new_node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
+                new_node.buttons.append(self.button_to_modify)
+
+        # Creating a new button - save before emitting state change
+        else:
+            assert self.target_coords is not None, "Target coordinates must be set when creating a new button."
+            new_button = Button(
+                label=self.label_input_box.text,
+                node=self.node_input_box.text,
+                dest=int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None,
+                img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
+                word=self.word_input_box.text if self.word_input_box.text != "" else None,
+                type=self.type_input_box.text,
+                func=self.func_dropdown.selected_value or None,
+                coords=self.target_coords
+            )
+            node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
+            node.buttons.append(new_button)
+
+        self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
 
     def _handle_left_click(self, event: pg.event.Event) -> None:
         # Check for dropdown events first
@@ -204,33 +260,8 @@ class ModifyState(State):
 
         # Proceed button
         if self.proceed_button.check_click(event.pos):
-            # Existing button - update button attributes
-            if self.button_to_modify is not None:
-                self.button_to_modify.label = self.label_input_box.text
-                self.button_to_modify.node = self.node_input_box.text
-                self.button_to_modify.dest = int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None
-                self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
-                self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
-                self.button_to_modify.type = self.type_input_box.text
-                self.button_to_modify.func = self.func_dropdown.selected_value or None
-
-            # Creating a new button - save before emitting state change
-            else:
-                assert self.target_coords is not None, "Target coordinates must be set when creating a new button."
-                new_button = Button(
-                    label=self.label_input_box.text,
-                    node=self.node_input_box.text,
-                    dest=int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None,
-                    img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
-                    word=self.word_input_box.text if self.word_input_box.text != "" else None,
-                    type=self.type_input_box.text,
-                    func=self.func_dropdown.selected_value or None,
-                    coords=self.target_coords
-                )
-                node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
-                node.buttons.append(new_button)
-
-            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
+            self._proceed()
+            return
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
