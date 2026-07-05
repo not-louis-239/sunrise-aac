@@ -30,7 +30,7 @@ from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton
 
-from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN, ICON_SIZE
+from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN, ICON_SIZE
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -64,7 +64,7 @@ class ModifyState(State):
         self.dest_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
         self.img_path_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
         self.word_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
-        self.type_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.type_dropdown = Dropdown(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN, options={v: v for v in ALLOWED_BUTTON_TYPES}, sentinel="default")
 
         func_options_dict: dict[str, str | None] = {str(v): v for v in [*self.aac_inst.engine.get_func_options()]}
         func_options_dict[""] = None  # empty string as stand-in for None
@@ -131,7 +131,7 @@ class ModifyState(State):
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                                     self.word_input_box,
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TYPE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.type_input_box,
+                                    self.type_dropdown,
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FUNC], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                                     self.func_dropdown
                                 ]
@@ -181,7 +181,7 @@ class ModifyState(State):
             self.dest_input_box.text = str(self.button_to_modify.dest) if self.button_to_modify.dest is not None else ""
             self.img_path_input_box.text = self.button_to_modify.img if self.button_to_modify.img is not None else ""
             self.word_input_box.text = self.button_to_modify.word if self.button_to_modify.word is not None else ""
-            self.type_input_box.text = self.button_to_modify.type
+            self.type_dropdown.set_from_option_str(self.button_to_modify.type or "default")
             self.func_dropdown.set_from_option_str(self.button_to_modify.func or "")
         else:
             self.title_label.set_text("Creating New Button")
@@ -193,7 +193,7 @@ class ModifyState(State):
             self.dest_input_box.text = ""
             self.img_path_input_box.text = ""
             self.word_input_box.text = ""
-            self.type_input_box.text = ""
+            self.type_dropdown.set_from_option_str("default")
             self.func_dropdown.set_from_option_str("")
 
         self._layout_widgets()
@@ -203,8 +203,9 @@ class ModifyState(State):
         if self.button_to_modify is not None:
             self._set_coords_text(self.button_to_modify.coords)
 
-        self.func_dropdown.update(dt_s=dt_s)
-        self.func_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
+        for dropdown in [self.type_dropdown, self.func_dropdown]:
+            dropdown.update(dt_s=dt_s)
+            dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
 
     def _proceed(self) -> None:
         # Existing button - update button attributes
@@ -214,7 +215,7 @@ class ModifyState(State):
             self.button_to_modify.dest = int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None
             self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
             self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
-            self.button_to_modify.type = self.type_input_box.text
+            self.button_to_modify.type = self.type_dropdown.selected_value or "default"
             self.button_to_modify.func = self.func_dropdown.selected_value or None
 
             # Move the button to the actual node in the tree
@@ -239,7 +240,7 @@ class ModifyState(State):
                 dest=int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None,
                 img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
                 word=self.word_input_box.text if self.word_input_box.text != "" else None,
-                type=self.type_input_box.text,
+                type=self.type_dropdown.selected_value or "default",
                 func=self.func_dropdown.selected_value or None,
                 coords=self.target_coords
             )
@@ -249,9 +250,10 @@ class ModifyState(State):
         self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
 
     def _handle_left_click(self, event: pg.event.Event) -> None:
-        # Check for dropdown events first
-        if self.func_dropdown.handle_left_click(event):
-            return
+        # Check for dropdown events first - closest to bottom-right is handled first as it is drawn last
+        for dropdown in [self.func_dropdown, self.type_dropdown]:
+            if dropdown.handle_left_click(event):
+                return
 
         # Close button
         if self.close_button.check_click(event.pos):
@@ -269,7 +271,12 @@ class ModifyState(State):
                 self._handle_left_click(event)
 
             if event.type == pg.MOUSEWHEEL:
-                self.func_dropdown.handle_scroll(event)
+                for button in [
+                    self.func_dropdown,
+                    self.type_dropdown
+                ]:
+                    if button.handle_scroll(event):
+                        break  # the scroll, once "absorbed" by a dropdown, should not be passed to other widgets
 
         for button in [
             self.label_input_box,
@@ -277,7 +284,6 @@ class ModifyState(State):
             self.dest_input_box,
             self.img_path_input_box,
             self.word_input_box,
-            self.type_input_box,
         ]:
             button.handle_input(keys=keys, events=events, dt_s=dt_s)
 
