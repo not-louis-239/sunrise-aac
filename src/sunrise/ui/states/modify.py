@@ -55,7 +55,17 @@ class ModifyState(State):
         self.proceed_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, img_path=self.aac_inst.assets.images.proceed_icon, border_w=0, k_fg=ThemeKey.FG_SUCCESS)
 
         # Input widgets and widgets that need to be updated for each button
-        self.label_input_box = InputBox(flex=1, min_size=(200, 30), font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.label_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.node_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.dest_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.img_path_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.word_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.type_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+
+        func_options_dict: dict[str, str | None] = {str(v): v for v in [*self.aac_inst.engine.get_func_options()]}
+        func_options_dict[""] = None  # empty string as stand-in for None
+        self.func_dropdown = Dropdown(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN, options=func_options_dict, sentinel="none")
+
         self.coords_label = Label(font=self.aac_inst.assets.fonts.ui_text_font_m)
         self.move_button = RectangularUIButton(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Move", inset=UI_MARGIN)
 
@@ -95,18 +105,31 @@ class ModifyState(State):
                             HBox(
                                 gap=UI_MARGIN,
                                 children=[
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.MAP_PIN], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.node_input_box,
+                                    Icon(img_path=self.aac_inst.assets.images.proceed_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.DEST], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.dest_input_box
                                 ]
                             ),
                             # 3rd row
                             HBox(
                                 gap=UI_MARGIN,
                                 children=[
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.IMAGE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.img_path_input_box,
                                 ]
                             ),
                             # 4th row
                             HBox(
                                 gap=UI_MARGIN,
                                 children=[
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.word_input_box,
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TYPE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.type_input_box,
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FUNC], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.func_dropdown
                                 ]
                             )
                         ]
@@ -146,7 +169,13 @@ class ModifyState(State):
             self._set_coords_text(self.button_to_modify.coords)
 
             # Pre-fill input fields if the button exists, else leave them blank
-            # TODO: Implement this part of the function
+            self.label_input_box.text = self.button_to_modify.label
+            self.node_input_box.text = self.button_to_modify.node
+            self.dest_input_box.text = str(self.button_to_modify.dest) if self.button_to_modify.dest is not None else ""
+            self.img_path_input_box.text = self.button_to_modify.img if self.button_to_modify.img is not None else ""
+            self.word_input_box.text = self.button_to_modify.word if self.button_to_modify.word is not None else ""
+            self.type_input_box.text = self.button_to_modify.type
+            self.func_dropdown.set_from_option_str(self.button_to_modify.func or "")
         else:
             self.title_label.set_text("Creating New Button")
             self._set_coords_text(coords)
@@ -157,9 +186,13 @@ class ModifyState(State):
         if self.button_to_modify is not None:
             self._set_coords_text(self.button_to_modify.coords)
 
+        self.func_dropdown.update(dt_s=dt_s)
+        self.func_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
+
     def _handle_left_click(self, event: pg.event.Event) -> None:
         # Check for dropdown events first
-        # TODO
+        if self.func_dropdown.handle_left_click(event):
+            return
 
         # Close button
         if self.close_button.check_click(event.pos):
@@ -183,8 +216,16 @@ class ModifyState(State):
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self._handle_left_click(event)
 
+            if event.type == pg.MOUSEWHEEL:
+                self.func_dropdown.handle_scroll(event)
+
         for button in [
-            self.label_input_box
+            self.label_input_box,
+            self.node_input_box,
+            self.dest_input_box,
+            self.img_path_input_box,
+            self.word_input_box,
+            self.type_input_box,
         ]:
             button.handle_input(keys=keys, events=events, dt_s=dt_s)
 

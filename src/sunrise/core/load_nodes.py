@@ -50,6 +50,9 @@ class Button:
 
     type: str                # used for button highlighting
 
+    # Where it is
+    node: str
+
     def inspect(self, node_label: str) -> str:
         """Return a formatted string for inspecting the Button object."""
         first_line = f"button {COL_INFO}'{self.label}'{COL_END} @ {COL_INFO}{self.coords}{COL_END} in node {COL_INFO}'{node_label}'{COL_END}"
@@ -154,7 +157,8 @@ def load_language_tree() -> LanguageTree:
                 coords=tuple(button_raw["coords"]),
                 type=button_raw["type"],
                 img=button_raw.get("img", None),
-                immutable=button_raw.get("immutable", False)
+                immutable=button_raw.get("immutable", False),
+                node=node_name
             )
             node_buttons.append(button)
 
@@ -189,7 +193,7 @@ def lint_language_tree(lt: LanguageTree) -> list[str]:
         universal_nodes = {button.coords for button in uni_node.buttons}
 
     # Import here to avoid circular import with aac.engine which imports this module
-    from sunrise.core.engine import AACEngine
+    from engine import AACEngine
 
     for node_name, node in lt.nodes.items():
         if node_name != "UNIVERSAL":

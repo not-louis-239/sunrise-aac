@@ -28,19 +28,21 @@ from sunrise.ui.themes import Theme, ThemeKey
 class InputBox(Widget):
     def __init__(
             self, *,
-            flex: int = 0, min_size: tuple[int, int], font: pg.font.Font, inset: int,
+            flex: int = 0, min_size: tuple[int, int] = (0, 0), font: pg.font.Font, inset: int,
             k_bg: ThemeKey = ThemeKey.BG,
             k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_fg: ThemeKey = ThemeKey.FG,
             k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_cursor: ThemeKey = ThemeKey.FG,
             k_border: ThemeKey = ThemeKey.BORDER,
+            k_sentinel: ThemeKey = ThemeKey.FG_DISABLED,  # sentinel to show in the input box when empty
+            sentinel_text: str = "None",
             border_w: int = BORDER_WIDTH
         ) -> None:
         # Creates a left-aligned InputBox
 
         super().__init__(flex=flex)
-        self.text = ""
+        self.text: str = ""
         self.min_size = min_size
         self.font = font  # needed so that it can auto-adjust text width while drawing
         self.text_inset = inset
@@ -54,6 +56,8 @@ class InputBox(Widget):
         self.k_fg_active = k_fg_active
         self.k_cursor = k_cursor
         self.k_border = k_border
+        self.k_sentinel = k_sentinel
+        self.sentinel_text = sentinel_text
         self.border_w = border_w
 
     def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
@@ -93,13 +97,13 @@ class InputBox(Widget):
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         # Draw the background and border
         k_bg = self.k_bg_active if self.active else self.k_bg
-        k_fg = self.k_fg_active if self.active else self.k_fg
+        k_fg = self.k_sentinel if not self.text else self.k_fg_active if self.active else self.k_fg
 
         pg.draw.rect(surface, current_theme[k_bg], self.rect)
 
         # Text - rendering only last 127 chars for performance
-        last_127_chars = self.text[-127:]
-        text_surf = self.font.render(last_127_chars, True, current_theme[k_fg])
+        text = self.sentinel_text if not self.text else self.text[-127:]
+        text_surf = self.font.render(text, True, current_theme[k_fg])
         text_visual_width = self.rect.width - 2 * self.text_inset
 
         # Draw the text aligned to left-centre
@@ -118,7 +122,7 @@ class InputBox(Widget):
 
         # Draw the cursor
         if self.active and self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
-            cursor_x = self.rect.x + self.text_inset + min(text_visual_width, text_surf.get_width())
+            cursor_x = self.rect.x + self.text_inset + (0 if not self.text else min(text_visual_width, text_surf.get_width()))
             cursor_top_y = self.rect.centery - text_surf.get_height() // 2
             cursor_bot_y = self.rect.centery + text_surf.get_height() // 2
             pg.draw.line(surface, current_theme[self.k_cursor], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)

@@ -34,6 +34,9 @@ class AACEngine:
             return func
         return decorator
 
+    def get_func_options(self) -> list[str]:
+        return list(self.FUNC_REGISTRY.keys())
+
     def __init__(self):
         self.sentence_bar: list[str] = []
         self.history: list[str] = []
