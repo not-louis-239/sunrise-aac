@@ -291,9 +291,11 @@ class Dropdown[T](Widget):
 
     def draw(self, surface: Surface, current_theme: Theme) -> None:
         self._refresh_options_surface(current_theme=current_theme)
-
         self._draw_dropdown_button(surface, current_theme)
+
+    def draw_overlay(self, surface: Surface, current_theme: Theme) -> None:
         if self.active:
+            self._refresh_options_surface(current_theme=current_theme)
             self._draw_dropdown_options(surface, current_theme)
 
     def update(self, dt_s: float) -> None:

@@ -60,6 +60,10 @@ class _Box(Widget):
         for child in self.children:
             child.draw(surface=surface, current_theme=current_theme)
 
+    def draw_overlay(self, surface: pg.Surface, current_theme: Theme) -> None:
+        for child in self.children:
+            child.draw_overlay(surface=surface, current_theme=current_theme)
+
 class HBox(_Box):
     """Horizontal box"""
 

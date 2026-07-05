@@ -61,3 +61,6 @@ class Panel(Widget):
 
         # child
         self.child.draw(surface=surface, current_theme=current_theme)
+
+    def draw_overlay(self, surface: pg.Surface, current_theme: Theme) -> None:
+        self.child.draw_overlay(surface=surface, current_theme=current_theme)

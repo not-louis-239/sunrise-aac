@@ -235,3 +235,4 @@ class ModifyState(State):
         screen.fill(theme[ThemeKey.BG])
 
         self.popup.draw(screen, current_theme=theme)
+        self.popup.draw_overlay(screen, current_theme=theme)

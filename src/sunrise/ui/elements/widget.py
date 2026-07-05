@@ -56,7 +56,20 @@ class Widget(ABC):
         doesn't return anything."""
         raise NotImplementedError
 
+    # NOTE: The order at which UI elements are `draw()`n is based on their order
+    # in their parent container, which goes from left-to-right or top-to-bottom.
+
+    # Hence, a note for myself: input should be "absorbed" by the widgets closest to
+    # the bottom-right first if a click can be registered inside multiple widgets.
+    # This is because the bottom-right widget will be drawn last, and thus will
+    # be on top of the other widgets.
+
     @abstractmethod
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         """Draw myself to the screen."""
         raise NotImplementedError
+
+    def draw_overlay(self, surface: pg.Surface, current_theme: Theme) -> None:
+        """Draw my transient UI elements above the normal layer, such as dropdown menus.
+        Not all UI elements would need this, obviously."""
+        return None
