@@ -79,7 +79,7 @@ class InputBox(Widget):
                         self.text += event.unicode
 
         # Handle delete
-        if keys[pg.K_BACKSPACE]:
+        if keys[pg.K_BACKSPACE] and self.active:
             self.delete_timer -= dt_s
             if self.delete_timer <= 0:
                 self.text = self.text[:-1]

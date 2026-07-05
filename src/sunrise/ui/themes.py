@@ -62,13 +62,13 @@ class Theme:
     fitzgerald_theme: Fitzgerald
 
     def __post_init__(self) -> None:
-        # Enforce that all `ThemeKey`s are present in the mapping
+        """Validate a theme by enforcing that all `ThemeKey`s are present in the mapping"""
         for key in ThemeKey:
             if key not in self.mapping:
                 raise RuntimeError(f"Theme '{self.display_name}' is missing a required key: '{key}'!")
 
     def __getitem__(self, key: ThemeKey) -> Colour:
-        # __getitem__() overload purely for making retrieving mapping contents easier
+        """__getitem__() overload purely for making retrieving mapping contents easier"""
         return self.mapping[key]
 
 
