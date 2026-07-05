@@ -101,6 +101,9 @@ class LanguageTree:
         return self.nodes[node_label]
 
     def serialise_to_json(self) -> dict[str, Any]:
+        # clean the tree before serialising
+        self.gc()
+
         return {
             node_name: {
                 "buttons": [
@@ -119,6 +122,34 @@ class LanguageTree:
             }
             for node_name, node in self.nodes.items()
         }
+
+    def get_reference_counts(self) -> dict[str, int]:
+        """Return a dictionary mapping node names to the number of buttons
+        that reference them as destinations. Useful for warning a user
+        of unreachable nodes."""
+        ref_counts: dict[str, int] = {node_name: 0 for node_name in self.nodes.keys()}
+
+        for node in self.nodes.values():
+            for button in node.buttons:
+                if isinstance(button.dest, str) and button.dest in ref_counts:
+                    ref_counts[button.dest] += 1
+
+        return ref_counts
+
+    def get_unreachable_nodes(self) -> set[str]:
+        """Return a set of node names that are unreachable from any button
+        in the language tree. A node is considered unreachable if it has
+        zero buttons that point to it as a destination."""
+        ref_counts = self.get_reference_counts()
+        unreachable_nodes = {node_name for node_name, count in ref_counts.items() if not count} - {"UNIVERSAL"}
+        return unreachable_nodes
+
+    def gc(self) -> None:
+        """Run garbage collection on the language tree by removing
+        any nodes that contain no buttons."""
+        empty_nodes = [node_name for node_name, node in self.nodes.items() if not node.buttons]
+        for node_name in empty_nodes:
+            del self.nodes[node_name]
 
 def save_language_tree(lt: LanguageTree) -> None:
     """Write the language tree to the nodes.json file, preserving
@@ -238,6 +269,11 @@ def lint_language_tree(lt: LanguageTree) -> list[str]:
             # Check for disallowed/unrecognised button types
             if button.type not in ALLOWED_BUTTON_TYPES:
                 errors.append(_make_error(node_name, button, f"unrecognised button type '{button.type}'"))
+
+    # Warn of unreachable nodes
+    unreachable_nodes = lt.get_unreachable_nodes()
+    for node_name in unreachable_nodes:
+        errors.append(f"{COL_WARN}unreachable node: '{node_name}'{COL_END}")
 
     return errors
 

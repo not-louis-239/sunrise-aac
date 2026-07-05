@@ -19,8 +19,8 @@
 
 from typing import Any, Callable
 
-from .speak import speak, stop_speaking as _stop_speaking
-from .load_nodes import Button, Node, LanguageTree, load_language_tree
+from sunrise.core.speak import speak, stop_speaking as _stop_speaking
+from sunrise.core.load_nodes import Button, LanguageTree, load_language_tree
 
 class AACEngine:
     """The engine class for the AAC talker (AAC = Augmentative and Alternative Communication)."""

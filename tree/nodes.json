@@ -1598,6 +1598,36 @@
                     "immutable": false
                 }
             ]
+        },
+        "ANIMALS": {
+            "buttons": [
+                {
+                    "label": "Cat",
+                    "word": "cat",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Dog",
+                    "word": null,
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                }
+            ]
         }
     }
 }
