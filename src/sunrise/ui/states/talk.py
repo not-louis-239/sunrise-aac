@@ -28,19 +28,21 @@ from .base_states import State
 from sunrise.ui.states.base_states import StateID
 from sunrise.core.bus import EventID
 from sunrise.core.load_nodes import Button, save_language_tree
-from sunrise.core.paths import IMAGES_DIR
+from sunrise.core.paths import IMAGES_DIR, UI_IMAGES_DIR
 from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (
     MOVE_HOLD_DELAY,
 )
 
 from sunrise.ui.themes import ThemeKey
+from sunrise.ui.elements import CircularUIButton
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
     UI_MARGIN,
     BUTTON_GRID_MARGIN,
     BORDER_WIDTH,
+    ICON_SIZE,
     GRID_W,
     GRID_H,
     WN_W,
@@ -244,6 +246,9 @@ class TalkState(State):
         self.button_hold_start_time: float | None = None
         self.last_clicked_pos: tuple[int, int] | None = None
 
+        self.settings_button = CircularUIButton(r=ICON_SIZE // 2, img_path=UI_IMAGES_DIR / "gear.png", font=self.aac_inst.assets.fonts.ui_button_font)
+        self.settings_button.layout(pg.Rect(WN_W - ICON_SIZE - UI_MARGIN, WN_H - ICON_SIZE - UI_MARGIN, ICON_SIZE, ICON_SIZE))
+
     def set_button_to_move(self, button: Button) -> None:
         self.button_to_move = button
 
@@ -260,6 +265,10 @@ class TalkState(State):
                     self.button_to_move = button
 
     def _handle_lmb_click(self, event: pg.event.Event) -> None:
+        if self.settings_button.check_click(event.pos):
+            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
+            return
+
         button_grid_coord = _screen_to_grid_coord(event.pos)
 
         # No valid coordinate - return
@@ -337,3 +346,5 @@ class TalkState(State):
 
         # Draw each of the buttons on the screen
         self.renderer.draw_buttons(screen)
+
+        self.settings_button.draw(screen, current_theme=theme)

@@ -28,7 +28,7 @@ class Dropdown[T](Widget):
             options: dict[str, T],  # {label: value}
             font: pg.font.Font,
             inset: int = 0,
-            sentinel: str,  # sentinel label to display for (1) values in `options` that have empty labels and (2) when such a value is selected
+            sentinel: str = "",  # sentinel label to display for (1) values in `options` that have empty labels and (2) when such a value is selected
             k_bg: ThemeKey = ThemeKey.BG,
             k_fg: ThemeKey = ThemeKey.FG,
             k_border: ThemeKey = ThemeKey.BORDER,

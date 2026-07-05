@@ -26,6 +26,7 @@ from . import (
 
 
 State = base_states.State
+StateID = base_states.StateID
 
 InspectState = inspect.InspectState
 ModifyState = modify.ModifyState

@@ -590,6 +590,32 @@
                     "type": "descriptor",
                     "img": "./icons/food/hungry.png",
                     "immutable": false
+                },
+                {
+                    "label": "Orange",
+                    "word": "orange",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/orange.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Pear",
+                    "word": "pear",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        2
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/pear.png",
+                    "immutable": false
                 }
             ]
         },
@@ -671,6 +697,19 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/drinks/thirsty.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Milkshake",
+                    "word": "milkshake",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/drinks/milkshake.png",
                     "immutable": false
                 }
             ]
