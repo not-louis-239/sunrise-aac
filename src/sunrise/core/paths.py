@@ -32,5 +32,4 @@ UI_IMAGES_DIR = IMAGES_DIR / "ui"
 LOGS_DIR = ROOT_DIR / "logs"
 
 NODES_FILE = ROOT_DIR / "tree" / "nodes.json"
-
-
+CONFIG_FILE = ROOT_DIR / "config" / "config.json"

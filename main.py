@@ -49,6 +49,7 @@ def main():
         for event in events:
             if event.type == pg.QUIT:
                 save_language_tree(aac.engine.tree)
+                aac.quit()
                 running = False
 
         aac.update(dt_s=dt_s)

@@ -196,15 +196,15 @@ class Dropdown[T](Widget):
             idx: int = int(true_h // row_h)
             return idx if 0 <= idx < len(self.options) else None
 
-    def set_from_option_str(self, opt: str) -> None:
+    def set_from_option_str(self, opt_label: str) -> None:
         """Set `self`'s option from an option string.
         If the option is not in `self`'s options, defaults to index 0."""
 
-        if opt not in self.options:
+        if opt_label not in self.options.keys():
             self.chosen_idx = 0
             return
 
-        self.chosen_idx = self._labels().index(opt)
+        self.chosen_idx = self._labels().index(opt_label)
 
     def handle_scroll(self, event: pg.event.Event) -> bool:
         """Handles a scroll event and returns True if something happened, else False."""

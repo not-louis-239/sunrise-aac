@@ -257,6 +257,14 @@ class TalkState(State):
             return
         if self.last_clicked_pos is None:
             return
+
+        if self.aac_inst.engine.current_node == "HOME":
+            self.settings_button.visible = True
+            self.settings_button.active = True
+        else:
+            self.settings_button.visible = False
+            self.settings_button.active = False
+
         if time.time() - self.button_hold_start_time > MOVE_HOLD_DELAY:
             # Valid grid coordinate and button exists -> move the button
             if button_grid_coord := _screen_to_grid_coord(self.last_clicked_pos):
@@ -265,7 +273,7 @@ class TalkState(State):
                     self.button_to_move = button
 
     def _handle_lmb_click(self, event: pg.event.Event) -> None:
-        if self.settings_button.check_click(event.pos):
+        if self.settings_button.check_click(event.pos) and self.settings_button.visible:
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
             return
 

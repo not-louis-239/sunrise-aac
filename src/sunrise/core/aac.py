@@ -20,6 +20,7 @@ import pygame as pg
 from pygame.key import ScancodeWrapper
 
 from sunrise.core.asset_manager import Assets
+from sunrise.core.data_manager import load_config, save_config
 from sunrise.core.engine import AACEngine
 from sunrise.ui.visuals import AACVisuals
 from sunrise.core.bus import Bus, EventID
@@ -39,11 +40,16 @@ class AAC:
         # assets MUST be initialised first
         self.assets = Assets()
 
+        # then config
+        config = load_config()
+        self.visuals = AACVisuals()
+        self.visuals.theme_idx = config['theme_idx']
+
+        # then everything else
         self.bus = Bus()
         self.bus.subscribe(EventID.STATE_CHANGE, self.change_state)
 
         self.engine = AACEngine()
-        self.visuals = AACVisuals()
 
         self.states: dict[StateID, State] = {
             StateID.INSPECT: InspectState(self),
@@ -64,6 +70,9 @@ class AAC:
 
     def take_input(self, keys: ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
         self.states[self.state].take_input(keys=keys, events=events, dt_s=dt_s)
+
+    def quit(self) -> None:
+        save_config(self)
 
     def draw(self, screen: pg.Surface) -> None:
         self.states[self.state].draw(screen=screen)

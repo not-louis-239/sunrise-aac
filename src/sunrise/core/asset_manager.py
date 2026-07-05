@@ -1,4 +1,5 @@
 # asset_manager.py - Asset Manager
+
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 

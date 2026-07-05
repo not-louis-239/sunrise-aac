@@ -37,6 +37,7 @@ class SettingsState(State):
 
         # Theme dropdown
         self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.visuals.theme_idx].display_name)
 
         # Assemble the panel
         self.panel = Panel(
@@ -95,13 +96,12 @@ class SettingsState(State):
                     self._proceed()
                     continue
 
-                self.theme_dropdown.handle_left_click(event)
+                # some settings can be applied immediately, such as theme changes
+                if self.theme_dropdown.handle_left_click(event):
+                    self.aac_inst.visuals.theme_idx = self.theme_dropdown.selected_value
 
             if event.type == pg.MOUSEWHEEL:
                 self.theme_dropdown.handle_scroll(event)
-
-        # some settings can be applied immediately, such as theme changes
-        self.aac_inst.visuals.theme_idx = self.theme_dropdown.selected_value
 
     def draw(self, screen: Surface) -> None:
         theme = self.aac_inst.get_current_theme()

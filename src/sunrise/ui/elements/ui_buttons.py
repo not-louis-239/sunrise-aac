@@ -130,6 +130,9 @@ class CircularUIButton(_UIButton):
         self.rect = rect
 
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
+        if not self.visible:
+            return
+
         k_fg = self.k_fg_active if self.active else self.k_fg
         k_bg = self.k_bg_active if self.active else self.k_bg
 
