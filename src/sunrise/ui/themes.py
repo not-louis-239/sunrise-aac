@@ -34,7 +34,7 @@ class ThemeKey(StrEnum):
     FG_ACTIVE = "FG_ACTIVE"
     FG_ERROR_DISABLED = "FG_ERROR_DISABLED"
     FG_ERROR = "FG_ERROR"
-    FG_ERROR_ACTIVE = "FG_ERR_ACTIVE"
+    FG_ERROR_ACTIVE = "FG_ERROR_ACTIVE"
     FG_WARNING = "FG_WARNING"
     FG_WARNING_ACTIVE = "FG_WARNING_ACTIVE"
     FG_SUCCESS = "FG_SUCCESS"
@@ -96,10 +96,10 @@ THEMES: list[Theme] = [
             verb=(180, 255, 180),
             descriptor=(180, 200, 255),
             social=(240, 180, 255),
-            syntax=(180, 180, 180),
+            syntax=(190, 190, 190),
             system=(240, 240, 240),
-            folder=(200, 200, 200),
-            default=(255, 255, 255),
+            folder=(215, 215, 215),
+            default=(255, 255, 255)
         )
     ),
 
@@ -107,32 +107,32 @@ THEMES: list[Theme] = [
     Theme(
         display_name="Dark",
         mapping={
-            ThemeKey.BG: (50, 50, 50),
-            ThemeKey.BG_ACTIVE: (70, 70, 70),
-            ThemeKey.BG_WARNING: (138, 104, 0),
-            ThemeKey.BG_ERROR: (138, 0, 0),
-            ThemeKey.FG: (255, 255, 255),
-            ThemeKey.FG_DISABLED: (123, 123, 123),
-            ThemeKey.FG_ACTIVE: (255, 255, 255),
-            ThemeKey.FG_ERROR_DISABLED: (140, 70, 70),
-            ThemeKey.FG_ERROR: (255, 0, 0),
-            ThemeKey.FG_ERROR_ACTIVE: (255, 0, 0),
-            ThemeKey.FG_WARNING: (255, 208, 0),
-            ThemeKey.FG_WARNING_ACTIVE: (255, 208, 0),
-            ThemeKey.FG_SUCCESS: (104, 255, 61),
-            ThemeKey.FG_SUCCESS_ACTIVE: (104, 255, 61),
-            ThemeKey.BORDER: (255, 255, 255),
+            ThemeKey.BG: (30, 30, 30),
+            ThemeKey.BG_ACTIVE: (55, 55, 55),
+            ThemeKey.BG_WARNING: (138, 104, 30),
+            ThemeKey.BG_ERROR: (138, 30, 30),
+            ThemeKey.FG: (220, 220, 220),
+            ThemeKey.FG_DISABLED: (100, 100, 100),
+            ThemeKey.FG_ACTIVE: (220, 220, 220),
+            ThemeKey.FG_ERROR_DISABLED: (100, 60, 60),
+            ThemeKey.FG_ERROR: (220, 100, 100),
+            ThemeKey.FG_ERROR_ACTIVE: (220, 100, 100),
+            ThemeKey.FG_WARNING: (220, 180, 0),
+            ThemeKey.FG_WARNING_ACTIVE: (220, 180, 0),
+            ThemeKey.FG_SUCCESS: (154, 220, 127),
+            ThemeKey.FG_SUCCESS_ACTIVE: (154, 220, 127),
+            ThemeKey.BORDER: (220, 220, 220),
         },
         fitzgerald_theme=Fitzgerald(
-            pronoun=(100, 100, 50),
-            noun=(100, 75, 50),
-            verb=(50, 100, 50),
-            descriptor=(50, 65, 100),
-            social=(90, 50, 100),
-            syntax=(70, 70, 70),
-            system=(55, 55, 55),
-            folder=(60, 60, 60),
-            default=(0, 0, 0),
+            pronoun=(120, 120, 30),
+            noun=(120, 70, 30),
+            verb=(30, 120, 30),
+            descriptor=(30, 50, 100),
+            social=(85, 30, 100),
+            syntax=(60, 60, 60),
+            system=(40, 40, 40),
+            folder=(50, 50, 50),
+            default=(30, 30, 30),
         )
     )
 ]
