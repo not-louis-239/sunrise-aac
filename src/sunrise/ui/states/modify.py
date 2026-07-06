@@ -23,7 +23,8 @@ from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import Panel, Label, HBox, VBox, SBox, Icon, Spacer, InputBox, HAlign, VAlign, Dropdown, RectangularUIButton
+from sunrise.core.paths import get_image_path
+from sunrise.ui.elements import Panel, Label, HBox, VBox, SBox, Icon, Spacer, InputBox, ErrorSeverity, HAlign, VAlign, Dropdown, RectangularUIButton
 from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.load_nodes import Button
 from sunrise.core.bus import EventID
@@ -215,7 +216,51 @@ class ModifyState(State):
             dropdown.update(dt_s=dt_s)
             dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
 
+        # input validation
+        self._validate_fields()
+
+    def _validate_fields(self) -> bool:
+        """Validate input fields and return True if they are all correct, else False.
+        Set and remove error messages as applicable."""
+
+        all_valid = True
+
+        if not self.img_path_input_box.text:
+            self.img_path_input_box.clear_error_msg()
+        elif (
+            self.img_path_input_box.text.startswith(".") and not self.img_path_input_box.text.startswith("./")
+            or self.img_path_input_box.text.startswith("./") and self.img_path_input_box.text[2:].startswith(".")
+        ):
+            all_valid = False
+            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"'{self.img_path_input_box.text}' is not a valid path for an image. Please choose a different path.")
+        elif len(self.img_path_input_box.text) != len(self.img_path_input_box.text.strip()):
+            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg="Leading or trailing whitespace in image path.")
+        elif self.img_path_input_box.text and not any(self.img_path_input_box.text.endswith(s) for s in [".png", ".jpg", ".jpeg", ".svg"]):
+            all_valid = False
+            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg="Unsupported image format. Please use .png, .jpg, .jpeg, or .svg.")
+        else:
+            path = get_image_path(self.img_path_input_box.text)
+            if not path.exists():
+                self.img_path_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Image not found: '{self.img_path_input_box.text}'")
+            elif not path.is_file():
+                self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"'{self.img_path_input_box.text}' is not a file")
+            else:
+                self.img_path_input_box.clear_error_msg()
+
+        if not self.label_input_box.text:
+            all_valid = False
+            self.label_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg="Please provide a label.")
+        elif len(self.label_input_box.text) != len(self.label_input_box.text.strip()):
+            self.label_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg="Leading or trailing spaces in label.")
+        else:
+            self.label_input_box.clear_error_msg()
+
+        return all_valid
+
     def _proceed(self) -> None:
+        if not self._validate_fields():
+            return
+
         self.aac_inst.bus.emit(EventID.CLEAR_MOVE_STATE)
 
         # Existing button - update button attributes

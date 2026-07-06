@@ -85,6 +85,10 @@ class InputBox(Widget):
         self.severity = severity
         self.error_tooltip_msg = msg
 
+    def clear_error_msg(self) -> None:
+        self.severity = ErrorSeverity.OK
+        self.error_tooltip_msg = None
+
     def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
         if self.active:
             self.cursor_flash_time = (self.cursor_flash_time + dt_s) % CURSOR_FLASH_INTERVAL
@@ -192,7 +196,7 @@ class InputBox(Widget):
         text = crop_text_to_fit(text=self.error_tooltip_msg, font=self.font, maxwidth=self.rect.width - 2 * self.inset)
         fg_colour = current_theme[self.k_fg]
         text_surf = self.font.render(text, True, fg_colour)
-        text_topleft = (self.rect.x + self.inset, self.rect.centery - text_surf.get_height() // 2)
+        text_topleft = (self.rect.x + self.inset, self.rect.centery + self.rect.height - text_surf.get_height() // 2)
         surface.blit(text_surf, text_topleft)
 
         # Draw the border
@@ -200,4 +204,6 @@ class InputBox(Widget):
 
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
         self._draw_input_field(surface, current_theme)
+
+    def draw_overlay(self, surface: pg.Surface, current_theme: Theme) -> None:
         self._draw_error_tooltip(surface, current_theme)

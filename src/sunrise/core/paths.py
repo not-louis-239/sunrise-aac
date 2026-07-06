@@ -33,3 +33,13 @@ LOGS_DIR = ROOT_DIR / "logs"
 
 NODES_FILE = ROOT_DIR / "tree" / "nodes.json"
 CONFIG_FILE = ROOT_DIR / "config" / "config.json"
+
+
+def get_image_path(rel_path: str) -> Path:
+    """Get the full path for a relative path that a Button may contain.
+    Relative path is relative to assets/images, e.g. './food/apple.png'.
+    This doesn't check for if the path is actually valid."""
+
+    clean_rel_path = rel_path[2:] if rel_path.startswith("./") else rel_path
+    path = IMAGES_DIR / clean_rel_path
+    return path

@@ -41,6 +41,7 @@ Label = labels.Label
 Icon = icon.Icon
 
 InputBox = input_boxes.InputBox
+ErrorSeverity = input_boxes.ErrorSeverity
 Dropdown = dropdown.Dropdown
 
 CircularUIButton = ui_buttons.CircularUIButton

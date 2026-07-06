@@ -28,7 +28,7 @@ from .base_states import State
 from sunrise.ui.states.base_states import StateID
 from sunrise.core.bus import EventID
 from sunrise.core.load_nodes import Button, save_language_tree
-from sunrise.core.paths import IMAGES_DIR, UI_IMAGES_DIR
+from sunrise.core.paths import UI_IMAGES_DIR, get_image_path
 from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (
     MOVE_HOLD_DELAY,
@@ -126,11 +126,10 @@ class _Renderer:
         a relative path.
         Relative path is relative to assets/images,
         e.g. './food/apple.png'.
-        If the file is not accessible (e.g. doesn't exist, permission denied),
+        If the file is not accessible (e.g. doesn't exist, permission denied, not a file),
         return None."""
 
-        clean_rel_path = rel_path.lstrip("./") if rel_path.startswith("./") else rel_path
-        path = IMAGES_DIR / clean_rel_path
+        path = get_image_path(rel_path)
 
         if not path.exists():
             return None

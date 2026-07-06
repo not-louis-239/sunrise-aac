@@ -63,12 +63,6 @@ class Theme:
     mapping: dict[ThemeKey, Colour]
     fitzgerald_theme: Fitzgerald
 
-    def __post_init__(self) -> None:
-        """Validate a theme by enforcing that all `ThemeKey`s are present in the mapping"""
-        for key in ThemeKey:
-            if key not in self.mapping:
-                raise RuntimeError(f"Theme '{self.display_name}' is missing a required key: '{key}'!")
-
     def __getitem__(self, key: ThemeKey) -> Colour:
         """__getitem__() overload purely for making retrieving mapping contents easier"""
         return self.mapping[key]
@@ -82,6 +76,8 @@ THEMES: list[Theme] = [
         mapping={
             ThemeKey.BG: (255, 255, 255),
             ThemeKey.BG_ACTIVE: (240, 240, 240),
+            ThemeKey.BG_WARNING: (255, 231, 170),
+            ThemeKey.BG_ERROR: (255, 170, 170),
             ThemeKey.FG: (0, 0, 0),
             ThemeKey.FG_DISABLED: (170, 170, 170),
             ThemeKey.FG_ACTIVE: (0, 0, 0),
@@ -113,6 +109,8 @@ THEMES: list[Theme] = [
         mapping={
             ThemeKey.BG: (50, 50, 50),
             ThemeKey.BG_ACTIVE: (70, 70, 70),
+            ThemeKey.BG_WARNING: (138, 104, 0),
+            ThemeKey.BG_ERROR: (138, 0, 0),
             ThemeKey.FG: (255, 255, 255),
             ThemeKey.FG_DISABLED: (123, 123, 123),
             ThemeKey.FG_ACTIVE: (255, 255, 255),
@@ -138,6 +136,24 @@ THEMES: list[Theme] = [
         )
     )
 ]
+
+# Runtime check that all `Theme`s are complete
+bad: list[tuple[Theme, list[ThemeKey]]] = []  # (theme, missing_keys)
+
+for theme in THEMES:
+    missing_keys = [key for key in ThemeKey if key not in theme.mapping]
+    if missing_keys:
+        bad.append((theme, missing_keys))
+
+if bad:
+    err_msg = f"The following themes are missing required keys:\n\n"
+
+    for theme, missing in bad:
+        err_msg += f"{theme.display_name}:\n"
+        err_msg += "".join(f"  - {key}\n" for key in missing)
+
+    raise RuntimeError(err_msg)
+
 
 def _test():
     BOLD = "\033[1m"
