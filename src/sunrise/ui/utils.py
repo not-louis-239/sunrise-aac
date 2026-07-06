@@ -79,5 +79,9 @@ class AmbientMessage:
 
     def update(self, dt_s: float) -> None:
         self.duration = max(0, self.duration - dt_s)
-        if not self.duration:
+        if not self.active:
             self.clear()
+
+    @property
+    def active(self) -> bool:
+        return self.duration > 0

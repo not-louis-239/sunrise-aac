@@ -36,6 +36,7 @@ from sunrise.core.constants import (
 
 from sunrise.ui.themes import ThemeKey
 from sunrise.ui.elements import CircularUIButton
+from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
@@ -118,6 +119,7 @@ class _Renderer:
     def __init__(self, assets: Assets, aac_inst: AAC):
         self.aac_inst = aac_inst
         self.assets = assets
+        self.ambient_msg = AmbientMessage()
 
     def retrieve_img(self, rel_path: str) -> Surface | None:
         """Load an image from an images manager and
@@ -208,13 +210,22 @@ class _Renderer:
         # If in moving state, display instructions in the sentence bar, then early return
         if is_selecting_coords:
             instruction_pos = (WN_W // 2, SENTENCE_BAR_H // 2)
-            draw_text(
-                surface=screen, pos=instruction_pos,
-                horiz_align='centre', vert_align='centre',
-                font_family=self.assets.fonts.ui_text_font_s,
-                text="Click on an empty spot to select a position for the button you are modifying, or Escape to cancel.",
-                colour=theme[ThemeKey.FG]
-            )
+            if self.ambient_msg.active:
+                draw_text(
+                    surface=screen, pos=instruction_pos,
+                    horiz_align='centre', vert_align='centre',
+                    font_family=self.assets.fonts.ui_text_font_s,
+                    text=self.ambient_msg.text,
+                    colour=theme[self.ambient_msg.k_fg]
+                )
+            else:
+                draw_text(
+                    surface=screen, pos=instruction_pos,
+                    horiz_align='centre', vert_align='centre',
+                    font_family=self.assets.fonts.ui_text_font_s,
+                    text="Click on an empty spot to select a position for the button you are modifying, or Escape to cancel.",
+                    colour=theme[ThemeKey.FG]
+                )
             return
 
         if in_moving_state:
@@ -278,9 +289,12 @@ class TalkState(State):
         self.button_to_move = button
 
     def update(self, dt_s: float) -> None:
-        if self.button_hold_start_time is None:
-            return
-        if self.last_clicked_pos is None:
+        if self.is_selecting_coords:
+            self.renderer.ambient_msg.update(dt_s=dt_s)
+        else:
+            self.renderer.ambient_msg.clear()
+
+        if self.button_hold_start_time is None or self.last_clicked_pos is None:
             return
 
         if self.aac_inst.engine.current_node == "HOME":
@@ -308,17 +322,20 @@ class TalkState(State):
         if button_grid_coord is None:
             return
 
+        # Get the actual Button object lying at `button_coord`
+        button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
 
         if self.is_selecting_coords:
-            self.clear_move_state()
-            self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
-            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+            if button:
+                # Button already exists there -> invalid coordinate
+                self.renderer.ambient_msg.set_msg("This position is already occupied. Please choose an empty position.", k_fg=ThemeKey.FG_ERROR)
+            else:
+                self.clear_move_state()
+                self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
+                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
             return
 
         if self.button_to_move:
-            # Get the actual Button object lying at `button_coord`
-            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
-
             if button:
                 # Valid button - swap the button to move with the button that just got clicked
                 button.coords, self.button_to_move.coords = self.button_to_move.coords, button.coords
