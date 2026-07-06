@@ -1828,8 +1828,8 @@
                     "immutable": false
                 },
                 {
-                    "label": "Thank you",
-                    "word": "thank you",
+                    "label": "Thank",
+                    "word": "thank",
                     "dest": null,
                     "func": null,
                     "coords": [
@@ -1851,6 +1851,97 @@
                     ],
                     "type": "social",
                     "img": "./icons/extra_words/sorry.png",
+                    "immutable": false
+                },
+                {
+                    "label": "How",
+                    "word": "how",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Are",
+                    "word": "are",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Hello",
+                    "word": "hello",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        1
+                    ],
+                    "type": "social",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Goodbye",
+                    "word": "goodbye",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        1
+                    ],
+                    "type": "social",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "What's up?",
+                    "word": "what's up",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        1
+                    ],
+                    "type": "social",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "?",
+                    "word": "?",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "!",
+                    "word": "!",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
                     "immutable": false
                 }
             ]

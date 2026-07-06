@@ -433,7 +433,14 @@ class TalkState(State):
         screen.fill(theme[ThemeKey.BG])
 
         # Draw sentence bar
-        self.renderer.draw_sentence_bar(screen, in_moving_state=self.button_to_move is not None, is_selecting_coords=self.is_selecting_coords)
+        self.renderer.draw_sentence_bar(
+            screen,
+            in_moving_state=(
+                self.button_to_move is not None
+                or self.button_hold_start_time is not None and time.time() - self.button_hold_start_time > MOVE_HOLD_DELAY
+            ),
+            is_selecting_coords=self.is_selecting_coords
+        )
 
         # Draw each of the buttons on the screen
         self.renderer.draw_buttons(screen)
