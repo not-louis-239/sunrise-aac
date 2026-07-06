@@ -25,6 +25,8 @@ class ThemeKey(StrEnum):
     # Background
     BG = "BG"
     BG_ACTIVE = "BG_ACTIVE"
+    BG_WARNING = "BG_WARNING"
+    BG_ERROR = "BG_ERROR"
 
     # Foreground
     FG = "FG"

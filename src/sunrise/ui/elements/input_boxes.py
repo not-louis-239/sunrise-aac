@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from enum import StrEnum
 
 import pygame as pg
 from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
@@ -23,6 +24,13 @@ from sunrise.ui.constants import BORDER_WIDTH, CURSOR_WIDTH, CURSOR_FLASH_INTERV
 
 from .widget import Widget
 from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.utils import crop_text_to_fit
+
+
+class ErrorSeverity(StrEnum):
+    OK = "OK"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
 
 
 class InputBox(Widget):
@@ -35,6 +43,10 @@ class InputBox(Widget):
             k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_cursor: ThemeKey = ThemeKey.FG,
             k_border: ThemeKey = ThemeKey.BORDER,
+            k_bg_warning: ThemeKey = ThemeKey.BG_WARNING,
+            k_bg_error: ThemeKey = ThemeKey.BG_ERROR,
+            k_border_warning: ThemeKey = ThemeKey.FG_WARNING,
+            k_border_error: ThemeKey = ThemeKey.FG_ERROR,
             k_sentinel: ThemeKey = ThemeKey.FG_DISABLED,  # sentinel to show in the input box when empty
             sentinel_text: str = "None",
             border_w: int = BORDER_WIDTH
@@ -45,7 +57,7 @@ class InputBox(Widget):
         self.text: str = ""
         self.min_size = min_size
         self.font = font  # needed so that it can auto-adjust text width while drawing
-        self.text_inset = inset
+        self.inset = inset
         self.active = False
         self.delete_timer: float = DELETE_DELAY
         self.cursor_flash_time: float = 0
@@ -56,9 +68,22 @@ class InputBox(Widget):
         self.k_fg_active = k_fg_active
         self.k_cursor = k_cursor
         self.k_border = k_border
+        self.k_bg_warning = k_bg_warning
+        self.k_bg_error = k_bg_error
+        self.k_border_warning = k_border_warning
+        self.k_border_error = k_border_error
         self.k_sentinel = k_sentinel
+
+        self.severity: ErrorSeverity = ErrorSeverity.OK
+        # Can be for error messages, but also can be used to display tooltips below `self` when `self.severity` is set to `OK`
+        self.error_tooltip_msg: str | None = None
+
         self.sentinel_text = sentinel_text
         self.border_w = border_w
+
+    def set_error_msg(self, severity: ErrorSeverity = ErrorSeverity.OK, msg: str | None = None) -> None:
+        self.severity = severity
+        self.error_tooltip_msg = msg
 
     def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
         if self.active:
@@ -94,7 +119,9 @@ class InputBox(Widget):
     def layout(self, rect) -> None:
         self.rect = rect
 
-    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
+    def _draw_input_field(self, surface: pg.Surface, current_theme: Theme) -> None:
+        """Draw the part of `self` that the user can click"""
+
         # Draw the background and border
         k_bg = self.k_bg_active if self.active else self.k_bg
         k_fg = self.k_sentinel if not self.text else self.k_fg_active if self.active else self.k_fg
@@ -104,11 +131,11 @@ class InputBox(Widget):
         # Text - rendering only last 127 chars for performance
         text = self.sentinel_text if not self.text else self.text[-127:]
         text_surf = self.font.render(text, True, current_theme[k_fg])
-        text_visual_width = self.rect.width - 2 * self.text_inset
+        text_visual_width = self.rect.width - 2 * self.inset
 
         # Draw the text aligned to left-centre
         dest = (
-            self.rect.x + self.text_inset,
+            self.rect.x + self.inset,
             self.rect.centery - text_surf.get_height() // 2,
         )
         source_rect = pg.Rect(
@@ -122,10 +149,55 @@ class InputBox(Widget):
 
         # Draw the cursor
         if self.active and self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
-            cursor_x = self.rect.x + self.text_inset + (0 if not self.text else min(text_visual_width, text_surf.get_width()))
+            cursor_x = self.rect.x + self.inset + (0 if not self.text else min(text_visual_width, text_surf.get_width()))
             cursor_top_y = self.rect.centery - text_surf.get_height() // 2
             cursor_bot_y = self.rect.centery + text_surf.get_height() // 2
             pg.draw.line(surface, current_theme[self.k_cursor], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)
 
         # Border
-        pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)
+        match self.severity:
+            case ErrorSeverity.ERROR:
+                border_colour = current_theme[self.k_border_error]
+            case ErrorSeverity.WARNING:
+                border_colour = current_theme[self.k_border_warning]
+            case ErrorSeverity.OK:
+                border_colour = current_theme[self.k_border]
+
+        pg.draw.rect(surface, border_colour, self.rect, width=self.border_w)
+
+    def _draw_error_tooltip(self, surface: pg.Surface, current_theme: Theme) -> None:
+        """Draws the error tooltip for the input field just below `self`,
+        but skip drawing if `self` is not active."""
+
+        if not self.active or not self.error_tooltip_msg:
+            return
+
+        match self.severity:
+            case ErrorSeverity.ERROR:
+                border_colour = current_theme[self.k_border_error]
+                tooltip_bg_colour = current_theme[self.k_bg_error]
+            case ErrorSeverity.WARNING:
+                border_colour = current_theme[self.k_border_warning]
+                tooltip_bg_colour = current_theme[self.k_bg_warning]
+            case ErrorSeverity.OK:
+                border_colour = current_theme[self.k_border]
+                tooltip_bg_colour = current_theme[self.k_bg]
+
+        tooltip_rect = pg.Rect(self.rect.left, self.rect.bottom, self.rect.w, self.rect.h)
+
+        # Draw the background
+        pg.draw.rect(surface, tooltip_bg_colour, tooltip_rect)
+
+        # Draw the text
+        text = crop_text_to_fit(text=self.error_tooltip_msg, font=self.font, maxwidth=self.rect.width - 2 * self.inset)
+        fg_colour = current_theme[self.k_fg]
+        text_surf = self.font.render(text, True, fg_colour)
+        text_topleft = (self.rect.x + self.inset, self.rect.centery - text_surf.get_height() // 2)
+        surface.blit(text_surf, text_topleft)
+
+        # Draw the border
+        pg.draw.rect(surface, border_colour, tooltip_rect, width=self.border_w)
+
+    def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
+        self._draw_input_field(surface, current_theme)
+        self._draw_error_tooltip(surface, current_theme)
