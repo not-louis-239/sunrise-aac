@@ -508,6 +508,19 @@
                     "type": "pronoun",
                     "img": null,
                     "immutable": false
+                },
+                {
+                    "label": "To",
+                    "word": "to",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        1
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
                 }
             ]
         },

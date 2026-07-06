@@ -217,7 +217,12 @@ class ModifyState(State):
             dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
 
         # input validation
-        self._validate_fields()
+        valid = self._validate_fields()
+        if not valid:
+            self.proceed_button.k_fg = ThemeKey.FG_DISABLED
+        else:
+            self.proceed_button.k_fg = ThemeKey.FG_SUCCESS
+
         # TODO: stop validating every frame
         # it works for now because validation is quick (≤0.1ms/f), but doing this every frame can eat into frame rate potentially
 
