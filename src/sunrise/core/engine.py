@@ -49,11 +49,14 @@ class AACEngine:
     """The engine class for the AAC talker (AAC = Augmentative and Alternative Communication)."""
 
     FUNC_REGISTRY: dict[str, Callable[[Any], None]] = {}
+    INFLECTION_FUNCS: dict[str, lm.Inflection] = {}  # takes the function alias, points to the inflection enum entry
 
     @classmethod
-    def register(cls, func_alias: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def register(cls, func_alias: str, *, inf: lm.Inflection | None = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
             AACEngine.FUNC_REGISTRY[func_alias] = func
+            if inf is not None:
+                AACEngine.INFLECTION_FUNCS[func_alias] = inf
             return func
         return decorator
 
@@ -120,9 +123,11 @@ class AACEngine:
             self.sentence_bar.append(Word(word=button.word))
 
         # If no word or dest, the button must have a function call inside of it
-        if button.func is not None:
-            func = AACEngine.FUNC_REGISTRY.get(button.func)
-            if func is not None:
+        if button.func is not None and (func := AACEngine.FUNC_REGISTRY.get(button.func)) is not None:
+            if (inf := self.INFLECTION_FUNCS.get(button.func)) is not None:
+                if self.sentence_bar[-1].inflection_is_valid(inf):
+                    func(self)
+            else:
                 func(self)
 
 # Now for registry functions
@@ -148,28 +153,28 @@ def stop_speaking(self: AACEngine) -> None:
     """Stop any currently playing speech immediately."""
     _stop_speaking()
 
-@AACEngine.register("pluralise")
+@AACEngine.register("pluralise", inf=lm.Inflection.PLURAL)
 def pluralise(self: AACEngine) -> None:
     """Add an 's' to the last word in the sentence bar"""
     if not self.sentence_bar:
         return
     self.sentence_bar[-1].transform(inf=lm.Inflection.PLURAL)
 
-@AACEngine.register("gerundise")
+@AACEngine.register("gerundise", inf=lm.Inflection.GERUND)
 def gerundise(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its gerund form."""
     if not self.sentence_bar:
         return
     self.sentence_bar[-1].transform(inf=lm.Inflection.GERUND)
 
-@AACEngine.register("make_past_tense")
+@AACEngine.register("make_past_tense", inf=lm.Inflection.PAST)
 def make_past_tense(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its past tense."""
     if not self.sentence_bar:
         return
     self.sentence_bar[-1].transform(inf=lm.Inflection.PAST)
 
-@AACEngine.register("agenticise")
+@AACEngine.register("agenticise", inf=lm.Inflection.AGENTIC)
 def agenticise(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its agentic form."""
     if not self.sentence_bar:

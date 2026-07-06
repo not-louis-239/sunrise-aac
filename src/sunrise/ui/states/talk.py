@@ -206,9 +206,23 @@ class _Renderer:
         else:
             font = self.aac_inst.assets.fonts.talk_button_font
 
+        # Decide the colour of the button foreground - grey it out if it is
+        # a button that applies an inflection, but it is invalid for
+        # the current word
+        k_fg = ThemeKey.FG
+
+        if button.func is not None and (inf := self.aac_inst.engine.INFLECTION_FUNCS.get(button.func)) is not None:
+            if not self.aac_inst.engine.sentence_bar:
+                k_fg = ThemeKey.FG_DISABLED
+            else:
+                last_word = self.aac_inst.engine.sentence_bar[-1]
+                is_allowed = last_word.inflection_is_valid(inf)
+                if not is_allowed:
+                    k_fg = ThemeKey.FG_DISABLED
+
         draw_text(
             surface=screen, pos=(text_centre_x, text_y),
-            horiz_align="centre", vert_align="top" if img else "centre", colour=theme[ThemeKey.FG],
+            horiz_align="centre", vert_align="top" if img else "centre", colour=theme[k_fg],
             text=str(button.label), font_family=font
         )
 
