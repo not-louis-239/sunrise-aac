@@ -218,6 +218,8 @@ class ModifyState(State):
 
         # input validation
         self._validate_fields()
+        # TODO: stop validating every frame
+        # it works for now because validation is quick (≤0.1ms/f), but doing this every frame can eat into frame rate potentially
 
     def _validate_fields(self) -> bool:
         """Validate input fields and return True if they are all correct, else False.
@@ -227,7 +229,7 @@ class ModifyState(State):
 
         # Validate image path
         if not self.img_path_input_box.text:
-            self.img_path_input_box.clear_error_msg()
+            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.OK, msg="Tip: Image path is relaive to assets/images.")
         elif (
             self.img_path_input_box.text.startswith(".") and not self.img_path_input_box.text.startswith("./")
             or self.img_path_input_box.text.startswith("./") and self.img_path_input_box.text[2:].startswith(".")
@@ -257,6 +259,14 @@ class ModifyState(State):
         else:
             self.label_input_box.clear_error_msg()
 
+        # Warn if the user is attempting to place a button in a node that either doesn't exist or has no references to it.
+        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text in self.aac_inst.engine.tree.get_unreachable_nodes():
+            self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{self.node_input_box.text}'")
+        else:
+            self.node_input_box.clear_error_msg()
+
+        self.dest_input_box.set_error_msg(severity=ErrorSeverity.OK, msg="Tip: Nodes that don't exist are automatically created when navigated to.")
+
         return all_valid
 
     def _proceed(self) -> None:
@@ -265,43 +275,53 @@ class ModifyState(State):
 
         self.aac_inst.bus.emit(EventID.CLEAR_MOVE_STATE)
 
+        # Normalise values first
+        label_norm = self.label_input_box.text.strip()
+        node_norm = self.node_input_box.text.strip()
+        dest_norm = _safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None
+        img_norm = self.img_path_input_box.text if self.img_path_input_box.text else None
+        word_norm = self.word_input_box.text if self.word_input_box.text else None
+        type_norm = self.type_dropdown.selected_value or "default"
+        func_norm = self.func_dropdown.selected_value or None
+        coords = self.target_coords
+
         # Existing button - update button attributes
         if self.button_to_modify is not None:
-            self.button_to_modify.label = self.label_input_box.text
-            self.button_to_modify.node = self.node_input_box.text
-            self.button_to_modify.dest = _safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None
-            self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
-            self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
-            self.button_to_modify.type = self.type_dropdown.selected_value or "default"
-            self.button_to_modify.func = self.func_dropdown.selected_value or None
-            self.button_to_modify.coords = self.target_coords
-
             # Move the button to the actual node in the tree
             if self.button_to_modify.node != self.node_input_box.text:
                 # Remove from old node
                 old_node_label = self.aac_inst.engine.get_node_for_button(self.button_to_modify)
                 if old_node_label is not None:
-                    old_node = self.aac_inst.engine.tree.get(old_node_label)
-                    if old_node:
+                    if old_node := self.aac_inst.engine.tree.get(old_node_label):
                         old_node.buttons.remove(self.button_to_modify)
 
                 # Add to new node
                 new_node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
                 new_node.buttons.append(self.button_to_modify)
 
+            # Update button attributes
+            self.button_to_modify.label = label_norm
+            self.button_to_modify.node = node_norm
+            self.button_to_modify.dest = dest_norm
+            self.button_to_modify.img = img_norm
+            self.button_to_modify.word = word_norm
+            self.button_to_modify.type = type_norm
+            self.button_to_modify.func = func_norm
+            self.button_to_modify.coords = coords
+
         # Creating a new button - save before emitting state change
         else:
             assert self.target_coords is not _COORDS_SENTINEL, "Target coordinates must be set when creating a new button."
 
             new_button = Button(
-                label=self.label_input_box.text,
-                node=self.node_input_box.text,
-                dest=_safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None,
-                img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
-                word=self.word_input_box.text if self.word_input_box.text != "" else None,
-                type=self.type_dropdown.selected_value or "default",
-                func=self.func_dropdown.selected_value or None,
-                coords=self.target_coords
+                label=label_norm,
+                node=node_norm,
+                dest=dest_norm,
+                img=img_norm,
+                word=word_norm,
+                type=type_norm,
+                func=func_norm,
+                coords=coords
             )
 
             node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
