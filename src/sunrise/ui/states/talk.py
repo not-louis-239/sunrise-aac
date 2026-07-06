@@ -293,9 +293,6 @@ class TalkState(State):
         else:
             self.renderer.ambient_msg.clear()
 
-        if self.button_hold_start_time is None or self.last_clicked_pos is None:
-            return
-
         if self.aac_inst.engine.current_node == "HOME":
             self.settings_button.visible = True
             self.settings_button.active = True
@@ -303,28 +300,17 @@ class TalkState(State):
             self.settings_button.visible = False
             self.settings_button.active = False
 
-        if time.time() - self.button_hold_start_time > MOVE_HOLD_DELAY:
-            # Valid grid coordinate and button exists -> move the button
-            if button_grid_coord := _screen_to_grid_coord(self.last_clicked_pos):
-                if button := _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord):
-                    self.button_hold_start_time = None
-                    self.button_to_move = button
-
     def _handle_lmb_click(self, event: pg.event.Event) -> None:
         if self.settings_button.check_click(event.pos) and self.settings_button.visible:
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
             return
 
         button_grid_coord = _screen_to_grid_coord(event.pos)
-
-        # No valid coordinate - return
         if button_grid_coord is None:
             return
 
-        # Get the actual Button object lying at `button_coord`
-        button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
-
         if self.is_selecting_coords:
+            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
             if button:
                 # Button already exists there -> invalid coordinate
                 self.renderer.ambient_msg.set_msg("This position is already occupied. Please choose an empty position.", k_fg=ThemeKey.FG_ERROR)
@@ -335,6 +321,7 @@ class TalkState(State):
             return
 
         if self.button_to_move:
+            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
             if button:
                 # Valid button - swap the button to move with the button that just got clicked
                 button.coords, self.button_to_move.coords = self.button_to_move.coords, button.coords
@@ -346,11 +333,6 @@ class TalkState(State):
             self.button_to_move = None
             self.button_hold_start_time = None
             return
-
-        # Handle normal button press (not in move mode)
-        if (button := _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)):
-            if self.button_hold_start_time is not None and time.time() - self.button_hold_start_time < MOVE_HOLD_DELAY:
-                self.aac_inst.engine.on_button_press(button)
 
     def _handle_rmb_click(self, event: pg.event.Event) -> None:
         if self.button_to_move:
@@ -373,6 +355,57 @@ class TalkState(State):
             self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=button, node=self.aac_inst.engine.current_node, coords=button_coord)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
 
+    def _handle_lmb_release(self, event: pg.event.Event) -> None:
+        if self.button_hold_start_time is None or self.last_clicked_pos is None:
+            return
+
+        if self.button_to_move:
+            dest_button_coord = _screen_to_grid_coord(event.pos)
+            if dest_button_coord is None:
+                return
+
+            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), dest_button_coord)
+            if button:
+                button.coords, self.button_to_move.coords = self.button_to_move.coords, button.coords
+            else:
+                self.button_to_move.coords = dest_button_coord
+
+            save_language_tree(self.aac_inst.engine.tree)
+            self.button_to_move = None
+            self.button_hold_start_time = None
+            return
+
+        held_duration = time.time() - self.button_hold_start_time
+        if held_duration >= MOVE_HOLD_DELAY:
+            grid_coord = _screen_to_grid_coord(self.last_clicked_pos)
+            if grid_coord is not None and (button := _get_button_at_pos(self.aac_inst.engine.current_buttons(), grid_coord)):
+                self.button_to_move = button
+            return
+
+        if self.settings_button.check_click(self.last_clicked_pos) and self.settings_button.visible:
+            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
+            return
+
+        pressed_button_coord = _screen_to_grid_coord(self.last_clicked_pos)
+        if pressed_button_coord is None:
+            return
+
+        if self.is_selecting_coords:
+            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), pressed_button_coord)
+            if button:
+                self.renderer.ambient_msg.set_msg(
+                    "This position is already occupied. Please choose an empty position.",
+                    k_fg=ThemeKey.FG_ERROR
+                )
+            else:
+                self.clear_move_state()
+                self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=pressed_button_coord)
+                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+            return
+
+        if button := _get_button_at_pos(self.aac_inst.engine.current_buttons(), pressed_button_coord):
+            self.aac_inst.engine.on_button_press(button)
+
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
             # If in moving state, press Escape to cancel
@@ -386,12 +419,11 @@ class TalkState(State):
                 # Left click
                 self.button_hold_start_time = time.time()
                 self.last_clicked_pos = event.pos
-                self._handle_lmb_click(event)
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
                 # Right click
                 self._handle_rmb_click(event)
-            elif event.type == pg.MOUSEBUTTONUP:
-                # Mouse button released - cancel last clicked position and stop holding
+            elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+                self._handle_lmb_release(event)
                 self.last_clicked_pos = None
                 self.button_hold_start_time = None
 
