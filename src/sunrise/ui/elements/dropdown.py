@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Sequence
 from enum import StrEnum
 
 import pygame as pg
@@ -11,6 +11,7 @@ from sunrise.ui.elements._scroll_physics import ScrollPhysics
 
 from .widget import Widget
 
+DROPDOWN_TRIANGLE_SIZE = 20
 
 T = TypeVar("T")
 
@@ -83,6 +84,10 @@ class Dropdown[T](Widget):
     def selected_value(self) -> T:
        """Returns the value of the currently selected option."""
        return self.options[self.selected_label]
+
+    def _row_width(self) -> int:
+        largest_w = max(self.font.size(opt)[0] for opt in self.options)  # for each option's label, get the largest width
+        return largest_w + 3 * self.inset + DROPDOWN_TRIANGLE_SIZE
 
     def _row_height(self) -> int:
         """Height of a single row of the dropdown, including padding."""
@@ -243,13 +248,31 @@ class Dropdown[T](Widget):
         return False
 
     def preferred_size(self) -> tuple[int, int]:
-        h = self._row_height()
-        largest_w = max(self.font.size(opt)[0] for opt in self.options)  # for each option's label, get the largest width
-        return (largest_w + self.inset * 2, h)
+        return (self._row_width(), self._row_height())
 
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
         self._reevaluate_status()
+
+    def _calc_triangle(self) -> Sequence[tuple[int, int]]:
+        """Calculates the triangle for the dropdown button."""
+        triangle_centre_x = self.rect.right - self.inset - DROPDOWN_TRIANGLE_SIZE // 2
+        triangle_centre_y = self.rect.centery
+
+        if self.active:
+            pts = [
+                (triangle_centre_x - DROPDOWN_TRIANGLE_SIZE // 2, triangle_centre_y + DROPDOWN_TRIANGLE_SIZE // 2),
+                (triangle_centre_x + DROPDOWN_TRIANGLE_SIZE // 2, triangle_centre_y + DROPDOWN_TRIANGLE_SIZE // 2),
+                (triangle_centre_x, triangle_centre_y - DROPDOWN_TRIANGLE_SIZE // 2)
+            ]
+        else:
+            pts = [
+                (triangle_centre_x - DROPDOWN_TRIANGLE_SIZE // 2, triangle_centre_y - DROPDOWN_TRIANGLE_SIZE // 2),
+                (triangle_centre_x + DROPDOWN_TRIANGLE_SIZE // 2, triangle_centre_y - DROPDOWN_TRIANGLE_SIZE // 2),
+                (triangle_centre_x, triangle_centre_y + DROPDOWN_TRIANGLE_SIZE // 2)
+            ]
+
+        return pts
 
     def _draw_dropdown_button(self, surface: Surface, current_theme: Theme) -> None:
         """Draws just the dropdown button and the currently selected option."""
@@ -266,6 +289,11 @@ class Dropdown[T](Widget):
         text = crop_text_to_fit(self.selected_label or self.sentinel, self.font, self.rect.width - self.inset * 2)
         text_surface = self.font.render(text, True, fg_colour)
         surface.blit(text_surface, (self.rect.left + self.inset, self.rect.top + (self.rect.height - text_surface.get_height()) // 2))
+
+        # Draw the dropdown triangle
+
+
+        pg.draw.polygon(surface, fg_colour, self._calc_triangle())
 
     def _draw_dropdown_options(self, surface: Surface, current_theme: Theme) -> None:
         """Draw the dropdown options"""

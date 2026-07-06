@@ -28,6 +28,8 @@ class EventID(StrEnum):
     SET_INSPECT_BUTTON = "SET_BUTTON"
     SET_MODIFY_BUTTON = "SET_MODIFY_BUTTON"
     SET_MOVE_STATE = "SET_MOVE_STATE"
+    SET_SELECTING_COORDS_FLAG = "SET_SELECTING_COORDS_FLAG"
+    BROADCAST_TARGET_COORDS = "BROADCAST_TARGET_COORDS"
 
 
 class Bus:
@@ -55,6 +57,7 @@ class Bus:
         if event_name not in self._listeners:
             return
 
+        # clean up any dead listeners
         dead_listeners = []
 
         for ref in self._listeners[event_name][:]:

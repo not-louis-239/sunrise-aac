@@ -35,19 +35,23 @@ from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN, IC
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
 
+
+_COORDS_SENTINEL = (-1, -1)
+
+
 class ModifyState(State):
     def __init__(self, aac_inst: AAC) -> None:
         super().__init__(aac_inst)
         self.aac_inst.bus.subscribe(EventID.SET_MODIFY_BUTTON, self.set_button_to_modify)
+        self.aac_inst.bus.subscribe(EventID.BROADCAST_TARGET_COORDS, self.set_target_coords)
         self.popup_rect = pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - UI_MARGIN * 2, WN_H - UI_MARGIN * 2)
 
         # Button = existing button to modify
         # None   = no button was selected, so making a new one
         self.button_to_modify: Button | None = None
-        self.target_coords: tuple[int, int] | None = None
 
-        if self.button_to_modify is not None:
-            self.target_coords = self.button_to_modify.coords
+        # Target coordinates - must be provided in any case
+        self.target_coords: tuple[int, int] = _COORDS_SENTINEL  # sentinel
 
         ## Set up UI popup
 
@@ -158,26 +162,26 @@ class ModifyState(State):
     def _layout_widgets(self) -> None:
         self.popup.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
 
-    def _set_coords_text(self, coords: tuple[int, int] | None) -> None:
-        text = f"({coords[0]}, {coords[1]})" if coords is not None else ""
+    def _set_coords_text(self, coords: tuple[int, int]) -> None:
+        text = f"({coords[0]}, {coords[1]})"
         if self.coords_label.text != text:
             self.coords_label.set_text(text)
             self._layout_widgets()
 
-    def set_button_to_modify(self, button: Button | None, node: str | None = None, coords: tuple[int, int] | None = None) -> None:
-        if button is None:
-            assert node is not None and coords is not None, "When creating a new button, both node and coords must be provided."
+    def set_target_coords(self, coords: tuple[int, int]) -> None:
+        self.target_coords = coords
+        self._set_coords_text(coords)
 
+    def set_button_to_modify(self, button: Button | None, node: str, coords: tuple[int, int]) -> None:
         self.button_to_modify = button
 
         if self.button_to_modify is not None:
             # Update labels
             self.title_label.set_text(f"Modifying Button '{self.button_to_modify.label}'")
-            self._set_coords_text(self.button_to_modify.coords)
 
             # Pre-fill input fields if the button exists, else leave them blank
             self.label_input_box.text = self.button_to_modify.label
-            self.node_input_box.text = self.button_to_modify.node
+            self.node_input_box.text = node
             self.dest_input_box.text = str(self.button_to_modify.dest) if self.button_to_modify.dest is not None else ""
             self.img_path_input_box.text = self.button_to_modify.img if self.button_to_modify.img is not None else ""
             self.word_input_box.text = self.button_to_modify.word if self.button_to_modify.word is not None else ""
@@ -185,11 +189,10 @@ class ModifyState(State):
             self.func_dropdown.set_from_option_str(self.button_to_modify.func or "")
         else:
             self.title_label.set_text("Creating New Button")
-            self._set_coords_text(coords)
 
             # Clear all input fields, except node
             self.label_input_box.text = ""
-            self.node_input_box.text = node or ""
+            self.node_input_box.text = node
             self.dest_input_box.text = ""
             self.img_path_input_box.text = ""
             self.word_input_box.text = ""
@@ -197,12 +200,10 @@ class ModifyState(State):
             self.func_dropdown.set_from_option_str("")
 
         self._layout_widgets()
-        self.target_coords = coords if self.button_to_modify is None else self.button_to_modify.coords
+        self._set_coords_text(coords)
+        self.target_coords = coords
 
     def update(self, dt_s: float) -> None:
-        if self.button_to_modify is not None:
-            self._set_coords_text(self.button_to_modify.coords)
-
         for dropdown in [self.type_dropdown, self.func_dropdown]:
             dropdown.update(dt_s=dt_s)
             dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
@@ -233,7 +234,8 @@ class ModifyState(State):
 
         # Creating a new button - save before emitting state change
         else:
-            assert self.target_coords is not None, "Target coordinates must be set when creating a new button."
+            assert self.target_coords is not _COORDS_SENTINEL, "Target coordinates must be set when creating a new button."
+
             new_button = Button(
                 label=self.label_input_box.text,
                 node=self.node_input_box.text,
@@ -244,6 +246,7 @@ class ModifyState(State):
                 func=self.func_dropdown.selected_value or None,
                 coords=self.target_coords
             )
+
             node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
             node.buttons.append(new_button)
 
@@ -252,8 +255,13 @@ class ModifyState(State):
     def _handle_left_click(self, event: pg.event.Event) -> None:
         # Check for dropdown events first - closest to bottom-right is handled first as it is drawn last
         for dropdown in [self.func_dropdown, self.type_dropdown]:
-            if dropdown.handle_left_click(event):
-                return
+            dropdown.handle_left_click(event)
+
+        # "Select" button
+        if self.select_coords_button.check_click(event.pos):
+            self.aac_inst.bus.emit(EventID.SET_SELECTING_COORDS_FLAG)
+            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
+            return
 
         # Close button
         if self.close_button.check_click(event.pos):

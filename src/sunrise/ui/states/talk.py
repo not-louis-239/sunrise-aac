@@ -248,6 +248,12 @@ class TalkState(State):
 
         self.settings_button = CircularUIButton(r=ICON_SIZE // 2, img_path=UI_IMAGES_DIR / "gear.png", font=self.aac_inst.assets.fonts.ui_button_font)
         self.settings_button.layout(pg.Rect(WN_W - ICON_SIZE - UI_MARGIN, WN_H - ICON_SIZE - UI_MARGIN, ICON_SIZE, ICON_SIZE))
+        self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
+
+        self.aac_inst.bus.subscribe(EventID.SET_SELECTING_COORDS_FLAG, self.set_selecting_coords_flag)
+
+    def set_selecting_coords_flag(self) -> None:
+        self.is_selecting_coords = True
 
     def set_button_to_move(self, button: Button) -> None:
         self.button_to_move = button
@@ -283,16 +289,23 @@ class TalkState(State):
         if button_grid_coord is None:
             return
 
-        # Get the actual Button object lying at `button_coord`
-        button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
 
-        if self.button_to_move:
+        if self.is_selecting_coords:
+            self.is_selecting_coords = False
+            self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
+            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+
+        elif self.button_to_move:
+            # Get the actual Button object lying at `button_coord`
+            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
+
             if button:
                 # Valid button - swap the button to move with the button that just got clicked
                 button.coords, self.button_to_move.coords = self.button_to_move.coords, button.coords
             else:
                 # No button exists at click location - move the button there
                 self.button_to_move.coords = button_grid_coord
+
             save_language_tree(self.aac_inst.engine.tree)
             self.button_to_move = None
             self.button_hold_start_time = None
