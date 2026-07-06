@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pygame as pg
 from pygame import Surface
@@ -37,6 +37,13 @@ if TYPE_CHECKING:
 
 
 _COORDS_SENTINEL = (-1, -1)
+
+
+def _safe_convert_to_int(i: Any) -> int | None:
+    try:
+        return int(i)
+    except (ValueError, TypeError):
+        return None
 
 
 class ModifyState(State):
@@ -215,7 +222,7 @@ class ModifyState(State):
         if self.button_to_modify is not None:
             self.button_to_modify.label = self.label_input_box.text
             self.button_to_modify.node = self.node_input_box.text
-            self.button_to_modify.dest = int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None
+            self.button_to_modify.dest = _safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None
             self.button_to_modify.img = self.img_path_input_box.text if self.img_path_input_box.text != "" else None
             self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
             self.button_to_modify.type = self.type_dropdown.selected_value or "default"
@@ -242,7 +249,7 @@ class ModifyState(State):
             new_button = Button(
                 label=self.label_input_box.text,
                 node=self.node_input_box.text,
-                dest=int(self.dest_input_box.text) if self.dest_input_box.text.isdigit() else None,
+                dest=_safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None,
                 img=self.img_path_input_box.text if self.img_path_input_box.text != "" else None,
                 word=self.word_input_box.text if self.word_input_box.text != "" else None,
                 type=self.type_dropdown.selected_value or "default",
