@@ -19,6 +19,7 @@
 
 from typing import Any, Callable
 
+import sunrise.core.linguistic_manipulation as lm
 from sunrise.core.speak import speak, stop_speaking as _stop_speaking
 from sunrise.core.load_nodes import Button, LanguageTree, load_language_tree
 
@@ -130,4 +131,4 @@ def pluralise(self: AACEngine) -> None:
     """Add an 's' to the last word in the sentence bar"""
     if not self.sentence_bar:
         return
-    self.sentence_bar[-1] += "s"
+    self.sentence_bar[-1] = lm.pluralise_word(self.sentence_bar[-1])
