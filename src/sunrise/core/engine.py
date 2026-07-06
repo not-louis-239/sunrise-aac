@@ -125,7 +125,7 @@ class AACEngine:
         # If no word or dest, the button must have a function call inside of it
         if button.func is not None and (func := AACEngine.FUNC_REGISTRY.get(button.func)) is not None:
             if (inf := self.INFLECTION_FUNCS.get(button.func)) is not None:
-                if self.sentence_bar[-1].inflection_is_valid(inf):
+                if self.sentence_bar and self.sentence_bar[-1].inflection_is_valid(inf):
                     func(self)
             else:
                 func(self)
