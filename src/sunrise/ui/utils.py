@@ -17,7 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pygame as pg
+from dataclasses import dataclass
 
+from sunrise.ui.themes import ThemeKey
+from sunrise.ui.constants import DEFAULT_MESSAGE_DURATION
 from sunrise.core.custom_types import Colour, IntCoord2
 
 
@@ -59,3 +62,22 @@ def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | N
         tinted = pg.transform.scale(tinted, size)
 
     return tinted
+
+@dataclass
+class AmbientMessage:
+    text: str = ""
+    k_fg: ThemeKey = ThemeKey.FG
+    duration: float = 0.0
+
+    def set_msg(self, text: str, k_fg: ThemeKey, duration: float = DEFAULT_MESSAGE_DURATION) -> None:
+        self.text = text
+        self.k_fg = k_fg
+        self.duration = duration
+
+    def clear(self) -> None:
+        self.set_msg("", ThemeKey.FG, 0.0)
+
+    def update(self, dt_s: float) -> None:
+        self.duration = max(0, self.duration - dt_s)
+        if not self.duration:
+            self.clear()

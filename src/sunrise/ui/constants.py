@@ -30,6 +30,7 @@ GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
 BORDER_WIDTH = 2        # border width for UI elements
 CURSOR_WIDTH = 2
 CURSOR_FLASH_INTERVAL = 0.8  # seconds for cursor flashing
+DEFAULT_MESSAGE_DURATION = 2.0  # seconds for which to show ambient messages or UI popup messages
 
 # Sizes
 SENTENCE_BAR_H = 80
