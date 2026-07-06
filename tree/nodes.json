@@ -88,6 +88,58 @@
                     "type": "system",
                     "img": null,
                     "immutable": true
+                },
+                {
+                    "label": "-s",
+                    "word": null,
+                    "dest": null,
+                    "func": "pluralise",
+                    "coords": [
+                        6,
+                        5
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": true
+                },
+                {
+                    "label": "-ing",
+                    "word": null,
+                    "dest": null,
+                    "func": "gerundise",
+                    "coords": [
+                        7,
+                        5
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": true
+                },
+                {
+                    "label": "-ed",
+                    "word": null,
+                    "dest": null,
+                    "func": "make_past_tense",
+                    "coords": [
+                        8,
+                        5
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": true
+                },
+                {
+                    "label": "-er",
+                    "word": null,
+                    "dest": null,
+                    "func": "agenticise",
+                    "coords": [
+                        9,
+                        5
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": true
                 }
             ]
         },
@@ -497,45 +549,6 @@
                     "immutable": false
                 },
                 {
-                    "label": "-s",
-                    "word": null,
-                    "dest": null,
-                    "func": "pluralise",
-                    "coords": [
-                        6,
-                        5
-                    ],
-                    "type": "syntax",
-                    "img": null,
-                    "immutable": false
-                },
-                {
-                    "label": "-ing",
-                    "word": null,
-                    "dest": null,
-                    "func": "gerundise",
-                    "coords": [
-                        7,
-                        5
-                    ],
-                    "type": "syntax",
-                    "img": null,
-                    "immutable": false
-                },
-                {
-                    "label": "-ed",
-                    "word": null,
-                    "dest": null,
-                    "func": "make_past_tense",
-                    "coords": [
-                        8,
-                        5
-                    ],
-                    "type": "syntax",
-                    "img": null,
-                    "immutable": false
-                },
-                {
                     "label": "Less",
                     "word": "less",
                     "dest": null,
@@ -738,19 +751,6 @@
                     "coords": [
                         5,
                         2
-                    ],
-                    "type": "syntax",
-                    "img": null,
-                    "immutable": false
-                },
-                {
-                    "label": "-er",
-                    "word": null,
-                    "dest": null,
-                    "func": "agenticise",
-                    "coords": [
-                        9,
-                        5
                     ],
                     "type": "syntax",
                     "img": null,
@@ -1480,6 +1480,19 @@
                     ],
                     "type": "noun",
                     "img": "./icons/people/baby.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Baker",
+                    "word": "baker",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
                     "immutable": false
                 }
             ]

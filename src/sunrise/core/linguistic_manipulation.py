@@ -29,6 +29,7 @@ class Inflection(StrEnum):
     GERUND = "gerund"
     PAST = "past"
     POSSESSIVE = "possessive"
+    AGENTIC = "agentic"
 
 
 def _load_langfile_csv(filename: str) -> dict[str, str]:
@@ -157,6 +158,7 @@ def possessive_word(word: str) -> str:
         return _apply_case(word, word + "'s")
 
 
+@_register(Inflection.AGENTIC)
 def agenticise_word(word: str) -> str:
     """Convert a noun to its agentic form with basic fallback rules."""
     lower = word.lower()
@@ -177,3 +179,38 @@ def agenticise_word(word: str) -> str:
 def apply_inflection(word: str, form: Inflection = Inflection.PLURAL) -> str:
     """Apply a basic inflection based on an explicit form name."""
     return _FUNC_DICT[form](word)
+
+
+# This is required to outline: given the transformations that
+# a word has already undergone, what transformations are still allowed?
+# If a state isn't listed here, it is "closed" and no further
+# transformations make sense to be applied.
+
+# Format is {transformations_already_applied, allowed_next_transformations}
+
+ALLOWED_TRANSFORMATIONS: dict[tuple[Inflection, ...], set[Inflection]] = {
+    # No transformations
+    (): {Inflection.PLURAL, Inflection.GERUND, Inflection.PAST, Inflection.AGENTIC, Inflection.POSSESSIVE},
+
+    # 1 transformation
+    (Inflection.PLURAL,): {Inflection.POSSESSIVE},
+    (Inflection.GERUND,): {Inflection.PLURAL, Inflection.POSSESSIVE},
+    (Inflection.PAST,): set(),
+    (Inflection.POSSESSIVE,): set(),
+    (Inflection.AGENTIC,): {Inflection.PLURAL, Inflection.POSSESSIVE},
+
+    # 2 transformations
+    (Inflection.PLURAL, Inflection.POSSESSIVE): set(),
+    (Inflection.GERUND, Inflection.PLURAL): {Inflection.POSSESSIVE},
+    (Inflection.GERUND, Inflection.POSSESSIVE): set(),
+    (Inflection.AGENTIC, Inflection.PLURAL): {Inflection.POSSESSIVE},
+    (Inflection.AGENTIC, Inflection.POSSESSIVE): set(),
+    # 3 transformations
+    (Inflection.GERUND, Inflection.PLURAL, Inflection.POSSESSIVE): set(),
+    (Inflection.AGENTIC, Inflection.PLURAL, Inflection.POSSESSIVE): set(),
+}
+
+def get_allowed_transformations(past_transformations: list[Inflection]) -> set[Inflection]:
+    """Given a list of past transformations, return the set of allowed next transformations."""
+    key = tuple(past_transformations)
+    return ALLOWED_TRANSFORMATIONS.get(key, set())
