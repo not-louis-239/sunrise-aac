@@ -521,6 +521,19 @@
                     "type": "syntax",
                     "img": null,
                     "immutable": false
+                },
+                {
+                    "label": "-s",
+                    "word": null,
+                    "dest": null,
+                    "func": "pluralise",
+                    "coords": [
+                        6,
+                        2
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
                 }
             ]
         },

@@ -124,3 +124,10 @@ def speak_sentence_bar(self: AACEngine) -> None:
 def stop_speaking(self: AACEngine) -> None:
     """Stop any currently playing speech immediately."""
     _stop_speaking()
+
+@AACEngine.register("pluralise")
+def pluralise(self: AACEngine) -> None:
+    """Add an 's' to the last word in the sentence bar"""
+    if not self.sentence_bar:
+        return
+    self.sentence_bar[-1] += "s"
