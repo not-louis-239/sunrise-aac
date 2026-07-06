@@ -199,13 +199,24 @@ class _Renderer:
             text=str(button.label), font_family=self.aac_inst.assets.fonts.talk_button_font
         )
 
-    def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool = False) -> None:
+    def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool, is_selecting_coords: bool) -> None:
         theme = self.aac_inst.get_current_theme()
 
         # Draw the line for the sentence bar
         pg.draw.line(screen, self.aac_inst.get_current_theme()[ThemeKey.FG], (0, SENTENCE_BAR_H), (WN_W, SENTENCE_BAR_H), 2)
 
         # If in moving state, display instructions in the sentence bar, then early return
+        if is_selecting_coords:
+            instruction_pos = (WN_W // 2, SENTENCE_BAR_H // 2)
+            draw_text(
+                surface=screen, pos=instruction_pos,
+                horiz_align='centre', vert_align='centre',
+                font_family=self.assets.fonts.ui_text_font_s,
+                text="Click on an empty spot to select a position for the button you are modifying, or Escape to cancel.",
+                colour=theme[ThemeKey.FG]
+            )
+            return
+
         if in_moving_state:
             instruction_pos = (WN_W // 2, SENTENCE_BAR_H // 2)
             draw_text(
@@ -299,7 +310,7 @@ class TalkState(State):
 
 
         if self.is_selecting_coords:
-            self.is_selecting_coords = False
+            self.clear_move_state()
             self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
             return
@@ -349,9 +360,10 @@ class TalkState(State):
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
             # If in moving state, press Escape to cancel
-            if self.button_to_move and event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.button_to_move = None
-                self.button_hold_start_time = None
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                if self.is_selecting_coords:
+                    self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+                self.clear_move_state()
 
             # Handle mouse clicks
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
@@ -372,7 +384,7 @@ class TalkState(State):
         screen.fill(theme[ThemeKey.BG])
 
         # Draw sentence bar
-        self.renderer.draw_sentence_bar(screen, in_moving_state=self.button_to_move is not None)
+        self.renderer.draw_sentence_bar(screen, in_moving_state=self.button_to_move is not None, is_selecting_coords=self.is_selecting_coords)
 
         # Draw each of the buttons on the screen
         self.renderer.draw_buttons(screen)
