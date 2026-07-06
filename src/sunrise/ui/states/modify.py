@@ -209,6 +209,8 @@ class ModifyState(State):
             dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
 
     def _proceed(self) -> None:
+        self.aac_inst.bus.emit(EventID.CLEAR_MOVE_STATE)
+
         # Existing button - update button attributes
         if self.button_to_modify is not None:
             self.button_to_modify.label = self.label_input_box.text
@@ -218,6 +220,7 @@ class ModifyState(State):
             self.button_to_modify.word = self.word_input_box.text if self.word_input_box.text != "" else None
             self.button_to_modify.type = self.type_dropdown.selected_value or "default"
             self.button_to_modify.func = self.func_dropdown.selected_value or None
+            self.button_to_modify.coords = self.target_coords
 
             # Move the button to the actual node in the tree
             if self.button_to_modify.node != self.node_input_box.text:

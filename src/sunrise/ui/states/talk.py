@@ -241,6 +241,9 @@ class TalkState(State):
     def __init__(self, aac_inst: AAC) -> None:
         super().__init__(aac_inst=aac_inst)
         self.aac_inst.bus.subscribe(EventID.SET_MOVE_STATE, self.set_button_to_move)
+        self.aac_inst.bus.subscribe(EventID.SET_SELECTING_COORDS_FLAG, self.set_selecting_coords_flag)
+        self.aac_inst.bus.subscribe(EventID.CLEAR_MOVE_STATE, self.clear_move_state)
+
         self.renderer = _Renderer(aac_inst.assets, aac_inst=aac_inst)
         self.button_to_move: Button | None = None
         self.button_hold_start_time: float | None = None
@@ -250,7 +253,12 @@ class TalkState(State):
         self.settings_button.layout(pg.Rect(WN_W - ICON_SIZE - UI_MARGIN, WN_H - ICON_SIZE - UI_MARGIN, ICON_SIZE, ICON_SIZE))
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
 
-        self.aac_inst.bus.subscribe(EventID.SET_SELECTING_COORDS_FLAG, self.set_selecting_coords_flag)
+    def clear_move_state(self) -> None:
+        """Clear all state related to entering move mode."""
+        self.button_to_move = None
+        self.is_selecting_coords = False
+        self.last_clicked_pos = None
+        self.button_hold_start_time = None
 
     def set_selecting_coords_flag(self) -> None:
         self.is_selecting_coords = True
@@ -294,8 +302,9 @@ class TalkState(State):
             self.is_selecting_coords = False
             self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+            return
 
-        elif self.button_to_move:
+        if self.button_to_move:
             # Get the actual Button object lying at `button_coord`
             button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
 
