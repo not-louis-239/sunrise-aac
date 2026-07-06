@@ -124,7 +124,11 @@ class InspectState(State):
                         v_align=VAlign.CENTRE,
                         child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text=text),
                     ),
-                    Label(font=self.aac_inst.assets.fonts.ui_text_font_m, flex=1),
+                    SBox(
+                        h_align=HAlign.LEFT,
+                        v_align=VAlign.CENTRE,
+                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, flex=1),
+                    )
                 ]
             ) for prop, text in [
                 (PropertyIconID.TEXT, "word:"),
@@ -197,7 +201,7 @@ class InspectState(State):
         btype = button.type
 
         for text, hbox in zip([word, dest, func, image_path, btype], self.property_hboxes):
-            label = hbox.children[2]  # magic index - it sucks, but too bad!
+            label = hbox.children[2].children[0]  # magic index - it sucks, but too bad!
             assert isinstance(label, Label), f"Wrong Instance Type! (Expected 'Label', got '{type(label).__name__}')"
             if text is not None:
                 label.set_text(text)
