@@ -112,8 +112,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
-                        1
+                        4,
+                        2
                     ],
                     "type": "verb",
                     "img": null,
@@ -138,8 +138,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
-                        1
+                        2,
+                        2
                     ],
                     "type": "verb",
                     "img": "./icons/home/stop.png",
@@ -151,8 +151,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
-                        1
+                        3,
+                        2
                     ],
                     "type": "verb",
                     "img": null,
@@ -178,7 +178,7 @@
                     "func": null,
                     "coords": [
                         8,
-                        0
+                        2
                     ],
                     "type": "syntax",
                     "img": null,
@@ -191,7 +191,7 @@
                     "func": null,
                     "coords": [
                         6,
-                        0
+                        2
                     ],
                     "type": "syntax",
                     "img": null,
@@ -243,7 +243,7 @@
                     "func": null,
                     "coords": [
                         7,
-                        0
+                        2
                     ],
                     "type": "syntax",
                     "img": null,
@@ -256,7 +256,7 @@
                     "func": null,
                     "coords": [
                         9,
-                        0
+                        2
                     ],
                     "type": "syntax",
                     "img": null,
@@ -320,7 +320,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
+                        4,
                         3
                     ],
                     "type": "descriptor",
@@ -372,7 +372,7 @@
                     "dest": "GROUPS",
                     "func": null,
                     "coords": [
-                        7,
+                        9,
                         4
                     ],
                     "type": "folder",
@@ -398,7 +398,7 @@
                     "dest": "PEOPLE",
                     "func": null,
                     "coords": [
-                        0,
+                        1,
                         4
                     ],
                     "type": "folder",
@@ -411,7 +411,7 @@
                     "dest": "EMOTIONS",
                     "func": null,
                     "coords": [
-                        1,
+                        6,
                         4
                     ],
                     "type": "folder",
@@ -437,7 +437,7 @@
                     "dest": "QUESTIONS",
                     "func": null,
                     "coords": [
-                        6,
+                        7,
                         4
                     ],
                     "type": "folder",
@@ -450,7 +450,7 @@
                     "dest": "EXTRA_WORDS",
                     "func": null,
                     "coords": [
-                        9,
+                        0,
                         4
                     ],
                     "type": "folder",
@@ -502,8 +502,8 @@
                     "dest": null,
                     "func": "pluralise",
                     "coords": [
-                        7,
-                        3
+                        6,
+                        5
                     ],
                     "type": "syntax",
                     "img": null,
@@ -515,8 +515,8 @@
                     "dest": null,
                     "func": "gerundise",
                     "coords": [
-                        8,
-                        3
+                        7,
+                        5
                     ],
                     "type": "syntax",
                     "img": null,
@@ -528,8 +528,8 @@
                     "dest": null,
                     "func": "make_past_tense",
                     "coords": [
-                        9,
-                        3
+                        8,
+                        5
                     ],
                     "type": "syntax",
                     "img": null,
@@ -546,6 +546,253 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/home/less.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Most",
+                    "word": "most",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/home/most.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Least",
+                    "word": "least",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/home/least.png",
+                    "immutable": false
+                },
+                {
+                    "label": "He",
+                    "word": "he",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "She",
+                    "word": "she",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "It",
+                    "word": "it",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "We",
+                    "word": "we",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "You",
+                    "word": "you",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "They",
+                    "word": "they",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Them",
+                    "word": "them",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Him",
+                    "word": "him",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        1
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Her",
+                    "word": "her",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        1
+                    ],
+                    "type": "pronoun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "All",
+                    "word": "all",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Some",
+                    "word": "some",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Of",
+                    "word": "of",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        1
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "But",
+                    "word": "but",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        2
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "-er",
+                    "word": null,
+                    "dest": null,
+                    "func": "agenticise",
+                    "coords": [
+                        9,
+                        5
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Yes",
+                    "word": "yes",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        3
+                    ],
+                    "type": "syntax",
+                    "img": "./icons/home/yes.png",
+                    "immutable": false
+                },
+                {
+                    "label": "No",
+                    "word": "no",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        3
+                    ],
+                    "type": "syntax",
+                    "img": "./icons/home/no.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Maybe",
+                    "word": "maybe",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        3
+                    ],
+                    "type": "syntax",
+                    "img": "./icons/home/maybe.png",
                     "immutable": false
                 }
             ]
@@ -1604,45 +1851,6 @@
                     ],
                     "type": "social",
                     "img": "./icons/extra_words/sorry.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Yes",
-                    "word": "yes",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        3,
-                        0
-                    ],
-                    "type": "syntax",
-                    "img": "./icons/extra_words/yes.png",
-                    "immutable": false
-                },
-                {
-                    "label": "No",
-                    "word": "no",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        4,
-                        0
-                    ],
-                    "type": "syntax",
-                    "img": "./icons/extra_words/no.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Maybe",
-                    "word": "maybe",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        5,
-                        0
-                    ],
-                    "type": "syntax",
-                    "img": "./icons/extra_words/maybe.png",
                     "immutable": false
                 }
             ]
