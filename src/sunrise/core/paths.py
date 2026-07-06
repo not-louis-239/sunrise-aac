@@ -25,6 +25,7 @@ except StopIteration:
 
 ASSETS_DIR = ROOT_DIR / "assets"
 
+LANGFILES_DIR = ASSETS_DIR / "langfiles"
 FONTS_DIR = ASSETS_DIR / "fonts"
 IMAGES_DIR = ASSETS_DIR / "images"
 UI_IMAGES_DIR = IMAGES_DIR / "ui"
