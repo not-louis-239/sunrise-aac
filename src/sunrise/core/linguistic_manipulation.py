@@ -188,6 +188,10 @@ def apply_inflection(word: str, form: Inflection = Inflection.PLURAL) -> str:
 
 # Format is {transformations_already_applied, allowed_next_transformations}
 
+# For now this is too simple to account for all of English's complexities:
+# different words have different "archetypes" for what suffixes they accept,
+# but too bad!
+
 ALLOWED_TRANSFORMATIONS: dict[tuple[Inflection, ...], set[Inflection]] = {
     # No transformations
     (): {Inflection.PLURAL, Inflection.GERUND, Inflection.PAST, Inflection.AGENTIC, Inflection.POSSESSIVE},

@@ -23,6 +23,28 @@ import sunrise.core.linguistic_manipulation as lm
 from sunrise.core.speak import speak, stop_speaking as _stop_speaking
 from sunrise.core.load_nodes import Button, LanguageTree, load_language_tree
 
+
+class Word:
+    """A class representing a word as a component of the sentence bar."""
+    def __init__(self, word: str) -> None:
+        self.base_string = word
+        self.current_string = word
+        self.transformations: list[lm.Inflection] = []
+
+    def __str__(self) -> str:
+        return self.current_string
+
+    def transform(self, inf: lm.Inflection) -> None:
+        """Transforms the word's current string according to the given `inf` and updates `self`'s
+        transformation history."""
+        self.current_string = lm.apply_inflection(word=self.current_string, form=inf)
+        self.transformations.append(inf)
+
+    def inflection_is_valid(self, inf: lm.Inflection) -> bool:
+        """Returns True if, given the `Word`'s state, the `inf` is a valid transformation for the word."""
+        return inf in lm.get_allowed_transformations(past_transformations=self.transformations)
+
+
 class AACEngine:
     """The engine class for the AAC talker (AAC = Augmentative and Alternative Communication)."""
 
@@ -39,8 +61,8 @@ class AACEngine:
         return list(self.FUNC_REGISTRY.keys())
 
     def __init__(self):
-        self.sentence_bar: list[str] = []
-        self.history: list[str] = []
+        self.sentence_bar: list[Word] = []
+        self.history: list[str] = []  # list of folder IDs that the AACEngine has been to
         self.current_node: str = "HOME"
         self.tree: LanguageTree = load_language_tree()
 
@@ -94,8 +116,8 @@ class AACEngine:
 
         # If the button has a word, speak and append to the sentence bar
         if button.word is not None:
-            speak(button.word.lower())  # normalise
-            self.sentence_bar.append(button.word)
+            speak(button.word.lower())  # normalise so the speaking engine doesn't say "capital I"
+            self.sentence_bar.append(Word(word=button.word))
 
         # If no word or dest, the button must have a function call inside of it
         if button.func is not None:
@@ -118,7 +140,7 @@ def backspace_sentence_bar(self: AACEngine) -> None:
 @AACEngine.register("speak_sentence_bar")
 def speak_sentence_bar(self: AACEngine) -> None:
     """Speak the current sentence bar."""
-    sentence = " ".join(self.sentence_bar)
+    sentence = " ".join(str(w) for w in self.sentence_bar)
     speak(sentence)
 
 @AACEngine.register("stop_speaking")
@@ -131,25 +153,25 @@ def pluralise(self: AACEngine) -> None:
     """Add an 's' to the last word in the sentence bar"""
     if not self.sentence_bar:
         return
-    self.sentence_bar[-1] = lm.pluralise_word(self.sentence_bar[-1])
+    self.sentence_bar[-1].transform(inf=lm.Inflection.PLURAL)
 
 @AACEngine.register("gerundise")
 def gerundise(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its gerund form."""
     if not self.sentence_bar:
         return
-    self.sentence_bar[-1] = lm.gerundise_word(self.sentence_bar[-1])
+    self.sentence_bar[-1].transform(inf=lm.Inflection.GERUND)
 
 @AACEngine.register("make_past_tense")
 def make_past_tense(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its past tense."""
     if not self.sentence_bar:
         return
-    self.sentence_bar[-1] = lm.past_tense_word(self.sentence_bar[-1])
+    self.sentence_bar[-1].transform(inf=lm.Inflection.PAST)
 
 @AACEngine.register("agenticise")
 def agenticise(self: AACEngine) -> None:
     """Convert the last word in the sentence bar to its agentic form."""
     if not self.sentence_bar:
         return
-    self.sentence_bar[-1] = lm.agenticise_word(self.sentence_bar[-1])
+    self.sentence_bar[-1].transform(inf=lm.Inflection.AGENTIC)

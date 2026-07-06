@@ -251,7 +251,7 @@ class _Renderer:
             return
 
         # Draw the sentence bar text
-        sentence_bar_text = " ".join(self.aac_inst.engine.sentence_bar)
+        sentence_bar_text = " ".join(str(w) for w in self.aac_inst.engine.sentence_bar)
 
         # rendering only the last 127 characters for performance
         # this is arbitrary but we expect here that a little kid might
