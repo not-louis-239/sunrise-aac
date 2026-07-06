@@ -31,7 +31,7 @@
                     "func": null,
                     "coords": [
                         1,
-                        -1
+                        5
                     ],
                     "type": "system",
                     "img": null,
@@ -125,8 +125,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
-                        2
+                        0,
+                        3
                     ],
                     "type": "descriptor",
                     "img": "./icons/home/more.png",
@@ -320,8 +320,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
-                        2
+                        2,
+                        3
                     ],
                     "type": "descriptor",
                     "img": "./icons/home/not.png",
@@ -333,8 +333,8 @@
                     "dest": "FOOD",
                     "func": null,
                     "coords": [
-                        0,
-                        3
+                        3,
+                        4
                     ],
                     "type": "folder",
                     "img": "./folders/food.png",
@@ -346,8 +346,8 @@
                     "dest": "DRINKS",
                     "func": null,
                     "coords": [
-                        1,
-                        3
+                        4,
+                        4
                     ],
                     "type": "folder",
                     "img": "./folders/drinks.png",
@@ -359,24 +359,11 @@
                     "dest": "PLACES",
                     "func": null,
                     "coords": [
-                        2,
-                        3
+                        5,
+                        4
                     ],
                     "type": "folder",
                     "img": "./folders/places.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Time",
-                    "word": null,
-                    "dest": "TIME",
-                    "func": null,
-                    "coords": [
-                        3,
-                        3
-                    ],
-                    "type": "folder",
-                    "img": "./folders/time.png",
                     "immutable": false
                 },
                 {
@@ -385,8 +372,8 @@
                     "dest": "GROUPS",
                     "func": null,
                     "coords": [
-                        4,
-                        3
+                        7,
+                        4
                     ],
                     "type": "folder",
                     "img": "./folders/groups.png",
@@ -450,24 +437,11 @@
                     "dest": "QUESTIONS",
                     "func": null,
                     "coords": [
-                        3,
+                        6,
                         4
                     ],
                     "type": "folder",
                     "img": "./folders/questions.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Colours",
-                    "word": null,
-                    "dest": "COLOURS",
-                    "func": null,
-                    "coords": [
-                        4,
-                        4
-                    ],
-                    "type": "folder",
-                    "img": "./folders/colours.png",
                     "immutable": false
                 },
                 {
@@ -528,11 +502,50 @@
                     "dest": null,
                     "func": "pluralise",
                     "coords": [
-                        6,
-                        2
+                        7,
+                        3
                     ],
                     "type": "syntax",
                     "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "-ing",
+                    "word": null,
+                    "dest": null,
+                    "func": "gerundise",
+                    "coords": [
+                        8,
+                        3
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "-ed",
+                    "word": null,
+                    "dest": null,
+                    "func": "make_past_tense",
+                    "coords": [
+                        9,
+                        3
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Less",
+                    "word": "less",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/home/less.png",
                     "immutable": false
                 }
             ]
@@ -1646,7 +1659,7 @@
                         0
                     ],
                     "type": "folder",
-                    "img": null,
+                    "img": "./folders/animals.png",
                     "immutable": false
                 },
                 {
@@ -1660,6 +1673,32 @@
                     ],
                     "type": "folder",
                     "img": "./folders/drinks.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Colours",
+                    "word": null,
+                    "dest": "COLOURS",
+                    "func": null,
+                    "coords": [
+                        2,
+                        0
+                    ],
+                    "type": "folder",
+                    "img": "./folders/colours.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Time",
+                    "word": null,
+                    "dest": "TIME",
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "folder",
+                    "img": "./folders/time.png",
                     "immutable": false
                 }
             ]

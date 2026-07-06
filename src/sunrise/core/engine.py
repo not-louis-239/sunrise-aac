@@ -132,3 +132,18 @@ def pluralise(self: AACEngine) -> None:
     if not self.sentence_bar:
         return
     self.sentence_bar[-1] = lm.pluralise_word(self.sentence_bar[-1])
+
+@AACEngine.register("gerundise")
+def gerundise(self: AACEngine) -> None:
+    """Add an 's' to the last word in the sentence bar"""
+    if not self.sentence_bar:
+        return
+    self.sentence_bar[-1] = lm.gerundise_word(self.sentence_bar[-1])
+
+@AACEngine.register("make_past_tense")
+def make_past_tense(self: AACEngine) -> None:
+    """Add an 's' to the last word in the sentence bar"""
+    if not self.sentence_bar:
+        return
+    self.sentence_bar[-1] = lm.past_tense_word(self.sentence_bar[-1])
+

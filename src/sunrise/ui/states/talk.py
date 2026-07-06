@@ -384,15 +384,16 @@ class TalkState(State):
             # Handle mouse clicks
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 # Left click
-                self._handle_lmb_click(event)
                 self.button_hold_start_time = time.time()
                 self.last_clicked_pos = event.pos
+                self._handle_lmb_click(event)
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
                 # Right click
                 self._handle_rmb_click(event)
             elif event.type == pg.MOUSEBUTTONUP:
-                # Mouse button released - cancel last clicked position
+                # Mouse button released - cancel last clicked position and stop holding
                 self.last_clicked_pos = None
+                self.button_hold_start_time = None
 
     def draw(self, screen: Surface) -> None:
         # Retrieve current theme and fill with background colour
