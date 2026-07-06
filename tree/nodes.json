@@ -1943,6 +1943,32 @@
                     "type": "syntax",
                     "img": null,
                     "immutable": false
+                },
+                {
+                    "label": ".",
+                    "word": ".",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": ",",
+                    "word": ",",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
                 }
             ]
         },
