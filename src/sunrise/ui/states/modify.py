@@ -225,6 +225,7 @@ class ModifyState(State):
 
         all_valid = True
 
+        # Validate image path
         if not self.img_path_input_box.text:
             self.img_path_input_box.clear_error_msg()
         elif (
@@ -245,8 +246,9 @@ class ModifyState(State):
             elif not path.is_file():
                 self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"'{self.img_path_input_box.text}' is not a file")
             else:
-                self.img_path_input_box.clear_error_msg()
+                self.img_path_input_box.set_error_msg(severity=ErrorSeverity.OK, msg="Tip: Image path is relaive to assets/images.")
 
+        # Validate label
         if not self.label_input_box.text:
             all_valid = False
             self.label_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg="Please provide a label.")
