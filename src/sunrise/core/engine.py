@@ -135,15 +135,21 @@ def pluralise(self: AACEngine) -> None:
 
 @AACEngine.register("gerundise")
 def gerundise(self: AACEngine) -> None:
-    """Add an 's' to the last word in the sentence bar"""
+    """Convert the last word in the sentence bar to its gerund form."""
     if not self.sentence_bar:
         return
     self.sentence_bar[-1] = lm.gerundise_word(self.sentence_bar[-1])
 
 @AACEngine.register("make_past_tense")
 def make_past_tense(self: AACEngine) -> None:
-    """Add an 's' to the last word in the sentence bar"""
+    """Convert the last word in the sentence bar to its past tense."""
     if not self.sentence_bar:
         return
     self.sentence_bar[-1] = lm.past_tense_word(self.sentence_bar[-1])
 
+@AACEngine.register("agenticise")
+def agenticise(self: AACEngine) -> None:
+    """Convert the last word in the sentence bar to its agentic form."""
+    if not self.sentence_bar:
+        return
+    self.sentence_bar[-1] = lm.agenticise_word(self.sentence_bar[-1])

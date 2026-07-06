@@ -20,7 +20,6 @@
 import re
 from enum import StrEnum
 from typing import Callable
-from pathlib import Path
 
 from sunrise.core.paths import LANGFILES_DIR
 
@@ -49,6 +48,7 @@ def _load_langfile_csv(filename: str) -> dict[str, str]:
 _IRREGULAR_PLURALS: dict[str, str] = _load_langfile_csv("plurals.csv")
 _IRREGULAR_GERUNDS: dict[str, str] = _load_langfile_csv("gerunds.csv")
 _IRREGULAR_PAST: dict[str, str] = _load_langfile_csv("past_tenses.csv")
+_IRREGULAR_AGENTICS: dict[str, str] = _load_langfile_csv("agentics.csv")
 
 
 # Set up the function registry
@@ -155,6 +155,23 @@ def possessive_word(word: str) -> str:
         return _apply_case(word, word + "'")
     else:
         return _apply_case(word, word + "'s")
+
+
+def agenticise_word(word: str) -> str:
+    """Convert a noun to its agentic form with basic fallback rules."""
+    lower = word.lower()
+
+    if lower in _IRREGULAR_AGENTICS:
+        return _apply_case(word, _IRREGULAR_AGENTICS[word])
+
+    if lower.endswith("e"):
+        return _apply_case(word, word + "r")
+
+    if lower.endswith(("p", "t", "m", "n", "r", "g", "b", "d")) and len(lower) > 1:
+        if lower[-2] in "aeiou" and (len(lower) < 3 or lower[-3] not in "aeiou"):
+            return _apply_case(word, word + word[-1] + "er")
+
+    return _apply_case(word, word + "er")
 
 
 def apply_inflection(word: str, form: Inflection = Inflection.PLURAL) -> str:
