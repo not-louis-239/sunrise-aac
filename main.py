@@ -36,7 +36,7 @@ def main():
     pg.init()
 
     screen = pg.display.set_mode((WN_W, WN_H))
-    pg.display.set_caption("AAC")
+    pg.display.set_caption("Sunrise AAC")
     clock = pg.time.Clock()
     aac = AAC()
 

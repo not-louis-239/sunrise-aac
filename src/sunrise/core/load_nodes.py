@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from collections import deque
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -51,7 +52,7 @@ class Button:
     type: str                # used for button highlighting
 
     # Where it is
-    node: str
+    node: str  # TODO: I decided I should get rid of this stupid attribute, it's data doubling
 
     def inspect(self, node_label: str) -> str:
         """Return a formatted string for inspecting the Button object."""
@@ -123,26 +124,28 @@ class LanguageTree:
             for node_name, node in self.nodes.items()
         }
 
-    def get_reference_counts(self) -> dict[str, int]:
-        """Return a dictionary mapping node names to the number of buttons
-        that reference them as destinations. Useful for warning a user
-        of unreachable nodes."""
-        ref_counts: dict[str, int] = {node_name: 0 for node_name in self.nodes.keys()}
+    def get_reachable_nodes(self, start_node_id: str = "HOME") -> set[str]:
+        """Returns a set of node IDs for all nodes
+        that are reachable from `start_node`."""
 
-        for node in self.nodes.values():
+        reachable_nodes: set[str] = set()
+        queue = deque([start_node_id])
+
+        while queue:
+            current_node = queue.popleft()
+            if current_node in reachable_nodes:
+                continue
+            reachable_nodes.add(current_node)
+
+            node = self.get(current_node)
+            if node is None:
+                continue
+
             for button in node.buttons:
-                if isinstance(button.dest, str) and button.dest in ref_counts:
-                    ref_counts[button.dest] += 1
+                if isinstance(button.dest, str):
+                    queue.append(button.dest)
 
-        return ref_counts
-
-    def get_unreachable_nodes(self) -> set[str]:
-        """Return a set of node names that are unreachable from any button
-        in the language tree. A node is considered unreachable if it has
-        zero buttons that point to it as a destination."""
-        ref_counts = self.get_reference_counts()
-        unreachable_nodes = {node_name for node_name, count in ref_counts.items() if not count} - {"UNIVERSAL"}
-        return unreachable_nodes
+        return reachable_nodes
 
     def gc(self) -> None:
         """Run garbage collection on the language tree by removing
@@ -271,7 +274,7 @@ def lint_language_tree(lt: LanguageTree) -> list[str]:
                 errors.append(_make_error(node_name, button, f"unrecognised button type '{button.type}'"))
 
     # Warn of unreachable nodes
-    unreachable_nodes = lt.get_unreachable_nodes()
+    unreachable_nodes = set(lt.nodes.keys()) - lt.get_reachable_nodes()
     for node_name in unreachable_nodes:
         errors.append(f"{COL_WARN}unreachable node: '{node_name}'{COL_END}")
 
