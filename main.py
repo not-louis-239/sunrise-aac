@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from sunrise.ui.constants import WN_W, WN_H
 from sunrise.core.constants import FPS
 from sunrise.core.aac import AAC
-from sunrise.core.load_nodes import save_language_tree
+from sunrise.core.language_tree import save_language_tree
 from sunrise.core.error_logger import write_error_log
 
 def main():

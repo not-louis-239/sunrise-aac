@@ -21,7 +21,7 @@ from typing import Any, Callable
 
 import sunrise.core.linguistic_manipulation as lm
 from sunrise.core.speak import speak, stop_speaking as _stop_speaking
-from sunrise.core.load_nodes import Button, LanguageTree, load_language_tree
+from sunrise.core.language_tree import Button, LanguageTree, load_language_tree
 
 
 class Word:

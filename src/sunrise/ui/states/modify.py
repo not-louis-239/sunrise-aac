@@ -26,7 +26,7 @@ from sunrise.ui.themes import ThemeKey
 from sunrise.core.paths import get_image_path
 from sunrise.ui.elements import Panel, Label, HBox, VBox, SBox, Icon, Spacer, InputBox, ErrorSeverity, HAlign, VAlign, Dropdown, RectangularUIButton
 from sunrise.core.asset_manager import PropertyIconID
-from sunrise.core.load_nodes import Button
+from sunrise.core.language_tree import Button
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton

@@ -27,7 +27,7 @@ from crystallinium.text_utils import draw_text
 from .base_states import State
 from sunrise.ui.states.base_states import StateID
 from sunrise.core.bus import EventID
-from sunrise.core.load_nodes import Button, save_language_tree
+from sunrise.core.language_tree import Button, save_language_tree
 from sunrise.core.paths import UI_IMAGES_DIR, get_image_path
 from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (

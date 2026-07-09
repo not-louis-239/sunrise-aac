@@ -42,7 +42,7 @@ from sunrise.ui.elements import (
 from .base_states import State, StateID
 from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
-from sunrise.core.load_nodes import Button, save_language_tree
+from sunrise.core.language_tree import Button, save_language_tree
 from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN, ICON_SIZE
 from sunrise.ui.themes import ThemeKey
 
