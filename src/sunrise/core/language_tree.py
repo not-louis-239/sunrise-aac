@@ -51,9 +51,6 @@ class Button:
 
     type: str                # used for button highlighting
 
-    # Where it is
-    node: str  # TODO: I decided I should get rid of this stupid attribute, it's data doubling
-
     def inspect(self, node_label: str) -> str:
         """Return a formatted string for inspecting the Button object."""
         first_line = f"button {COL_INFO}'{self.label}'{COL_END} @ {COL_INFO}{self.coords}{COL_END} in node {COL_INFO}'{node_label}'{COL_END}"
@@ -189,7 +186,6 @@ def load_language_tree() -> LanguageTree:
                 type=button_raw["type"],
                 img=button_raw.get("img", None),
                 immutable=button_raw.get("immutable", False),
-                node=node_name
             )
             node_buttons.append(button)
 

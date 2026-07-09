@@ -57,6 +57,7 @@ class ModifyState(State):
         # Button = existing button to modify
         # None   = no button was selected, so making a new one
         self.button_to_modify: Button | None = None
+        self.orig_node_id: str | None = None
 
         # Target coordinates - must be provided in any case
         self.target_coords: tuple[int, int] = _COORDS_SENTINEL  # sentinel
@@ -180,8 +181,9 @@ class ModifyState(State):
         self.target_coords = coords
         self._set_coords_text(coords)
 
-    def set_button_to_modify(self, button: Button | None, node: str, coords: tuple[int, int]) -> None:
+    def set_button_to_modify(self, button: Button | None, node_id: str, coords: tuple[int, int]) -> None:
         self.button_to_modify = button
+        self.orig_node_id = node_id
 
         if self.button_to_modify is not None:
             # Update labels
@@ -189,7 +191,7 @@ class ModifyState(State):
 
             # Pre-fill input fields if the button exists, else leave them blank
             self.label_input_box.text = self.button_to_modify.label
-            self.node_input_box.text = node
+            self.node_input_box.text = node_id
             self.dest_input_box.text = str(self.button_to_modify.dest) if self.button_to_modify.dest is not None else ""
             self.img_path_input_box.text = self.button_to_modify.img if self.button_to_modify.img is not None else ""
             self.word_input_box.text = self.button_to_modify.word if self.button_to_modify.word is not None else ""
@@ -200,7 +202,7 @@ class ModifyState(State):
 
             # Clear all input fields, except node
             self.label_input_box.text = ""
-            self.node_input_box.text = node
+            self.node_input_box.text = node_id
             self.dest_input_box.text = ""
             self.img_path_input_box.text = ""
             self.word_input_box.text = ""
@@ -265,7 +267,7 @@ class ModifyState(State):
             self.label_input_box.clear_error_msg()
 
         # Warn if the user is attempting to place a button in a node that either doesn't exist or has no references to it.
-        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text in self.aac_inst.engine.tree.get_unreachable_nodes():
+        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text not in self.aac_inst.engine.tree.get_reachable_nodes():
             self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{self.node_input_box.text}'")
         else:
             self.node_input_box.clear_error_msg()
@@ -293,7 +295,7 @@ class ModifyState(State):
         # Existing button - update button attributes
         if self.button_to_modify is not None:
             # Move the button to the actual node in the tree
-            if self.button_to_modify.node != self.node_input_box.text:
+            if self.orig_node_id != self.node_input_box.text:
                 # Remove from old node
                 old_node_label = self.aac_inst.engine.get_node_for_button(self.button_to_modify)
                 if old_node_label is not None:
@@ -306,7 +308,6 @@ class ModifyState(State):
 
             # Update button attributes
             self.button_to_modify.label = label_norm
-            self.button_to_modify.node = node_norm
             self.button_to_modify.dest = dest_norm
             self.button_to_modify.img = img_norm
             self.button_to_modify.word = word_norm
@@ -320,7 +321,6 @@ class ModifyState(State):
 
             new_button = Button(
                 label=label_norm,
-                node=node_norm,
                 dest=dest_norm,
                 img=img_norm,
                 word=word_norm,
