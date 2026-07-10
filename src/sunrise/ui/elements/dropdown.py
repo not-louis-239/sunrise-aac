@@ -10,6 +10,8 @@ from sunrise.ui.utils import crop_text_to_fit
 from sunrise.ui.elements._scroll_physics import ScrollPhysics
 
 from .widget import Widget
+from ._dummy_surface import DUMMY_SURFACE
+
 
 DROPDOWN_TRIANGLE_SIZE = 20
 
@@ -53,7 +55,7 @@ class Dropdown[T](Widget):
 
         # placeholder that gets evaluated at draw() time, but it prevents pg.Surface() churn which is wasteful
         # a new surface will only be created if self.options_surface doesn't meet size requirements after a self._reevaluate_status() call
-        self.options_surface = pg.Surface((1, 1))
+        self.options_surface = DUMMY_SURFACE
 
         # needed to tell `self` when the `options_surface` is dirty
         self.last_theme: Theme | None = None
@@ -291,8 +293,6 @@ class Dropdown[T](Widget):
         surface.blit(text_surface, (self.rect.left + self.inset, self.rect.top + (self.rect.height - text_surface.get_height()) // 2))
 
         # Draw the dropdown triangle
-
-
         pg.draw.polygon(surface, fg_colour, self._calc_triangle())
 
     def _draw_dropdown_options(self, surface: Surface, current_theme: Theme) -> None:
