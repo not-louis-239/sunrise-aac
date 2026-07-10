@@ -252,7 +252,7 @@ class InspectState(State):
         # modify, move, delete
         if self.modify_button.check_click(event.pos):
             if not self.button.immutable:
-                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node=self.aac_inst.engine.current_node, coords=self.button.coords)
+                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.aac_inst.engine.current_node, coords=self.button.coords)
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
         if self.delete_button.check_click(event.pos):
             if not self.button.immutable:

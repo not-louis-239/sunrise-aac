@@ -378,7 +378,7 @@ class TalkState(State):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.INSPECT)
         else:
             # button doesn't exist - open the menu to create a new button
-            self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=button, node=self.aac_inst.engine.current_node, coords=button_coord)
+            self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=button, node_id=self.aac_inst.engine.current_node, coords=button_coord)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
 
     def _handle_lmb_release(self, event: pg.event.Event) -> None:
