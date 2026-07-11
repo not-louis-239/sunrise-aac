@@ -35,7 +35,7 @@ from sunrise.core.constants import (
 )
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import CircularUIButton
+from sunrise.ui.elements import VBox, Panel, RectangularUIButton
 from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
@@ -271,14 +271,14 @@ class _Renderer:
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
-        max_width = WN_W - 2 * UI_MARGIN
+        max_width = WN_W - 3 * UI_MARGIN - ICON_SIZE
         text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-127:], True, theme[ThemeKey.FG])
         if (big_width := text_surf.get_width()) > max_width:
             excess = big_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, text_surf.get_rect(left=UI_MARGIN, centery=SENTENCE_BAR_H / 2))
+        screen.blit(text_surf, text_surf.get_rect(left=2 * UI_MARGIN + ICON_SIZE, centery=SENTENCE_BAR_H / 2))
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():
@@ -296,8 +296,22 @@ class TalkState(State):
         self.button_hold_start_time: float | None = None
         self.last_clicked_pos: tuple[int, int] | None = None
 
-        self.settings_button = CircularUIButton(r=ICON_SIZE // 2, img_path=UI_IMAGES_DIR / "gear.png", font=self.aac_inst.assets.fonts.ui_button_font)
-        self.settings_button.layout(pg.Rect(WN_W - ICON_SIZE - UI_MARGIN, WN_H - ICON_SIZE - UI_MARGIN, ICON_SIZE, ICON_SIZE))
+        # TODO: figure out why the hamburger icon is not showing
+        # changing this to a CircularUIButton with equivalent radius seems to work
+        self.hamburger_button = RectangularUIButton(img_path=UI_IMAGES_DIR / "hamburger.png", font=self.aac_inst.assets.fonts.ui_button_font)
+        self.hamburger_button.layout(pg.Rect((SENTENCE_BAR_H - ICON_SIZE) // 2, (SENTENCE_BAR_H - ICON_SIZE) // 2, ICON_SIZE, ICON_SIZE))
+        self.hamburger_menu_active = False
+
+        self.settings_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Settings")
+        self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
+        self.hamburger_panel = Panel(
+            child=VBox(
+                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN, gap=UI_MARGIN
+            )
+        )
+
+        self.hamburger_panel.layout(pg.Rect(UI_MARGIN, SENTENCE_BAR_H + UI_MARGIN, *self.hamburger_panel.preferred_size()))
+
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
 
     def clear_move_state(self) -> None:
@@ -319,46 +333,31 @@ class TalkState(State):
         else:
             self.renderer.ambient_msg.clear()
 
-        if self.aac_inst.engine.current_node == "HOME":
-            self.settings_button.visible = True
-            self.settings_button.active = True
-        else:
-            self.settings_button.visible = False
-            self.settings_button.active = False
+    def _handle_lmb_click(self, event: pg.event.Event) -> bool:
+        """Handles a LMB click for things for which clicks can be used instead of releases,
+        and returns True if something happened, else False."""
 
-    def _handle_lmb_click(self, event: pg.event.Event) -> None:
-        if self.settings_button.check_click(event.pos) and self.settings_button.visible:
-            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
-            return
+        hamburger_button_clicked = self.hamburger_button.check_click(event.pos)
+        is_inside_hamburger_panel = self.hamburger_panel.rect.collidepoint(event.pos)
 
-        button_grid_coord = _screen_to_grid_coord(event.pos)
-        if button_grid_coord is None:
-            return
+        if hamburger_button_clicked:
+            self.hamburger_menu_active = not self.hamburger_menu_active
+            return True
+        elif self.hamburger_menu_active and not is_inside_hamburger_panel:
+            self.hamburger_menu_active = False
+            return True
 
-        if self.is_selecting_coords:
-            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
-            if button:
-                # Button already exists there -> invalid coordinate
-                self.renderer.ambient_msg.set_msg("This position is already occupied. Please choose an empty position.", k_fg=ThemeKey.FG_ERROR)
-            else:
-                self.clear_move_state()
-                self.aac_inst.bus.emit(EventID.BROADCAST_TARGET_COORDS, coords=button_grid_coord)
-                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
-            return
+        if self.hamburger_menu_active:
+            if self.settings_button.check_click(event.pos):
+                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
+                return True
+            if self.doctor_button.check_click(event.pos):
+                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.DOCTOR)
+                return True
 
-        if self.button_to_move:
-            button = _get_button_at_pos(self.aac_inst.engine.current_buttons(), button_grid_coord)
-            if button:
-                # Valid button - swap the button to move with the button that just got clicked
-                button.coords, self.button_to_move.coords = self.button_to_move.coords, button.coords
-            else:
-                # No button exists at click location - move the button there
-                self.button_to_move.coords = button_grid_coord
-
-            save_language_tree(self.aac_inst.engine.tree)
-            self.button_to_move = None
-            self.button_hold_start_time = None
-            return
+        if is_inside_hamburger_panel:
+            return True  # block clicks that are inside the panel but don't do anything
+        return False
 
     def _handle_rmb_click(self, event: pg.event.Event) -> None:
         if self.button_to_move:
@@ -408,10 +407,6 @@ class TalkState(State):
                 self.button_to_move = button
             return
 
-        if self.settings_button.check_click(self.last_clicked_pos) and self.settings_button.visible:
-            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
-            return
-
         pressed_button_coord = _screen_to_grid_coord(self.last_clicked_pos)
         if pressed_button_coord is None:
             return
@@ -443,6 +438,8 @@ class TalkState(State):
             # Handle mouse clicks
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 # Left click
+                if self._handle_lmb_click(event=event):
+                    continue
                 self.button_hold_start_time = time.time()
                 self.last_clicked_pos = event.pos
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
@@ -471,4 +468,6 @@ class TalkState(State):
         # Draw each of the buttons on the screen
         self.renderer.draw_buttons(screen)
 
-        self.settings_button.draw(screen, current_theme=theme)
+        self.hamburger_button.draw(screen, current_theme=theme)
+        if self.hamburger_menu_active:
+            self.hamburger_panel.draw(screen, current_theme=theme)

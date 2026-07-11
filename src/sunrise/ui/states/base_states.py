@@ -49,3 +49,4 @@ class StateID(StrEnum):
     MODIFY = "modify"
     TALK = "talk"
     SETTINGS = "settings"
+    DOCTOR = "doctor"

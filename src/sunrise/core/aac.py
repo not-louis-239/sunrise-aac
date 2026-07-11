@@ -30,7 +30,8 @@ from sunrise.ui.states import (
     InspectState,
     ModifyState,
     TalkState,
-    SettingsState
+    SettingsState,
+    DoctorState
 )
 from sunrise.ui.states.base_states import StateID
 
@@ -55,7 +56,8 @@ class AAC:
             StateID.INSPECT: InspectState(self),
             StateID.MODIFY: ModifyState(self),
             StateID.TALK: TalkState(self),
-            StateID.SETTINGS: SettingsState(self)
+            StateID.SETTINGS: SettingsState(self),
+            StateID.DOCTOR: DoctorState(self)
         }
         self.state: StateID = StateID.TALK
 

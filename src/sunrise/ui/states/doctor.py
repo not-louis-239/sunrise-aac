@@ -1,4 +1,6 @@
-# this is an init file
+# doctor state for linting the internal language tree and revealing issues
+# such as unreachable nodes
+
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 
@@ -16,21 +18,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from . import (
-    base_states,
-    inspect,
-    modify,
-    talk,
-    settings,
-    doctor
-)
+from pygame import Surface
+from pygame.event import Event
+from pygame.key import ScancodeWrapper
+
+from .base_states import State
+from sunrise.ui.themes import ThemeKey
 
 
-State = base_states.State
-StateID = base_states.StateID
+class DoctorState(State):
+    def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
+        pass
 
-InspectState = inspect.InspectState
-ModifyState = modify.ModifyState
-TalkState = talk.TalkState
-SettingsState = settings.SettingsState
-DoctorState = doctor.DoctorState
+    def update(self, dt_s: float) -> None:
+        pass
+
+    def draw(self, screen: Surface) -> None:
+        theme = self.aac_inst.get_current_theme()
+        screen.fill(theme[ThemeKey.BG])
