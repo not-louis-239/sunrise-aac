@@ -33,13 +33,11 @@ class ImageContainer:
     """Class for storing a base image, plus tinted and scaled versions.
     Derivatives of the original image are cached to avoid wasteful recalculations."""
 
-    def __init__(self, img_path: Path, start_size: IntCoord2):
+    def __init__(self, img_path: Path):
         self.img_path = img_path
-        self.start_size = start_size
 
         self._base_cache: pg.Surface = pg.image.load(str(self.img_path)).convert_alpha()  # the untinted, unscaled original image - not to be modified after it is set
-        self._base_cache = pg.transform.scale(self._base_cache, start_size)
-
+        self._start_size = self._base_cache.get_size()
         self._tint_size_cache: _TintSizeCache = {}
 
     def get_tinted_scaled_img(self, colour: Colour, size: IntCoord2) -> pg.Surface:
@@ -50,7 +48,7 @@ class ImageContainer:
         if key not in self._tint_size_cache:
             self._tint_size_cache[key] = make_tinted_surface(
                 surface=self._base_cache, colour=colour,
-                size=size if size != self.start_size else None  # skip resizing if the requested size is the same as the original size
+                size=size if size != self._start_size else None  # skip resizing if the requested size is the same as the original size
             )
 
         return self._tint_size_cache[key]

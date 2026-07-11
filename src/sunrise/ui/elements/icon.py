@@ -32,7 +32,7 @@ class Icon(Widget):
             self, *, img_path: Path, size: tuple[int, int], k_fg: ThemeKey
         ) -> None:
         super().__init__()
-        self.img_container = ImageContainer(img_path=img_path, start_size=size)
+        self.img_container = ImageContainer(img_path=img_path)
 
         # remembers its original dimensions - do not touch after creation please
         self.native_size: Final[IntCoord2] = size

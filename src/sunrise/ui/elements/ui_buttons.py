@@ -59,12 +59,12 @@ class _UIButton(Widget):
         self.border_w = border_w
 
         self.img_container: ImageContainer | None = (
-            ImageContainer(img_path=img_path, start_size=self._preferred_icon_size())
+            ImageContainer(img_path=img_path)
             if img_path is not None else None
         )
 
     def _preferred_icon_size(self) -> tuple[int, int]:
-        return self.fixed_size or self.preferred_size()
+        return self.fixed_size or self.rect.size
 
     def _get_text_size(self) -> tuple[int, int]:
         text_size = self.font.size(self.text)
@@ -79,7 +79,7 @@ class RectangularUIButton(_UIButton):
         return self.rect.collidepoint(mouse_pos)
 
     def preferred_size(self) -> tuple[int, int]:
-        return self.fixed_size if self.fixed_size is not None else self._get_text_size()
+        return self.fixed_size if self.fixed_size else self._get_text_size()
 
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
@@ -93,7 +93,7 @@ class RectangularUIButton(_UIButton):
 
         # Draw icon
         if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self.preferred_size())
+            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self._preferred_icon_size())
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw border
