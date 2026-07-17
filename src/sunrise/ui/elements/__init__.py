@@ -19,6 +19,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import sunrise.core.problem_severity
+
 from . import (
     alignment_boxes,
     dropdown,
@@ -26,6 +28,7 @@ from . import (
     input_boxes,
     labels,
     panel,
+    scrollable_display,
     spacer,
     ui_buttons
 )
@@ -41,7 +44,7 @@ Label = labels.Label
 Icon = icon.Icon
 
 InputBox = input_boxes.InputBox
-ErrorSeverity = input_boxes.ErrorSeverity
+ErrorSeverity = sunrise.core.problem_severity.Severity
 Dropdown = dropdown.Dropdown
 
 CircularUIButton = ui_buttons.CircularUIButton
@@ -49,3 +52,4 @@ RectangularUIButton = ui_buttons.RectangularUIButton
 
 HAlign = alignment_boxes.HAlign
 VAlign = alignment_boxes.VAlign
+ScrollableDisplay = scrollable_display.ScrollableDisplay

@@ -25,10 +25,11 @@
 
 import pygame as pg
 
-from sunrise.ui.themes import Theme
+from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.elements._scroll_physics import ScrollPhysics
 from sunrise.ui.elements.widget import Widget
 from sunrise.ui.elements._dummy_surface import DUMMY_SURFACE
+from sunrise.ui.constants import BORDER_WIDTH
 
 
 class ScrollableDisplay(Widget):
@@ -36,16 +37,20 @@ class ScrollableDisplay(Widget):
     Its height depends on the preferred size of the contents inside of the display."""
     def __init__(
             self, *,
-            flex: int = 0, gap: int = 0, child: Widget, padding: int = 0
+            flex: int = 0, gap: int = 0, child: Widget, padding: int = 0,
+            k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         super().__init__(flex=flex)
         self.padding = padding
         self.child = child
+        self.gap = gap
+        self.k_border = k_border
+        self.border_w = border_w
+
         self.children = [child]
         self.internal_rect = pg.Rect(0, 0, 0, 0)
         self.internal_surface: pg.Surface = DUMMY_SURFACE
-        self.scroll_physics = ScrollPhysics(y_max=self._internal_dims()[1])
-        self.gap = gap
+        self.scroll_physics = ScrollPhysics(y_max=0)
 
     def _internal_dims(self) -> tuple[int, int]:
         """Get the preferred vertical size of all child components
@@ -69,12 +74,14 @@ class ScrollableDisplay(Widget):
         # Resize the surface if needed
         required_size = self._internal_dims()
         if required_size != self.internal_surface.get_size():
-            self.internal_surface = pg.Surface(required_size)
+            self.internal_surface = pg.Surface(required_size, pg.SRCALPHA)
 
         # Then redraw the content
+        self.internal_surface.fill((0, 0, 0, 0))
         self.child.draw(surface=self.internal_surface, current_theme=current_theme)
 
     def update(self, dt_s: float) -> None:
+        self.scroll_physics.y_max = max(0, self._internal_dims()[1] + 2 * self.padding - self.rect.height)
         self.scroll_physics.update(dt_s=dt_s)
 
     def handle_scroll(self, event: pg.event.Event) -> None:
@@ -100,5 +107,9 @@ class ScrollableDisplay(Widget):
 
         # Get the relevant part of `self`'s internal surface
         # and draw it on the given surface.
-        relevant_rect = pg.Rect(0, self.scroll_physics.y, self.rect.width - 2 * self.padding, self.scroll_physics.y + self.rect.height - 2 * self.padding)
+        relevant_rect = pg.Rect(0, self.scroll_physics.y, self.rect.width - 2 * self.padding, self.rect.height - 2 * self.padding)
         surface.blit(self.internal_surface, dest=self.rect, area=relevant_rect)
+
+        # Draw border
+        if self.border_w > 0:
+            pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)

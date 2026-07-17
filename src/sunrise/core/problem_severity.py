@@ -1,5 +1,3 @@
-# dummy surface
-
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 
@@ -17,10 +15,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from enum import StrEnum
 
-import pygame as pg
-from pygame import Surface
 
-# This exists to avoid awkward `Surface | None` typing that
-# causes type checkers to complain incessantly!!
-DUMMY_SURFACE = Surface((1, 1), pg.SRCALPHA)
+class Severity(StrEnum):
+    """Problem severity"""
+
+    OK = "OK"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"

@@ -16,21 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from enum import StrEnum
 
 import pygame as pg
 from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
 from sunrise.ui.constants import BORDER_WIDTH, CURSOR_WIDTH, CURSOR_FLASH_INTERVAL
+from sunrise.core.problem_severity import Severity
 
 from .widget import Widget
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import crop_text_to_fit
-
-
-class ErrorSeverity(StrEnum):
-    OK = "OK"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
 
 
 class InputBox(Widget):
@@ -74,19 +68,19 @@ class InputBox(Widget):
         self.k_border_error = k_border_error
         self.k_sentinel = k_sentinel
 
-        self.severity: ErrorSeverity = ErrorSeverity.OK
+        self.severity: Severity = Severity.OK
         # Can be for error messages, but also can be used to display tooltips below `self` when `self.severity` is set to `OK`
         self.error_tooltip_msg: str | None = None
 
         self.sentinel_text = sentinel_text
         self.border_w = border_w
 
-    def set_error_msg(self, severity: ErrorSeverity = ErrorSeverity.OK, msg: str | None = None) -> None:
+    def set_error_msg(self, severity: Severity = Severity.OK, msg: str | None = None) -> None:
         self.severity = severity
         self.error_tooltip_msg = msg
 
     def clear_error_msg(self) -> None:
-        self.severity = ErrorSeverity.OK
+        self.severity = Severity.OK
         self.error_tooltip_msg = None
 
     def handle_input(self, keys: pg.key.ScancodeWrapper, events: list[pg.event.Event], dt_s: float) -> None:
@@ -160,11 +154,13 @@ class InputBox(Widget):
 
         # Border
         match self.severity:
-            case ErrorSeverity.ERROR:
+            case Severity.ERROR:
                 border_colour = current_theme[self.k_border_error]
-            case ErrorSeverity.WARNING:
+            case Severity.WARNING:
                 border_colour = current_theme[self.k_border_warning]
-            case ErrorSeverity.OK:
+            case Severity.OK:
+                border_colour = current_theme[self.k_border]
+            case _:
                 border_colour = current_theme[self.k_border]
 
         pg.draw.rect(surface, border_colour, self.rect, width=self.border_w)
@@ -177,13 +173,16 @@ class InputBox(Widget):
             return
 
         match self.severity:
-            case ErrorSeverity.ERROR:
+            case Severity.ERROR:
                 border_colour = current_theme[self.k_border_error]
                 tooltip_bg_colour = current_theme[self.k_bg_error]
-            case ErrorSeverity.WARNING:
+            case Severity.WARNING:
                 border_colour = current_theme[self.k_border_warning]
                 tooltip_bg_colour = current_theme[self.k_bg_warning]
-            case ErrorSeverity.OK:
+            case Severity.OK:
+                border_colour = current_theme[self.k_border]
+                tooltip_bg_colour = current_theme[self.k_bg]
+            case _:
                 border_colour = current_theme[self.k_border]
                 tooltip_bg_colour = current_theme[self.k_bg]
 

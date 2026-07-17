@@ -30,7 +30,7 @@ from sunrise.core.language_tree import Button
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton
-
+from sunrise.core.constants import ALLOWED_IMAGE_SUFFIXES
 from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN, ICON_SIZE
 
 if TYPE_CHECKING:
@@ -245,9 +245,9 @@ class ModifyState(State):
             self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"'{self.img_path_input_box.text}' is not a valid path for an image. Please choose a different path.")
         elif len(self.img_path_input_box.text) != len(self.img_path_input_box.text.strip()):
             self.img_path_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg="Leading or trailing whitespace in image path.")
-        elif self.img_path_input_box.text and not any(self.img_path_input_box.text.endswith(s) for s in [".png", ".jpg", ".jpeg", ".svg"]):
+        elif self.img_path_input_box.text and not any(self.img_path_input_box.text.endswith(s) for s in ALLOWED_IMAGE_SUFFIXES):
             all_valid = False
-            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg="Unsupported image format. Please use .png, .jpg, .jpeg, or .svg.")
+            self.img_path_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"Unsupported image format. Please use one of: {', '.join(ALLOWED_IMAGE_SUFFIXES)}")
         else:
             path = get_image_path(self.img_path_input_box.text)
             if not path.exists():
@@ -267,7 +267,7 @@ class ModifyState(State):
             self.label_input_box.clear_error_msg()
 
         # Warn if the user is attempting to place a button in a node that either doesn't exist or has no references to it.
-        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text not in self.aac_inst.engine.tree.get_reachable_nodes():
+        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text not in self.aac_inst.engine.tree.get_reachable_node_ids():
             self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{self.node_input_box.text}'")
         else:
             self.node_input_box.clear_error_msg()

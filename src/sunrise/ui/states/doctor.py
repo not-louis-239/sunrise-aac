@@ -25,11 +25,12 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
+from sunrise.core.lint_language_tree import lint_language_tree, Severity
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.themes import ThemeKey
 from sunrise.ui.constants import ICON_SIZE, UI_MARGIN, WN_H, WN_W
-from sunrise.ui.elements import Panel, HBox, VBox, Spacer, Label, CircularUIButton
+from sunrise.ui.elements import Panel, HBox, VBox, Spacer, Label, CircularUIButton, RectangularUIButton, ScrollableDisplay
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -40,11 +41,19 @@ class DoctorState(State):
     def __init__(self, aac_inst: AAC) -> None:
         super().__init__(aac_inst)
 
+        # Errors VBox
+        self.default_errors_display = [Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Warnings will appear here.")]
+        self.errors_vbox = VBox(padding=UI_MARGIN, gap=UI_MARGIN)
+        self.errors_scroller = ScrollableDisplay(flex=1, child=self.errors_vbox)
+
         # Close button
         self.close_button = CircularUIButton(
             r=ICON_SIZE // 2, font=self.aac_inst.assets.fonts.ui_button_font,
             img_path=self.aac_inst.assets.images.exit_icon, border_w=0, k_fg=ThemeKey.FG_ERROR
         )
+
+        # Button to check the language tree
+        self.check_button = RectangularUIButton(inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Check Language Tree")
 
         self.panel = Panel(
             horiz_padding=UI_MARGIN,
@@ -60,21 +69,58 @@ class DoctorState(State):
                             self.close_button
                         ]
                     ),
-                    Spacer(flex=1)
+                    HBox(
+                        gap=UI_MARGIN,
+                        children=[
+                            self.check_button,
+                            Spacer(flex=1)
+                        ]
+                    ),
+                    self.errors_scroller
                 ]
             )
         )
 
+        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self._reset_error_display()
+
+    def _reset_error_display(self) -> None:
+        self.errors_vbox.children = self.default_errors_display  # type: ignore
+        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+
+    def _refresh_error_display(self) -> None:
+        """Check the language tree and update the errors display with appropriate elements, then
+        re-layout."""
+
+        problems = lint_language_tree(self.aac_inst.engine.tree)
+
+        new_labels: list[Label] = []
+
+        for problem in problems:
+            label = Label(
+                font=self.aac_inst.assets.fonts.ui_text_font_s,
+                k_fg=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
+                text=problem.desc
+            )
+            new_labels.append(label)
+
+        self.errors_vbox.children = new_labels  # type: ignore
         self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 if self.close_button.check_click(event.pos):
+                    self._reset_error_display()
                     self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
+                if self.check_button.check_click(event.pos):
+                    self._refresh_error_display()
+
+            if event.type == pg.MOUSEWHEEL:
+                self.errors_scroller.handle_scroll(event)
 
     def update(self, dt_s: float) -> None:
-        pass
+        self.errors_scroller.update(dt_s=dt_s)
 
     def draw(self, screen: Surface) -> None:
         theme = self.aac_inst.get_current_theme()

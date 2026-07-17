@@ -21,3 +21,7 @@ DELETE_INTERVAL = 0.075
 MOVE_HOLD_DELAY = 0.5  # seconds to hold down a button to enter move mode
 
 FPS = 60
+
+# Image file types
+ALLOWED_IMAGE_SUFFIXES = [".png", ".jpg", ".jpeg", ".svg"]
+
