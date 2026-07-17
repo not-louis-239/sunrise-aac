@@ -349,9 +349,11 @@ class TalkState(State):
 
         if self.hamburger_menu_active:
             if self.settings_button.check_click(event.pos):
+                self.hamburger_menu_active = False
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.SETTINGS)
                 return True
             if self.doctor_button.check_click(event.pos):
+                self.hamburger_menu_active = False
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.DOCTOR)
                 return True
 
