@@ -49,11 +49,6 @@ class Fonts:
         self.talk_button_font_size = 21  # the separate size is needed somewhere so that's why it's stored as a separate attr
         self.talk_button_font = pg.font.Font(self._button_font_path, self.talk_button_font_size)
 
-        # automatically make a word slightly larger if it is short and has no attached image
-        self.talk_button_font_m = pg.font.Font(self._button_font_path, int(self.talk_button_font_size * 1.3))
-        self.talk_button_font_l = pg.font.Font(self._button_font_path, int(self.talk_button_font_size * 1.8))
-        self.talk_button_font_xl = pg.font.Font(self._button_font_path, self.talk_button_font_size * 3)
-
         self.ui_text_font_m = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_s = pg.font.Font(self._ui_font_path, 22)
         self.title_font = pg.font.Font(self._ui_font_path, 45)

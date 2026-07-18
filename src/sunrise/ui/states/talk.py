@@ -193,19 +193,6 @@ class _Renderer:
         else:
             text_y = rect.top
 
-        # Draw the button label
-        if img is None:
-            if len(button.label) <= 2:
-                font = self.aac_inst.assets.fonts.talk_button_font_xl
-            elif len(button.label) <= 4:
-                font = self.aac_inst.assets.fonts.talk_button_font_l
-            elif len(button.label) <= 7:
-                font = self.aac_inst.assets.fonts.talk_button_font_m
-            else:
-                font = self.aac_inst.assets.fonts.talk_button_font
-        else:
-            font = self.aac_inst.assets.fonts.talk_button_font
-
         # Decide the colour of the button foreground - grey it out if it is
         # a button that applies an inflection, but it is invalid for
         # the current word
@@ -223,7 +210,7 @@ class _Renderer:
         draw_text(
             surface=screen, pos=(text_centre_x, text_y),
             horiz_align="centre", vert_align="top" if img else "centre", colour=theme[k_fg],
-            text=str(button.label), font_family=font
+            text=str(button.label), font_family=self.aac_inst.assets.fonts.talk_button_font
         )
 
     def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool, is_selecting_coords: bool) -> None:

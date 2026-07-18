@@ -103,7 +103,9 @@ class DoctorState(State):
     def _reset_error_display(self) -> None:
         self.errors_vbox.children = self.default_errors_display  # type: ignore
         self.num_errors_label.set_text("-")
+        self.num_errors_label.k_fg = ThemeKey.FG_DISABLED
         self.num_warnings_label.set_text("-")
+        self.num_warnings_label.k_fg = ThemeKey.FG_DISABLED
         self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
 
     def _refresh_error_display(self) -> None:
@@ -131,6 +133,8 @@ class DoctorState(State):
                 num_errors += 1
             else:
                 num_warnings += 1
+
+        new_labels.sort(key=lambda l: l.text)
 
         self.errors_vbox.children = new_labels  # type: ignore
 

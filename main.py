@@ -40,29 +40,32 @@ def main():
     clock = pg.time.Clock()
     aac = AAC()
 
-    running = True
-    while running:
-        keys = pg.key.get_pressed()
-        events = pg.event.get()
-        dt_s = clock.tick(FPS) / 1_000.0
+    try:
+        running = True
+        while running:
+            keys = pg.key.get_pressed()
+            events = pg.event.get()
+            dt_s = clock.tick(FPS) / 1_000.0
 
-        for event in events:
-            if event.type == pg.QUIT:
-                save_language_tree(aac.engine.tree)
-                aac.quit()
-                running = False
+            for event in events:
+                if event.type == pg.QUIT:
+                    save_language_tree(aac.engine.tree)
+                    aac.quit()
+                    running = False
 
-        aac.update(dt_s=dt_s)
-        aac.take_input(keys=keys, events=events, dt_s=dt_s)
-        aac.draw(screen)
-        pg.display.flip()
+            aac.update(dt_s=dt_s)
+            aac.take_input(keys=keys, events=events, dt_s=dt_s)
+            aac.draw(screen)
+            pg.display.flip()
+    except KeyboardInterrupt:
+        save_language_tree(aac.engine.tree)
+        aac.quit()
+        print("\nExited.")
 
 if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
         write_error_log(exc)
-    except KeyboardInterrupt:
-        print("\nExited.")
     finally:
         pg.quit()
