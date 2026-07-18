@@ -25,13 +25,18 @@ from .widget import Widget
 
 class Label(Widget):
     def __init__(
-            self, *, flex: int = 0, text: str = "", font: pg.font.Font,
-            k_fg: ThemeKey = ThemeKey.FG
+            self, *, flex: int = 0, text: str = "", font: pg.font.Font, inset: int = 0,
+            k_fg: ThemeKey = ThemeKey.FG, k_bg: ThemeKey | None = None, k_border: ThemeKey = ThemeKey.BORDER, border_w: int = 0
         ) -> None:
         super().__init__(flex=flex)
         self.text = text
         self.font = font
+        self.inset = inset
         self.k_fg = k_fg
+
+        self.k_bg = k_bg
+        self.k_border = k_border
+        self.border_w = border_w
 
     def set_fg_theme_key(self, k_fg: ThemeKey) -> None:
         self.k_fg = k_fg
@@ -40,14 +45,23 @@ class Label(Widget):
         self.text = text
 
     def preferred_size(self) -> tuple[int, int]:
-        w, h = self.font.size(self.text)
-        return (w, h)
+        text_w, text_h = self.font.size(self.text)
+        return (text_w + 2 * self.inset, text_h + 2 * self.inset)
 
     def layout(self, rect: pg.Rect) -> None:
         self.rect = rect
 
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
-        # Draws text aligned within `self`'s rect
-        text = crop_text_to_fit(self.text, self.font, self.rect.width)
+        # Draw background if applicable
+        if self.k_bg is not None:
+            pg.draw.rect(surface, current_theme[self.k_bg], self.rect)
+
+        # Draw text aligned within `self`'s rect
+        text = crop_text_to_fit(self.text, self.font, self.rect.width - 2 * self.inset)
         font_surface = self.font.render(text, True, current_theme[self.k_fg])
-        surface.blit(font_surface, self.rect)
+        surface.blit(font_surface, self.rect.inflate(-2 * self.inset, -2 * self.inset))
+
+        # Draw border if applicable
+        if self.border_w > 0:
+            pg.draw.rect(surface, current_theme[self.k_border], self.rect, self.border_w)
+

@@ -29,8 +29,8 @@ from sunrise.core.lint_language_tree import lint_language_tree, Severity
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.constants import ICON_SIZE, UI_MARGIN, WN_H, WN_W
-from sunrise.ui.elements import Panel, HBox, VBox, Spacer, Label, CircularUIButton, RectangularUIButton, ScrollableDisplay
+from sunrise.ui.constants import ICON_SIZE, UI_MARGIN, WN_H, WN_W, BORDER_WIDTH
+from sunrise.ui.elements import Panel, HBox, VBox, SBox, Spacer, Icon, Label, HAlign, CircularUIButton, RectangularUIButton, ScrollableDisplay
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -45,6 +45,21 @@ class DoctorState(State):
         self.default_errors_display = [Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Warnings will appear here.")]
         self.errors_vbox = VBox(padding=UI_MARGIN, gap=UI_MARGIN)
         self.errors_scroller = ScrollableDisplay(flex=1, child=self.errors_vbox)
+
+        # Errors/warnings display
+        self.num_errors_label = Label(font=self.aac_inst.assets.fonts.ui_button_font)
+        self.num_warnings_label = Label(font=self.aac_inst.assets.fonts.ui_button_font)
+
+        self.errors_warnings_counter = HBox(
+            children=[
+                Icon(img_path=self.aac_inst.assets.images.exit_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_ERROR),
+                Spacer(min_w=UI_MARGIN),
+                SBox(forced_width=100, child=self.num_errors_label, h_align=HAlign.LEFT),
+                Icon(img_path=self.aac_inst.assets.images.warning_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_WARNING),
+                Spacer(min_w=UI_MARGIN),
+                SBox(forced_width=100, child=self.num_warnings_label, h_align=HAlign.LEFT),
+            ]
+        )
 
         # Close button
         self.close_button = CircularUIButton(
@@ -64,7 +79,7 @@ class DoctorState(State):
                     HBox(
                         gap=UI_MARGIN,
                         children=[
-                            Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Doctor"),
+                            Label(font=self.aac_inst.assets.fonts.title_font, text="Doctor"),
                             Spacer(flex=1),
                             self.close_button
                         ]
@@ -73,6 +88,7 @@ class DoctorState(State):
                         gap=UI_MARGIN,
                         children=[
                             self.check_button,
+                            self.errors_warnings_counter,
                             Spacer(flex=1)
                         ]
                     ),
@@ -86,6 +102,8 @@ class DoctorState(State):
 
     def _reset_error_display(self) -> None:
         self.errors_vbox.children = self.default_errors_display  # type: ignore
+        self.num_errors_label.set_text("-")
+        self.num_warnings_label.set_text("-")
         self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
 
     def _refresh_error_display(self) -> None:
@@ -95,16 +113,33 @@ class DoctorState(State):
         problems = lint_language_tree(self.aac_inst.engine.tree)
 
         new_labels: list[Label] = []
+        num_errors = 0
+        num_warnings = 0
 
         for problem in problems:
             label = Label(
                 font=self.aac_inst.assets.fonts.ui_text_font_s,
-                k_fg=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
+                inset=UI_MARGIN,
+                border_w=BORDER_WIDTH,
+                k_bg=ThemeKey.BG_ERROR if problem.severity == Severity.ERROR else ThemeKey.BG_WARNING,
+                k_border=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
                 text=problem.desc
             )
             new_labels.append(label)
 
+            if problem.severity == Severity.ERROR:
+                num_errors += 1
+            else:
+                num_warnings += 1
+
         self.errors_vbox.children = new_labels  # type: ignore
+
+        self.num_errors_label.set_text(str(num_errors))
+        self.num_errors_label.k_fg = ThemeKey.FG if num_errors else ThemeKey.FG_DISABLED
+
+        self.num_warnings_label.set_text(str(num_warnings))
+        self.num_warnings_label.k_fg = ThemeKey.FG if num_warnings else ThemeKey.FG_DISABLED
+
         self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:

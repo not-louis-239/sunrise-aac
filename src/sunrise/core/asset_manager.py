@@ -68,6 +68,7 @@ class Images:
         self.exit_icon: Path = UI_IMAGES_DIR / "exit.png"
         self.proceed_icon: Path = UI_IMAGES_DIR / "proceed.png"
         self.lock_icon: Path = UI_IMAGES_DIR / "lock.png"
+        self.warning_icon: Path = UI_IMAGES_DIR / "warning.png"
 
         self.property_icons: dict[PropertyIconID, Path] = {
             PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",
