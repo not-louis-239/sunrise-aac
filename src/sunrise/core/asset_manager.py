@@ -56,7 +56,7 @@ class Fonts:
 
 class Images:
     def __init__(self) -> None:
-        # {relative_fp, pg.Surface} pairs
+        # {relative_fp, pg.Surface} pairs for buttons
         self.cache: dict[str, pg.Surface] = {}
 
         # paths

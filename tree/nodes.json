@@ -259,7 +259,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/home/in.png",
                     "immutable": false
                 },
                 {
@@ -285,7 +285,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/home/out.png",
                     "immutable": false
                 },
                 {
@@ -632,7 +632,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        6,
+                        7,
                         0
                     ],
                     "type": "pronoun",
@@ -645,7 +645,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        7,
+                        8,
                         0
                     ],
                     "type": "pronoun",
@@ -658,7 +658,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        8,
+                        9,
                         0
                     ],
                     "type": "pronoun",
@@ -671,7 +671,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        9,
+                        6,
                         0
                     ],
                     "type": "pronoun",
@@ -714,7 +714,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/home/all.png",
                     "immutable": false
                 },
                 {
@@ -727,7 +727,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/home/some.png",
                     "immutable": false
                 },
                 {
@@ -784,7 +784,7 @@
                 },
                 {
                     "label": "None",
-                    "word": null,
+                    "word": "none",
                     "dest": null,
                     "func": null,
                     "coords": [
@@ -831,7 +831,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
+                        3,
                         0
                     ],
                     "type": "noun",
@@ -844,7 +844,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
+                        2,
                         0
                     ],
                     "type": "noun",
@@ -901,6 +901,110 @@
                     ],
                     "type": "noun",
                     "img": "./icons/food/pear.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Cereal",
+                    "word": "cereal",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/cereal.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Toast",
+                    "word": "toast",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/toast.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Bread",
+                    "word": "bread",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/bread.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Meat",
+                    "word": "meat",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/meat.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Steak",
+                    "word": "steak",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/steak.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Eggs",
+                    "word": "eggs",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/eggs.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Ham",
+                    "word": "ham",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/ham.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Chips",
+                    "word": "chips",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/food/chips.png",
                     "immutable": false
                 }
             ]
@@ -997,6 +1101,19 @@
                     "type": "noun",
                     "img": "./icons/drinks/milkshake.png",
                     "immutable": false
+                },
+                {
+                    "label": "Soft Drink",
+                    "word": "soft drink",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
                 }
             ]
         },
@@ -1052,6 +1169,32 @@
                     ],
                     "type": "noun",
                     "img": "./icons/places/school.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Near",
+                    "word": "near",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Far",
+                    "word": null,
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
                     "immutable": false
                 }
             ]
@@ -1220,7 +1363,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        0,
+                        1,
                         4
                     ],
                     "type": "noun",
@@ -1233,7 +1376,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        1,
+                        2,
                         4
                     ],
                     "type": "noun",
@@ -1246,7 +1389,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
+                        3,
                         4
                     ],
                     "type": "noun",
@@ -1259,7 +1402,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
+                        4,
                         4
                     ],
                     "type": "noun",
@@ -1272,7 +1415,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
+                        5,
                         4
                     ],
                     "type": "noun",
@@ -1285,11 +1428,219 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
+                        6,
                         4
                     ],
                     "type": "noun",
                     "img": "./icons/time/second.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Soon",
+                    "word": "soon",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/soon.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Later",
+                    "word": "later",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/later.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Now",
+                    "word": "now",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/time/now.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Past",
+                    "word": "past",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/time/past.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Future",
+                    "word": "future",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/time/future.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Fast",
+                    "word": "fast",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/fast.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Slow",
+                    "word": "slow",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/slow.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Year",
+                    "word": null,
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        4
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Half",
+                    "word": "half",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        4
+                    ],
+                    "type": "noun",
+                    "img": "./icons/time/half.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Quarter",
+                    "word": "quarter",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        4
+                    ],
+                    "type": "noun",
+                    "img": "./icons/time/quarter.png",
+                    "immutable": false
+                },
+                {
+                    "label": "O' Clock",
+                    "word": "o' clock",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        4
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/o_clock.png",
+                    "immutable": false
+                },
+                {
+                    "label": "To",
+                    "word": "to",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/to.png",
+                    "immutable": false
+                },
+                {
+                    "label": "15",
+                    "word": "15",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        2
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "30",
+                    "word": "30",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        2
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "45",
+                    "word": "45",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        2
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Past",
+                    "word": "past",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/time/past_alternate.png",
                     "immutable": false
                 }
             ]
@@ -1639,7 +1990,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
+                        5,
                         0
                     ],
                     "type": "descriptor",
@@ -1652,11 +2003,154 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
+                        8,
                         0
                     ],
                     "type": "descriptor",
                     "img": "./icons/weather/cold.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Wet",
+                    "word": "wet",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/wet.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Dry",
+                    "word": "dry",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/dry.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Stormy",
+                    "word": "stormy",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/stormy.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Warm",
+                    "word": "warm",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/warm.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Boiling",
+                    "word": "boiling",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/boiling.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Freezing",
+                    "word": "freezing",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/freezing.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Cool",
+                    "word": "cool",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Lightning",
+                    "word": "lightning",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/weather/lightning.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Rainbow",
+                    "word": "rainbow",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": "./icons/weather/rainbow.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Foggy",
+                    "word": "foggy",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/weather/foggy.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Snowy",
+                    "word": "snowy",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
                     "immutable": false
                 }
             ]
@@ -1764,7 +2258,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        1,
+                        5,
                         0
                     ],
                     "type": "descriptor",
@@ -1777,7 +2271,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
+                        4,
                         0
                     ],
                     "type": "descriptor",
@@ -1790,7 +2284,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
+                        2,
                         0
                     ],
                     "type": "descriptor",
@@ -1803,7 +2297,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
+                        8,
                         0
                     ],
                     "type": "descriptor",
@@ -1816,11 +2310,245 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
+                        1,
                         0
                     ],
                     "type": "descriptor",
                     "img": "./icons/colours/orange.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Black",
+                    "word": "black",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/black.png",
+                    "immutable": false
+                },
+                {
+                    "label": "White",
+                    "word": "white",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/white.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Grey",
+                    "word": "grey",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/grey.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Pink",
+                    "word": "pink",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/pink.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Aqua",
+                    "word": "aqua",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/aqua.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Maroon",
+                    "word": "maroon",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/maroon.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Teal",
+                    "word": "teal",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/teal.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Indigo",
+                    "word": "indigo",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/indigo.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Violet",
+                    "word": "violet",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/violet.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Gold",
+                    "word": "gold",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/gold.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Crimson",
+                    "word": "crimson",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/crimson.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Brown",
+                    "word": "brown",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/brown.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Cream",
+                    "word": "cream",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/cream.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Lime",
+                    "word": "lime",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/lime.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Navy",
+                    "word": "navy",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/navy.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Chocolate",
+                    "word": "chocolate",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/chocolate.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Rainbow",
+                    "word": "rainbow",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/rainbow.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Sky Blue",
+                    "word": "sky blue",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/colours/sky_blue.png",
                     "immutable": false
                 }
             ]
@@ -2051,6 +2779,19 @@
                     "type": "folder",
                     "img": "./folders/time.png",
                     "immutable": false
+                },
+                {
+                    "label": "Directions",
+                    "word": null,
+                    "dest": "DIRECTIONS",
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "folder",
+                    "img": "./folders/directions.png",
+                    "immutable": false
                 }
             ]
         },
@@ -2071,7 +2812,7 @@
                 },
                 {
                     "label": "Dog",
-                    "word": null,
+                    "word": "dog",
                     "dest": null,
                     "func": null,
                     "coords": [
@@ -2079,6 +2820,751 @@
                         0
                     ],
                     "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Bird",
+                    "word": "bird",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Sheep",
+                    "word": "sheep",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Cow",
+                    "word": "cow",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Pig",
+                    "word": "pig",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Horse",
+                    "word": "horse",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Bee",
+                    "word": "bee",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Bull",
+                    "word": "bull",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                }
+            ]
+        },
+        "DIRECTIONS": {
+            "buttons": [
+                {
+                    "label": "Left",
+                    "word": "left",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Right",
+                    "word": "right",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Up",
+                    "word": "up",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Down",
+                    "word": "down",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Forward",
+                    "word": "forward",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Backward",
+                    "word": "backward",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        1
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Top",
+                    "word": "top",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Bottom",
+                    "word": "bottom",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/directions/bottom.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Front",
+                    "word": "front",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Back",
+                    "word": "back",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Sideways",
+                    "word": "sideways",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Horizontal",
+                    "word": "horizontal",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Vertical",
+                    "word": "vertical",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Length",
+                    "word": "length",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Width",
+                    "word": "width",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Height",
+                    "word": "height",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "North",
+                    "word": "north",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "South",
+                    "word": "south",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "East",
+                    "word": "east",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "West",
+                    "word": "west",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Clockwise",
+                    "word": "clockwise",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        4
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Anticlockwise",
+                    "word": "anticlockwise",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        4
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Turn",
+                    "word": "turn",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        4
+                    ],
+                    "type": "verb",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "45",
+                    "word": "45",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        4
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "90",
+                    "word": "90",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        4
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "180",
+                    "word": "180",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        4
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "360",
+                    "word": "360",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        4
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "30",
+                    "word": "30",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        4
+                    ],
+                    "type": "syntax",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Degrees",
+                    "word": "degrees",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        4
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Move",
+                    "word": "move",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        3
+                    ],
+                    "type": "verb",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Diagonal",
+                    "word": "diagonal",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Between",
+                    "word": "between",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "In Front",
+                    "word": "in front",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        4,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Behind",
+                    "word": "behind",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Straight",
+                    "word": "straight",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Distance",
+                    "word": "distance",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        3
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Destination",
+                    "word": "destination",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        2,
+                        3
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Depart",
+                    "word": "depart",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        2
+                    ],
+                    "type": "verb",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Arrive",
+                    "word": "arrive",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        3
+                    ],
+                    "type": "verb",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Leave",
+                    "word": "leave",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        2
+                    ],
+                    "type": "verb",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Trip",
+                    "word": "trip",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        3
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Opposite",
+                    "word": "opposite",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Across",
+                    "word": "across",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Depth",
+                    "word": "depth",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        1
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Metres",
+                    "word": "metres",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        4
+                    ],
+                    "type": "noun",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Deep",
+                    "word": "deep",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Long",
+                    "word": "long",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Wide",
+                    "word": "wide",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Tall",
+                    "word": "tall",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        2
+                    ],
+                    "type": "descriptor",
+                    "img": null,
+                    "immutable": false
+                },
+                {
+                    "label": "Short",
+                    "word": "short",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        3
+                    ],
+                    "type": "descriptor",
                     "img": null,
                     "immutable": false
                 }

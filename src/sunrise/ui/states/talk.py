@@ -187,6 +187,7 @@ class _Renderer:
             screen.blit(img, img_rect)
 
         # Now the text
+        # TODO: shrink the text if it's too large for the button
         text_centre_x = rect.centerx
         if not img:
             text_y = rect.centery  # no image -> print text in centre of the rect
@@ -344,8 +345,8 @@ class TalkState(State):
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.DOCTOR)
                 return True
 
-        if is_inside_hamburger_panel:
-            return True  # block clicks that are inside the panel but don't do anything
+            if is_inside_hamburger_panel:
+                return True  # block clicks that are inside the panel but don't do anything
         return False
 
     def _handle_rmb_click(self, event: pg.event.Event) -> None:

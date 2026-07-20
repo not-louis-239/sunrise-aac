@@ -30,12 +30,24 @@ from sunrise.ui.constants import GRID_W, GRID_H
 class Problem:
     severity: Severity
     desc: str
+    node_id: str | None = None
+    button_label: str | None = None
+
+    def __str__(self) -> str:
+        if self.node_id and self.button_label:
+            return f"Node '{self.node_id}', Button '{self.button_label}': {self.desc}"
+        elif self.node_id:
+            return f"Node '{self.node_id}': {self.desc}"
+        else:
+            return self.desc
+
 
 def lint_language_tree(lt: LanguageTree) -> list[Problem]:
     """
     Lint a LanguageTree object and return a list of `Problem`s if applicable, such as:
      - missing UNIVERSAL node
      - unreachable nodes
+     - buttons with no action set (no word, destination or function)
      - buttons with OOB grid positions
      - buttons overlapping with UNIVERSAL or same-node buttons
      - buttons with bad image paths
@@ -56,34 +68,40 @@ def lint_language_tree(lt: LanguageTree) -> list[Problem]:
     reachable_node_ids = lt.get_reachable_node_ids()
     unreachable_node_ids = set(lt.nodes.keys()) - reachable_node_ids
     for node_id in unreachable_node_ids:
-        problems.append(Problem(Severity.WARNING, f"Unreachable node '{node_id}'"))
+        problems.append(Problem(Severity.WARNING, f"Unreachable node '{node_id}'", node_id=node_id))
 
     # Check for OOB positions and overlaps
     for node_id in reachable_node_ids - {"UNIVERSAL"}:
         node = lt.nodes[node_id]  # not using .get() here so Pyright won't complain, we know that it points to a valid node
         seen_coords = universal_button_coords.copy()
 
+        # TODO: clicking on a warning or error takes you to the problematic button
+        # this would be a nice QoL feature
+
         for button in node.buttons:
+            # No function set
+            if not button.word and not button.dest and not button.func:
+                problems.append(Problem(Severity.WARNING, f"No word, destination or function set", node_id=node_id, button_label=button.label))
+
             # Grid position out of bounds
             x, y = button.coords
             if not (-GRID_W <= x < GRID_W and -GRID_H <= y < GRID_H):
-                problems.append(Problem(Severity.ERROR, f"Node '{node_id}', Button '{button.label}': Out-of-bounds coordinates {button.coords}"))
+                problems.append(Problem(Severity.ERROR, f"Out-of-bounds coordinates {button.coords}", node_id=node_id, button_label=button.label))
 
             # Overlaps
             coords_norm = button.coords[0] % GRID_W, button.coords[1] % GRID_H  # normalise
             if coords_norm in seen_coords:
-                print(f"Node '{node_id}', Button '{button.label}': Coordinates {button.coords}")
-                problems.append(Problem(Severity.ERROR, f"Node '{node_id}', Button '{button.label}': Coordinates {button.coords} is already occupied by another button"))
+                problems.append(Problem(Severity.ERROR, f"Coordinates {button.coords} is already occupied by another button", node_id=node_id, button_label=button.label))
             seen_coords.add(coords_norm)
 
             # Bad image paths
             if button.img is not None:
                 img_path = get_image_path(button.img)
                 if not img_path.exists():
-                    problems.append(Problem(Severity.WARNING, f"Node '{node_id}', Button '{button.label}': Image not found: '{button.img}'"))
+                    problems.append(Problem(Severity.WARNING, f"Image not found: '{button.img}'", node_id=node_id, button_label=button.label))
                 elif not img_path.is_file():
-                    problems.append(Problem(Severity.WARNING, f"Node '{node_id}', Button '{button.label}': '{button.img}' is not a file"))
+                    problems.append(Problem(Severity.WARNING, f"'{button.img}' is not a file", node_id=node_id, button_label=button.label))
                 elif img_path and img_path.suffix not in ALLOWED_IMAGE_SUFFIXES:
-                    problems.append(Problem(Severity.ERROR, f"Unsupported image format. Please use one of: {', '.join(ALLOWED_IMAGE_SUFFIXES)}"))
+                    problems.append(Problem(Severity.ERROR, f"Unsupported image format. Please use one of: {', '.join(ALLOWED_IMAGE_SUFFIXES)}", node_id=node_id, button_label=button.label))
 
     return problems

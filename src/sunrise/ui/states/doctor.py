@@ -69,6 +69,7 @@ class DoctorState(State):
 
         # Button to check the language tree
         self.check_button = RectangularUIButton(inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Check Language Tree")
+        self.clear_button = RectangularUIButton(inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Clear Caches")
 
         self.panel = Panel(
             horiz_padding=UI_MARGIN,
@@ -89,7 +90,8 @@ class DoctorState(State):
                         children=[
                             self.check_button,
                             self.errors_warnings_counter,
-                            Spacer(flex=1)
+                            Spacer(flex=1),
+                            self.clear_button
                         ]
                     ),
                     self.errors_scroller
@@ -125,7 +127,7 @@ class DoctorState(State):
                 border_w=BORDER_WIDTH,
                 k_bg=ThemeKey.BG_ERROR if problem.severity == Severity.ERROR else ThemeKey.BG_WARNING,
                 k_border=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
-                text=problem.desc
+                text=str(problem)
             )
             new_labels.append(label)
 
@@ -154,6 +156,8 @@ class DoctorState(State):
                     self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
                 if self.check_button.check_click(event.pos):
                     self._refresh_error_display()
+                if self.clear_button.check_click(event.pos):
+                    self.aac_inst.assets.images.cache.clear()
 
             if event.type == pg.MOUSEWHEEL:
                 self.errors_scroller.handle_scroll(event)
