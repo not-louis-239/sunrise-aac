@@ -155,7 +155,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/i.png",
                     "immutable": false
                 },
                 {
@@ -168,7 +168,7 @@
                         2
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/home/want.png",
                     "immutable": false
                 },
                 {
@@ -207,7 +207,7 @@
                         2
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/home/do.png",
                     "immutable": false
                 },
                 {
@@ -220,7 +220,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/for.png",
                     "immutable": false
                 },
                 {
@@ -233,7 +233,7 @@
                         3
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/a.png",
                     "immutable": false
                 },
                 {
@@ -246,7 +246,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/the.png",
                     "immutable": false
                 },
                 {
@@ -272,7 +272,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/on.png",
                     "immutable": false
                 },
                 {
@@ -298,7 +298,7 @@
                         3
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/at.png",
                     "immutable": false
                 },
                 {
@@ -311,7 +311,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/and.png",
                     "immutable": false
                 },
                 {
@@ -324,7 +324,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/an.png",
                     "immutable": false
                 },
                 {
@@ -519,7 +519,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/you.png",
                     "immutable": false
                 },
                 {
@@ -532,7 +532,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/me.png",
                     "immutable": false
                 },
                 {
@@ -545,7 +545,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/to.png",
                     "immutable": false
                 },
                 {
@@ -597,7 +597,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/he.png",
                     "immutable": false
                 },
                 {
@@ -610,7 +610,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/she.png",
                     "immutable": false
                 },
                 {
@@ -623,7 +623,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/it.png",
                     "immutable": false
                 },
                 {
@@ -636,7 +636,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/we.png",
                     "immutable": false
                 },
                 {
@@ -649,7 +649,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/you.png",
                     "immutable": false
                 },
                 {
@@ -662,7 +662,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/they.png",
                     "immutable": false
                 },
                 {
@@ -675,7 +675,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/them.png",
                     "immutable": false
                 },
                 {
@@ -688,7 +688,7 @@
                         1
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/him.png",
                     "immutable": false
                 },
                 {
@@ -701,7 +701,7 @@
                         1
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/her.png",
                     "immutable": false
                 },
                 {
@@ -740,7 +740,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/home/of.png",
                     "immutable": false
                 },
                 {
@@ -1112,7 +1112,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/drinks/soft_drink.png",
                     "immutable": false
                 }
             ]
@@ -1181,7 +1181,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/places/near.png",
                     "immutable": false
                 },
                 {
@@ -1194,7 +1194,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/places/far.png",
                     "immutable": false
                 }
             ]
@@ -1211,7 +1211,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/1.png",
                     "immutable": false
                 },
                 {
@@ -1224,7 +1224,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/2.png",
                     "immutable": false
                 },
                 {
@@ -1237,7 +1237,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/3.png",
                     "immutable": false
                 },
                 {
@@ -1250,7 +1250,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/4.png",
                     "immutable": false
                 },
                 {
@@ -1263,7 +1263,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/5.png",
                     "immutable": false
                 },
                 {
@@ -1276,7 +1276,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/6.png",
                     "immutable": false
                 },
                 {
@@ -1289,7 +1289,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/7.png",
                     "immutable": false
                 },
                 {
@@ -1302,7 +1302,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/8.png",
                     "immutable": false
                 },
                 {
@@ -1315,7 +1315,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/9.png",
                     "immutable": false
                 },
                 {
@@ -1328,7 +1328,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/10.png",
                     "immutable": false
                 },
                 {
@@ -1341,7 +1341,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/11.png",
                     "immutable": false
                 },
                 {
@@ -1354,7 +1354,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/12.png",
                     "immutable": false
                 },
                 {
@@ -1536,7 +1536,7 @@
                         4
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/time/year.png",
                     "immutable": false
                 },
                 {
@@ -1601,7 +1601,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/15.png",
                     "immutable": false
                 },
                 {
@@ -1614,7 +1614,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/30.png",
                     "immutable": false
                 },
                 {
@@ -1627,7 +1627,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/time/45.png",
                     "immutable": false
                 },
                 {
@@ -1843,7 +1843,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/people/baker.png",
                     "immutable": false
                 }
             ]
@@ -2098,7 +2098,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/weather/cool.png",
                     "immutable": false
                 },
                 {
@@ -2150,7 +2150,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/weather/snowy.png",
                     "immutable": false
                 }
             ]
@@ -2604,7 +2604,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/how.png",
                     "immutable": false
                 },
                 {
@@ -2617,7 +2617,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/are.png",
                     "immutable": false
                 },
                 {
@@ -2630,7 +2630,7 @@
                         1
                     ],
                     "type": "social",
-                    "img": null,
+                    "img": "./icons/extra_words/hello.png",
                     "immutable": false
                 },
                 {
@@ -2643,7 +2643,7 @@
                         1
                     ],
                     "type": "social",
-                    "img": null,
+                    "img": "./icons/extra_words/goodbye.png",
                     "immutable": false
                 },
                 {
@@ -2656,7 +2656,7 @@
                         1
                     ],
                     "type": "social",
-                    "img": null,
+                    "img": "./icons/extra_words/what's_up?.png",
                     "immutable": false
                 },
                 {
@@ -2669,7 +2669,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/?.png",
                     "immutable": false
                 },
                 {
@@ -2682,7 +2682,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/!.png",
                     "immutable": false
                 },
                 {
@@ -2695,7 +2695,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/..png",
                     "immutable": false
                 },
                 {
@@ -2708,7 +2708,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/,.png",
                     "immutable": false
                 },
                 {
@@ -2721,7 +2721,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/extra_words/but.png",
                     "immutable": false
                 }
             ]
@@ -2807,7 +2807,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/cat.png",
                     "immutable": false
                 },
                 {
@@ -2820,7 +2820,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/dog.png",
                     "immutable": false
                 },
                 {
@@ -2833,7 +2833,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/bird.png",
                     "immutable": false
                 },
                 {
@@ -2846,7 +2846,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/sheep.png",
                     "immutable": false
                 },
                 {
@@ -2859,7 +2859,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/cow.png",
                     "immutable": false
                 },
                 {
@@ -2872,7 +2872,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/pig.png",
                     "immutable": false
                 },
                 {
@@ -2885,7 +2885,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/horse.png",
                     "immutable": false
                 },
                 {
@@ -2898,7 +2898,7 @@
                         0
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/bee.png",
                     "immutable": false
                 },
                 {
@@ -2911,7 +2911,7 @@
                         1
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/animals/bull.png",
                     "immutable": false
                 }
             ]
@@ -2928,7 +2928,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/left.png",
                     "immutable": false
                 },
                 {
@@ -2941,7 +2941,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/right.png",
                     "immutable": false
                 },
                 {
@@ -2954,7 +2954,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/up.png",
                     "immutable": false
                 },
                 {
@@ -2967,7 +2967,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/down.png",
                     "immutable": false
                 },
                 {
@@ -2980,7 +2980,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/forward.png",
                     "immutable": false
                 },
                 {
@@ -2993,7 +2993,7 @@
                         1
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/backward.png",
                     "immutable": false
                 },
                 {
@@ -3006,7 +3006,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/top.png",
                     "immutable": false
                 },
                 {
@@ -3032,7 +3032,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/front.png",
                     "immutable": false
                 },
                 {
@@ -3045,7 +3045,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/back.png",
                     "immutable": false
                 },
                 {
@@ -3058,7 +3058,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/sideways.png",
                     "immutable": false
                 },
                 {
@@ -3071,7 +3071,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/horizontal.png",
                     "immutable": false
                 },
                 {
@@ -3084,7 +3084,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/vertical.png",
                     "immutable": false
                 },
                 {
@@ -3097,7 +3097,7 @@
                         1
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/length.png",
                     "immutable": false
                 },
                 {
@@ -3110,7 +3110,7 @@
                         1
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/width.png",
                     "immutable": false
                 },
                 {
@@ -3123,7 +3123,7 @@
                         1
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/height.png",
                     "immutable": false
                 },
                 {
@@ -3136,7 +3136,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/north.png",
                     "immutable": false
                 },
                 {
@@ -3149,7 +3149,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/south.png",
                     "immutable": false
                 },
                 {
@@ -3162,7 +3162,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/east.png",
                     "immutable": false
                 },
                 {
@@ -3175,7 +3175,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/west.png",
                     "immutable": false
                 },
                 {
@@ -3188,7 +3188,7 @@
                         4
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/clockwise.png",
                     "immutable": false
                 },
                 {
@@ -3201,7 +3201,7 @@
                         4
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/anticlockwise.png",
                     "immutable": false
                 },
                 {
@@ -3214,7 +3214,7 @@
                         4
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/directions/turn.png",
                     "immutable": false
                 },
                 {
@@ -3227,7 +3227,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/directions/45.png",
                     "immutable": false
                 },
                 {
@@ -3240,7 +3240,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/directions/90.png",
                     "immutable": false
                 },
                 {
@@ -3253,7 +3253,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/directions/180.png",
                     "immutable": false
                 },
                 {
@@ -3266,7 +3266,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/directions/360.png",
                     "immutable": false
                 },
                 {
@@ -3279,7 +3279,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": null,
+                    "img": "./icons/directions/30.png",
                     "immutable": false
                 },
                 {
@@ -3292,7 +3292,7 @@
                         4
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/degrees.png",
                     "immutable": false
                 },
                 {
@@ -3305,7 +3305,7 @@
                         3
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/directions/move.png",
                     "immutable": false
                 },
                 {
@@ -3318,7 +3318,7 @@
                         3
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/diagonal.png",
                     "immutable": false
                 },
                 {
@@ -3331,7 +3331,7 @@
                         3
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/between.png",
                     "immutable": false
                 },
                 {
@@ -3344,7 +3344,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/in_front.png",
                     "immutable": false
                 },
                 {
@@ -3357,7 +3357,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/behind.png",
                     "immutable": false
                 },
                 {
@@ -3370,7 +3370,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/straight.png",
                     "immutable": false
                 },
                 {
@@ -3383,7 +3383,7 @@
                         3
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/distance.png",
                     "immutable": false
                 },
                 {
@@ -3396,7 +3396,7 @@
                         3
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/destination.png",
                     "immutable": false
                 },
                 {
@@ -3409,7 +3409,7 @@
                         2
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/directions/depart.png",
                     "immutable": false
                 },
                 {
@@ -3422,7 +3422,7 @@
                         3
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/directions/arrive.png",
                     "immutable": false
                 },
                 {
@@ -3435,7 +3435,7 @@
                         2
                     ],
                     "type": "verb",
-                    "img": null,
+                    "img": "./icons/directions/leave.png",
                     "immutable": false
                 },
                 {
@@ -3448,7 +3448,7 @@
                         3
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/trip.png",
                     "immutable": false
                 },
                 {
@@ -3461,7 +3461,7 @@
                         3
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/opposite.png",
                     "immutable": false
                 },
                 {
@@ -3474,7 +3474,7 @@
                         3
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/across.png",
                     "immutable": false
                 },
                 {
@@ -3487,7 +3487,7 @@
                         1
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/depth.png",
                     "immutable": false
                 },
                 {
@@ -3500,7 +3500,7 @@
                         4
                     ],
                     "type": "noun",
-                    "img": null,
+                    "img": "./icons/directions/metres.png",
                     "immutable": false
                 },
                 {
@@ -3513,7 +3513,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/deep.png",
                     "immutable": false
                 },
                 {
@@ -3526,7 +3526,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/long.png",
                     "immutable": false
                 },
                 {
@@ -3539,7 +3539,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/wide.png",
                     "immutable": false
                 },
                 {
@@ -3552,7 +3552,7 @@
                         2
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/tall.png",
                     "immutable": false
                 },
                 {
@@ -3565,7 +3565,7 @@
                         3
                     ],
                     "type": "descriptor",
-                    "img": null,
+                    "img": "./icons/directions/short.png",
                     "immutable": false
                 }
             ]
