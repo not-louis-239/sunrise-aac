@@ -50,6 +50,8 @@ def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
 
     return known_good
 
+
+
 def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | None = None) -> pg.Surface:
     """Tints the given surface with a given colour and resizes it using
     pg.transform.scale() if a size is provided."""
