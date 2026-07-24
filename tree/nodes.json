@@ -155,7 +155,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": "./icons/home/i.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -532,7 +532,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": "./icons/home/me.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1211,7 +1211,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/1.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1224,7 +1224,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/2.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1237,7 +1237,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/3.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1250,7 +1250,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/4.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1263,7 +1263,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/5.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1276,7 +1276,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/6.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1289,7 +1289,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/7.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1302,7 +1302,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/8.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1315,7 +1315,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/9.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1328,7 +1328,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/10.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1341,7 +1341,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/11.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1354,7 +1354,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/12.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1601,7 +1601,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/15.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1614,7 +1614,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/30.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1627,7 +1627,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": "./icons/time/45.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1926,6 +1926,45 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/emotions/tired.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Bored",
+                    "word": "bored",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        6,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/feelings/bored.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Confused",
+                    "word": "confused",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        7,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/feelings/confused.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Disgusted",
+                    "word": "disgusted",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        8,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/feelings/disgusted.png",
                     "immutable": false
                 }
             ]
@@ -3409,7 +3448,7 @@
                         2
                     ],
                     "type": "verb",
-                    "img": "./icons/directions/depart.png",
+                    "img": "./icons/directions/leave.png",
                     "immutable": false
                 },
                 {

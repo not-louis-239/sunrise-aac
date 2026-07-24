@@ -187,7 +187,6 @@ class _Renderer:
             screen.blit(img, img_rect)
 
         # Now the text
-        # TODO: shrink the text if it's too large for the button
         text_centre_x = rect.centerx
         if not img:
             text_y = rect.centery  # no image -> print text in centre of the rect
@@ -284,7 +283,6 @@ class TalkState(State):
         self.button_hold_start_time: float | None = None
         self.last_clicked_pos: tuple[int, int] | None = None
 
-        # TODO: figure out why the hamburger icon is not showing
         # changing this to a CircularUIButton with equivalent radius seems to work
         self.hamburger_button = RectangularUIButton(img_path=UI_IMAGES_DIR / "hamburger.png", font=self.aac_inst.assets.fonts.ui_button_font)
         self.hamburger_button.layout(pg.Rect((SENTENCE_BAR_H - ICON_SIZE) // 2, (SENTENCE_BAR_H - ICON_SIZE) // 2, ICON_SIZE, ICON_SIZE))
