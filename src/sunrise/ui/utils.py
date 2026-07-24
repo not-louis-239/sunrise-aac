@@ -1,4 +1,4 @@
-# module for random utils that don't really fit elsewhere
+# module for UI utilities
 
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
@@ -16,12 +16,42 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
+import re
+
 import pygame as pg
 from dataclasses import dataclass
 
 from sunrise.ui.themes import ThemeKey
 from sunrise.ui.constants import DEFAULT_MESSAGE_DURATION
 from sunrise.core.custom_types import Colour, IntCoord2
+
+
+_TOKEN_SPLIT_RE = r"(\s+)"
+
+
+@dataclass
+class AmbientMessage:
+    text: str = ""
+    k_fg: ThemeKey = ThemeKey.FG
+    duration: float = 0.0
+
+    def set_msg(self, text: str, k_fg: ThemeKey, duration: float = DEFAULT_MESSAGE_DURATION) -> None:
+        self.text = text
+        self.k_fg = k_fg
+        self.duration = duration
+
+    def clear(self) -> None:
+        self.set_msg("", ThemeKey.FG, 0.0)
+
+    def update(self, dt_s: float) -> None:
+        self.duration = max(0, self.duration - dt_s)
+        if not self.active:
+            self.clear()
+
+    @property
+    def active(self) -> bool:
+        return self.duration > 0
 
 
 def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
@@ -51,7 +81,6 @@ def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
     return known_good
 
 
-
 def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | None = None) -> pg.Surface:
     """Tints the given surface with a given colour and resizes it using
     pg.transform.scale() if a size is provided."""
@@ -65,25 +94,48 @@ def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | N
 
     return tinted
 
-@dataclass
-class AmbientMessage:
-    text: str = ""
-    k_fg: ThemeKey = ThemeKey.FG
-    duration: float = 0.0
 
-    def set_msg(self, text: str, k_fg: ThemeKey, duration: float = DEFAULT_MESSAGE_DURATION) -> None:
-        self.text = text
-        self.k_fg = k_fg
-        self.duration = duration
+def _tokenise(text: str) -> list[str]:
+    return re.split(_TOKEN_SPLIT_RE, text)
 
-    def clear(self) -> None:
-        self.set_msg("", ThemeKey.FG, 0.0)
+def wrap_text(text: str, font: pg.font.Font, maxwidth: int) -> list[str]:
+    """Wrap text to fixed-size rows each. This could be useful in something
+    like a text box display where text wrapping is needed.
+    Returns a list of text lines, each no wider than `maxwidth`."""
 
-    def update(self, dt_s: float) -> None:
-        self.duration = max(0, self.duration - dt_s)
-        if not self.active:
-            self.clear()
+    if font.size(text)[0] < maxwidth:
+        return [text]
 
-    @property
-    def active(self) -> bool:
-        return self.duration > 0
+    # tokens are required so that the wrapping doesn't cut words in half
+    tokens = _tokenise(text)
+
+    space_left = maxwidth
+    lines: list[str] = []
+    current_line: str = ""
+    pos = 0
+
+    while pos < len(tokens):
+        tok_width = font.size(tokens[pos])[0]
+
+        if tok_width > maxwidth:
+            # cut a token up into characters if it's hopelessly wide
+            # to fit inside `maxwidth`
+            # then we have to recalculate tok_width
+            tokens[pos:pos + 1] = iter(tokens[pos])
+            tok_width = font.size(tokens[pos])[0]
+
+        if tok_width > space_left:
+            lines.append(current_line)
+            current_line = ""
+            space_left = maxwidth
+            while tokens[pos].isspace():
+                pos += 1
+            continue
+        else:
+            space_left -= tok_width
+            current_line += tokens[pos]
+            pos += 1
+
+    lines.append(current_line)
+
+    return lines

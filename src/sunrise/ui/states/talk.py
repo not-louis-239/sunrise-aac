@@ -254,12 +254,12 @@ class _Renderer:
         # Draw the sentence bar text
         sentence_bar_text = " ".join(str(w) for w in self.aac_inst.engine.sentence_bar)
 
-        # rendering only the last 127 characters for performance
+        # rendering only the last 255 characters for performance
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
         max_width = WN_W - 3 * UI_MARGIN - ICON_SIZE
-        text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-127:], True, theme[ThemeKey.FG])
+        text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-255:], True, theme[ThemeKey.FG])
         if (big_width := text_surf.get_width()) > max_width:
             excess = big_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())

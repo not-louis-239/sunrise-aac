@@ -24,7 +24,7 @@ from sunrise.core.problem_severity import Severity
 
 from .widget import Widget
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import crop_text_to_fit
+from sunrise.ui.utils import wrap_text
 
 
 class InputBox(Widget):
@@ -126,8 +126,8 @@ class InputBox(Widget):
 
         pg.draw.rect(surface, current_theme[k_bg], self.rect)
 
-        # Text - rendering only last 127 chars for performance
-        text = self.sentinel_text if not self.text else self.text[-127:]
+        # Text - rendering only last 255 chars for performance
+        text = self.sentinel_text if not self.text else self.text[-255:]
         text_surf = self.font.render(text, True, current_theme[k_fg])
         text_visual_width = self.rect.width - 2 * self.inset
 
@@ -186,17 +186,23 @@ class InputBox(Widget):
                 border_colour = current_theme[self.k_border]
                 tooltip_bg_colour = current_theme[self.k_bg]
 
-        tooltip_rect = pg.Rect(self.rect.left, self.rect.bottom, self.rect.w, self.rect.h)
+        # Draw the text
+        lines = wrap_text(text=self.error_tooltip_msg, font=self.font, maxwidth=self.rect.width - 2 * self.inset)
+        font_h = self.font.get_height()
+        text_height = font_h * len(lines)
 
-        # Draw the background
+        start_x = self.rect.x + self.inset
+        start_y = self.rect.bottom + self.inset
+
+        fg_colour = current_theme[self.k_fg]
+
+        # Draw background
+        tooltip_rect = pg.Rect(self.rect.left, self.rect.bottom, self.rect.w, text_height + 2 * self.inset)
         pg.draw.rect(surface, tooltip_bg_colour, tooltip_rect)
 
-        # Draw the text
-        text = crop_text_to_fit(text=self.error_tooltip_msg, font=self.font, maxwidth=self.rect.width - 2 * self.inset)
-        fg_colour = current_theme[self.k_fg]
-        text_surf = self.font.render(text, True, fg_colour)
-        text_topleft = (self.rect.x + self.inset, self.rect.centery + self.rect.height - text_surf.get_height() // 2)
-        surface.blit(text_surf, text_topleft)
+        # Draw text
+        for lineno, line in enumerate(lines):
+            surface.blit(self.font.render(line, True, fg_colour), (start_x, start_y + font_h * lineno))
 
         # Draw the border
         pg.draw.rect(surface, border_colour, tooltip_rect, width=self.border_w)
