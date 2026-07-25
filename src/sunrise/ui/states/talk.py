@@ -213,14 +213,17 @@ class _Renderer:
                     k_fg = ThemeKey.FG_DISABLED
 
         # Find the appropriate font size for the button
-        size = self.assets.fonts.default_talk_button_font_size
-        while self._font_cache[size].size(button.label)[0] > rect.width and size > 1:
-            size -= 1
+        if button.fixed_font_size:
+            size = button.fixed_font_size
+        else:
+            size = self.assets.fonts.default_talk_button_font_size
+            while self._font_cache[size].size(button.label)[0] > rect.width - BUTTON_GRID_MARGIN and size > 1:
+                size -= 1
 
         draw_text(
             surface=screen, pos=(text_centre_x, text_y),
             horiz_align="centre", vert_align="top" if img else "centre", colour=theme[k_fg],
-            text=str(button.label), font_family=self._font_cache[size]
+            text=str(button.label), font_family=(self.assets.fonts.talk_button_font_path, size)
         )
 
     def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool, is_selecting_coords: bool) -> None:

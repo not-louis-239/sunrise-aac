@@ -37,6 +37,7 @@ class PropertyIconID(StrEnum):
     MAP_PIN = "map_pin"
     TYPE = "type"
     COORDS = "coords"
+    FONT_SIZE = "font_size"
 
 
 class Fonts:
@@ -73,7 +74,8 @@ class Images:
             PropertyIconID.LABEL: UI_IMAGES_DIR / "label.png",
             PropertyIconID.MAP_PIN: UI_IMAGES_DIR / "map_pin.png",
             PropertyIconID.TYPE: UI_IMAGES_DIR / "type.png",
-            PropertyIconID.COORDS: UI_IMAGES_DIR / "coords.png"
+            PropertyIconID.COORDS: UI_IMAGES_DIR / "coords.png",
+            PropertyIconID.FONT_SIZE: UI_IMAGES_DIR / "font_size.png"
         }
 
 class Assets:

@@ -43,6 +43,7 @@ class InputBox(Widget):
             k_border_error: ThemeKey = ThemeKey.FG_ERROR,
             k_sentinel: ThemeKey = ThemeKey.FG_DISABLED,  # sentinel to show in the input box when empty
             sentinel_text: str = "None",
+            fixed_tooltip_width: int | None = None,
             border_w: int = BORDER_WIDTH
         ) -> None:
         # Creates a left-aligned InputBox
@@ -73,6 +74,8 @@ class InputBox(Widget):
         self.error_tooltip_msg: str | None = None
 
         self.sentinel_text = sentinel_text
+
+        self.fixed_tooltip_width = fixed_tooltip_width
         self.border_w = border_w
 
     def set_error_msg(self, severity: Severity = Severity.OK, msg: str | None = None) -> None:
@@ -186,10 +189,16 @@ class InputBox(Widget):
                 border_colour = current_theme[self.k_border]
                 tooltip_bg_colour = current_theme[self.k_bg]
 
+        # Calculate tooltip width
+        tooltip_w = self.fixed_tooltip_width or self.rect.w
+
         # Draw the text
-        lines = wrap_text(text=self.error_tooltip_msg, font=self.font, maxwidth=self.rect.width - 2 * self.inset)
+        lines = wrap_text(text=self.error_tooltip_msg, font=self.font, maxwidth=tooltip_w - 2 * self.inset)
         font_h = self.font.get_height()
         text_height = font_h * len(lines)
+
+        # Tooltip rect
+        tooltip_rect = pg.Rect(self.rect.left, self.rect.bottom, tooltip_w, text_height + 2 * self.inset)
 
         start_x = self.rect.x + self.inset
         start_y = self.rect.bottom + self.inset
@@ -197,7 +206,6 @@ class InputBox(Widget):
         fg_colour = current_theme[self.k_fg]
 
         # Draw background
-        tooltip_rect = pg.Rect(self.rect.left, self.rect.bottom, self.rect.w, text_height + 2 * self.inset)
         pg.draw.rect(surface, tooltip_bg_colour, tooltip_rect)
 
         # Draw text

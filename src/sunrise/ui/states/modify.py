@@ -72,7 +72,8 @@ class ModifyState(State):
         self.proceed_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, img_path=self.aac_inst.assets.images.proceed_icon, border_w=0, k_fg=ThemeKey.FG_SUCCESS)
 
         # Input widgets and widgets that need to be updated for each button
-        self.label_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.label_input_box = InputBox(flex=6, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.font_size_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN, sentinel_text="Auto", fixed_tooltip_width=200)
         self.node_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
         self.dest_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
         self.img_path_input_box = InputBox(flex=1, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
@@ -113,6 +114,8 @@ class ModifyState(State):
                                 children=[
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.LABEL], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                                     self.label_input_box,
+                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FONT_SIZE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                                    self.font_size_input_box,
                                     Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.COORDS], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
                                     SBox(child=self.coords_label, forced_width=100, h_align=HAlign.CENTRE, v_align=VAlign.CENTRE),
                                     self.select_coords_button
@@ -191,6 +194,7 @@ class ModifyState(State):
 
             # Pre-fill input fields if the button exists, else leave them blank
             self.label_input_box.text = self.button_to_modify.label
+            self.font_size_input_box.text = str(self.button_to_modify.fixed_font_size) if self.button_to_modify.fixed_font_size is not None else ""
             self.node_input_box.text = node_id
             self.dest_input_box.text = str(self.button_to_modify.dest) if self.button_to_modify.dest is not None else ""
             self.img_path_input_box.text = self.button_to_modify.img if self.button_to_modify.img is not None else ""
@@ -202,6 +206,7 @@ class ModifyState(State):
 
             # Clear all input fields, except node
             self.label_input_box.text = ""
+            self.font_size_input_box.text = ""
             self.node_input_box.text = node_id
             self.dest_input_box.text = ""
             self.img_path_input_box.text = ""
@@ -262,13 +267,21 @@ class ModifyState(State):
             all_valid = False
             self.label_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg="Please provide a label.")
         elif len(self.label_input_box.text) != len(self.label_input_box.text.strip()):
-            self.label_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg="Leading or trailing spaces in label.")
+            self.label_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg="Leading or trailing whitespace in label.")
         else:
             self.label_input_box.clear_error_msg()
 
+        # Check that font size is a valid font
+        if self.font_size_input_box.text.isdigit() or not self.font_size_input_box.text:
+            self.font_size_input_box.clear_error_msg()
+        else:
+            all_valid = False
+            self.font_size_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"Invalid font size '{self.font_size_input_box.text}'")
+
         # Warn if the user is attempting to place a button in a node that either doesn't exist or has no references to it.
-        if self.node_input_box.text not in self.aac_inst.engine.tree.nodes.keys() or self.node_input_box.text not in self.aac_inst.engine.tree.get_reachable_node_ids():
-            self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{self.node_input_box.text}'")
+        node_norm = self.node_input_box.text.strip()
+        if node_norm not in self.aac_inst.engine.tree.nodes.keys() or node_norm not in self.aac_inst.engine.tree.get_reachable_node_ids():
+            self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{node_norm}'")
         else:
             self.node_input_box.clear_error_msg()
 
@@ -284,6 +297,7 @@ class ModifyState(State):
 
         # Normalise values first
         label_norm = self.label_input_box.text.strip()
+        font_size_norm = int(self.font_size_input_box.text) if self.font_size_input_box.text else None
         node_norm = self.node_input_box.text.strip()
         dest_norm = _safe_convert_to_int(self.dest_input_box.text) or self.dest_input_box.text or None
         img_norm = self.img_path_input_box.text if self.img_path_input_box.text else None
@@ -295,7 +309,7 @@ class ModifyState(State):
         # Existing button - update button attributes
         if self.button_to_modify is not None:
             # Move the button to the actual node in the tree
-            if self.orig_node_id != self.node_input_box.text:
+            if self.orig_node_id != node_norm:
                 # Remove from old node
                 old_node_label = self.aac_inst.engine.get_node_for_button(self.button_to_modify)
                 if old_node_label is not None:
@@ -303,11 +317,12 @@ class ModifyState(State):
                         old_node.buttons.remove(self.button_to_modify)
 
                 # Add to new node
-                new_node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
+                new_node = self.aac_inst.engine.tree.add_node(node_norm)
                 new_node.buttons.append(self.button_to_modify)
 
             # Update button attributes
             self.button_to_modify.label = label_norm
+            self.button_to_modify.fixed_font_size = font_size_norm
             self.button_to_modify.dest = dest_norm
             self.button_to_modify.img = img_norm
             self.button_to_modify.word = word_norm
@@ -321,6 +336,7 @@ class ModifyState(State):
 
             new_button = Button(
                 label=label_norm,
+                fixed_font_size=font_size_norm,
                 dest=dest_norm,
                 img=img_norm,
                 word=word_norm,
@@ -329,7 +345,7 @@ class ModifyState(State):
                 coords=coords
             )
 
-            node = self.aac_inst.engine.tree.add_node(self.node_input_box.text)
+            node = self.aac_inst.engine.tree.add_node(node_norm)
             node.buttons.append(new_button)
 
         self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
@@ -370,6 +386,7 @@ class ModifyState(State):
 
         for button in [
             self.label_input_box,
+            self.font_size_input_box,
             self.node_input_box,
             self.dest_input_box,
             self.img_path_input_box,

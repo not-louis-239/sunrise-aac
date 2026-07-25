@@ -85,6 +85,7 @@ class LanguageTree:
                 "buttons": [
                     {
                         "label": button.label,
+                        "fixed_font_size": button.fixed_font_size,
                         "word": button.word,
                         "dest": button.dest,
                         "func": button.func,
@@ -159,6 +160,7 @@ def load_language_tree() -> LanguageTree:
         for button_raw in buttons_raw_list:
             button = Button(
                 label=button_raw["label"],
+                fixed_font_size=button_raw.get("fixed_font_size", None),
                 word=button_raw.get("word", None),
                 dest=button_raw.get("dest", None),
                 func=button_raw.get("func", None),
