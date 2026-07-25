@@ -47,12 +47,13 @@ class Button:
 
     # How it looks
     label: str
-    img: str | None          # relative path to image folder from assets/images
-    coords: tuple[int, int]  # (x, y) from:
-                             #     for x:  [-10..-1] U [0..9]
-                             #     for y:  [-6..-1] U [0..5]
+    fixed_font_size: int | None = None
+    img: str | None           # relative path to image folder from assets/images
+    coords: tuple[int, int]   # (x, y) from:
+                              #     for x:  [-10..-1] U [0..9]
+                              #     for y:  [-6..-1] U [0..5]
 
-    type: str                # used for button highlighting
+    type: str                 # used for button highlighting
 
 
 @dataclass(kw_only=True)

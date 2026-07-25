@@ -128,6 +128,8 @@ def wrap_text(text: str, font: pg.font.Font, maxwidth: int) -> list[str]:
             lines.append(current_line)
             current_line = ""
             space_left = maxwidth
+
+            # consume trailing spaces
             while tokens[pos].isspace():
                 pos += 1
             continue
@@ -136,6 +138,8 @@ def wrap_text(text: str, font: pg.font.Font, maxwidth: int) -> list[str]:
             current_line += tokens[pos]
             pos += 1
 
-    lines.append(current_line)
+    # add the current line
+    if current_line and not current_line.isspace():
+        lines.append(current_line)
 
     return lines

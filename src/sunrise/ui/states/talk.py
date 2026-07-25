@@ -121,6 +121,11 @@ class _Renderer:
         self.assets = assets
         self.ambient_msg = AmbientMessage()
 
+        self._font_cache: dict[int, pg.font.Font] = {
+            n: pg.font.Font(self.assets.fonts.talk_button_font_path, n)
+            for n in range(1, self.assets.fonts.default_talk_button_font_size + 1)
+        }
+
     def retrieve_img(self, rel_path: str) -> Surface | None:
         """Load an image from an images manager and
         a relative path.
@@ -183,7 +188,7 @@ class _Renderer:
 
         if img is not None:
             img_rect = img.get_rect()
-            img_rect.center = (rect.centerx, int(rect.centery + self.aac_inst.assets.fonts.talk_button_font_size // 2))
+            img_rect.center = (rect.centerx, int(rect.centery + self.aac_inst.assets.fonts.default_talk_button_font_size // 2))
             screen.blit(img, img_rect)
 
         # Now the text
@@ -207,10 +212,15 @@ class _Renderer:
                 if not is_allowed:
                     k_fg = ThemeKey.FG_DISABLED
 
+        # Find the appropriate font size for the button
+        size = self.assets.fonts.default_talk_button_font_size
+        while self._font_cache[size].size(button.label)[0] > rect.width and size > 1:
+            size -= 1
+
         draw_text(
             surface=screen, pos=(text_centre_x, text_y),
             horiz_align="centre", vert_align="top" if img else "centre", colour=theme[k_fg],
-            text=str(button.label), font_family=self.aac_inst.assets.fonts.talk_button_font
+            text=str(button.label), font_family=self._font_cache[size]
         )
 
     def draw_sentence_bar(self, screen: pg.Surface, in_moving_state: bool, is_selecting_coords: bool) -> None:

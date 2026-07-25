@@ -41,13 +41,13 @@ class PropertyIconID(StrEnum):
 
 class Fonts:
     def __init__(self) -> None:
-        self._button_font_path: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
+        self.talk_button_font_path: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
         self._ui_font_path: Path = FONTS_DIR / "AtkinsonHyperlegible-Regular.ttf"
 
         self.sentence_bar_font = pg.font.Font(self._ui_font_path, 35)
 
-        self.talk_button_font_size = 21  # the separate size is needed somewhere so that's why it's stored as a separate attr
-        self.talk_button_font = pg.font.Font(self._button_font_path, self.talk_button_font_size)
+        self.default_talk_button_font_size = 21  # the separate size is needed somewhere so that's why it's stored as a separate attr
+
 
         self.ui_text_font_m = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_s = pg.font.Font(self._ui_font_path, 22)
