@@ -1,3 +1,5 @@
+# talk state module
+
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 
@@ -36,11 +38,12 @@ from sunrise.core.constants import (
 )
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import HBox, VBox, Panel, RectangularUIButton, KBState
+from sunrise.ui.elements import HBox, VBox, Panel, Key, KBState, KBAction, RectangularUIButton
 from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
+    UI_MARGIN_L,
     UI_MARGIN_M,
     UI_MARGIN_S,
     BORDER_WIDTH,
@@ -50,6 +53,7 @@ from sunrise.ui.constants import (
     WN_W,
     WN_H
 )
+
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -313,45 +317,94 @@ class TalkState(State):
         self.hamburger_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, *self.hamburger_panel.preferred_size()))
 
         # Keyboard
-        self.keyboard_state = KBState()
-        self.keyboard_panel = Panel(
+        self.kb_state = KBState()
+        self.kb_panel = Panel(
             horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox(
                 gap=UI_MARGIN_S,
                 children=[
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='`', shift_char='~'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='1', shift_char='!'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='2', shift_char='@'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='3', shift_char='#'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='4', shift_char='$'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='5', shift_char='%'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='6', shift_char='^'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='7', shift_char='&'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='8', shift_char='*'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='9', shift_char='('),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='0', shift_char=')'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='-', shift_char='_'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='=', shift_char='+'),
+                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Bksp", kb_action=KBAction.BACKSPACE),
                         ]
                     ),
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-
+                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Tab"),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='q', shift_char='Q'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='w', shift_char='W'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='e', shift_char='E'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='r', shift_char='R'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='t', shift_char='T'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='y', shift_char='Y'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='u', shift_char='U'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='i', shift_char='I'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='o', shift_char='O'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='p', shift_char='P'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='[', shift_char='{'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=']', shift_char='}'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\\', shift_char='|'),
                         ]
                     ),
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-
+                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Caps"),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='a', shift_char='A'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='s', shift_char='S'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='d', shift_char='D'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='f', shift_char='F'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='g', shift_char='G'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='h', shift_char='H'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='j', shift_char='J'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='k', shift_char='K'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='l', shift_char='L'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=';', shift_char=':'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\'', shift_char='"'),
+                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Enter"),
                         ]
                     ),
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-
+                            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift"),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='z', shift_char='Z'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='x', shift_char='X'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='c', shift_char='C'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='v', shift_char='V'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='b', shift_char='B'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='n', shift_char='N'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='m', shift_char='M'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=',', shift_char='<'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='.', shift_char='>'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='/', shift_char='?'),
+                            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shfit"),
                         ]
                     ),
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Space")
                         ]
                     )
                 ]
             )
         )
-        self.keyboard_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - SENTENCE_BAR_H - 2 * UI_MARGIN_M))
+        self.kb_panel.layout(pg.Rect(UI_MARGIN_L, SENTENCE_BAR_H + UI_MARGIN_L, WN_W - 2 * UI_MARGIN_L, min(WN_H - SENTENCE_BAR_H - 2 * UI_MARGIN_L, self.kb_panel.preferred_size()[1])))
 
         # Selecting coordinates
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
@@ -516,7 +569,9 @@ class TalkState(State):
         )
 
         # Draw each of the buttons on the screen
-        if not self.aac_inst.engine.in_keyboard_mode:
+        if self.aac_inst.engine.in_keyboard_mode:
+            self.kb_panel.draw(surface=screen, current_theme=theme)
+        else:
             self.renderer.draw_buttons(screen)
 
         self.hamburger_button.draw(screen, current_theme=theme)

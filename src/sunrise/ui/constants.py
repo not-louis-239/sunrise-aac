@@ -22,6 +22,7 @@
 WN_W, WN_H = 1280, 720
 
 # UI margin presets
+UI_MARGIN_L = int(WN_W * 0.05)
 UI_MARGIN_M = int(WN_W * 0.012)
 UI_MARGIN_S = int(WN_W * 0.01)
 

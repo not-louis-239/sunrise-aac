@@ -25,7 +25,7 @@ import pygame as pg
 from pygame import Rect
 from pygame.font import Font
 
-from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.constants import BORDER_WIDTH, UI_MARGIN_S
 from sunrise.ui.themes import Theme, ThemeKey
 
 from .ui_buttons import RectangularUIButton
@@ -47,8 +47,8 @@ class KBAction(Enum):
 
 class Key(RectangularUIButton):
     def __init__(
-            self, *, flex: float = 0,
-            font: Font, inset: int = 0,
+            self, *, flex: float = 1,
+            font: Font, inset: int = UI_MARGIN_S,
             fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
@@ -75,12 +75,13 @@ class Key(RectangularUIButton):
 
     def _get_text_size(self) -> tuple[int, int]:
         if self.override_display_text:
-            return self.font.size(self.override_display_text)
+            w, h = self.font.size(self.override_display_text)
+            return w + 2 * self.inset, h + 2 * self.inset
 
-        w1, h1 = self.font.size(self.char or "")
-        w2, h2 = self.font.size(self.shift_char or "")
+        w1, h = self.font.size(self.char or "")
+        w2 = self.font.size(self.shift_char or "")[0]
 
-        return (max(w1, w2) + 2 * self.inset, h1 + 3 * self.inset + h2)
+        return (max(w1, w2) + 2 * self.inset, h + 2 * self.inset)
 
     def preferred_size(self) -> tuple[int, int]:
         return self.fixed_size or self._get_text_size()
@@ -98,7 +99,7 @@ class Key(RectangularUIButton):
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw border
-        pg.draw.rect(surface, current_theme[self.k_bg], self.rect, width=self.border_w)
+        pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)
 
         # Draw text if applicable
         if self.override_display_text:

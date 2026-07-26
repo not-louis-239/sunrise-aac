@@ -57,3 +57,4 @@ ScrollableDisplay = scrollable_display.ScrollableDisplay
 
 Key = key.Key
 KBState = key.KBState
+KBAction = key.KBAction
