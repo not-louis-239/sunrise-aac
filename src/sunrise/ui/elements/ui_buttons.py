@@ -35,7 +35,7 @@ from .widget import Widget
 class _UIButton(Widget):
     def __init__(
             self, *,
-            flex: int = 0, text: str = "", font: pg.font.Font, inset: int = 0,
+            flex: float = 0, text: str = "", font: pg.font.Font, inset: int = 0,
             fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
@@ -106,7 +106,7 @@ class RectangularUIButton(_UIButton):
 class CircularUIButton(_UIButton):
     def __init__(
             self, *,
-            r: int = 0, flex: int = 0, text: str = "", font: Font, inset: int = 0,
+            r: int = 0, flex: float = 0, text: str = "", font: Font, inset: int = 0,
             fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,

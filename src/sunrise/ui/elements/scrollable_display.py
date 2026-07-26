@@ -37,7 +37,7 @@ class ScrollableDisplay(Widget):
     Its height depends on the preferred size of the contents inside of the display."""
     def __init__(
             self, *,
-            flex: int = 0, gap: int = 0, child: Widget, padding: int = 0,
+            flex: float = 0, gap: int = 0, child: Widget, padding: int = 0,
             k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         super().__init__(flex=flex)

@@ -30,7 +30,7 @@ from sunrise.ui.utils import wrap_text
 class InputBox(Widget):
     def __init__(
             self, *,
-            flex: int = 0, min_size: tuple[int, int] = (0, 0), font: pg.font.Font, inset: int,
+            flex: float = 0, min_size: tuple[int, int] = (0, 0), font: pg.font.Font, inset: int,
             k_bg: ThemeKey = ThemeKey.BG,
             k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_fg: ThemeKey = ThemeKey.FG,

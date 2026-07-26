@@ -24,7 +24,7 @@ from sunrise.ui.themes import Theme
 
 
 class Spacer(Widget):
-    def __init__(self, *, flex: int = 0, min_w: int = 0, min_h: int = 0):
+    def __init__(self, *, flex: float = 0, min_w: int = 0, min_h: int = 0):
         super().__init__(flex=flex)
         self.min_w = min_w
         self.min_h = min_h

@@ -36,7 +36,7 @@ from sunrise.core.constants import (
 )
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import VBox, Panel, RectangularUIButton
+from sunrise.ui.elements import HBox, VBox, Panel, RectangularUIButton
 from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
@@ -313,7 +313,44 @@ class TalkState(State):
         self.hamburger_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, *self.hamburger_panel.preferred_size()))
 
         # Keyboard
-        self.keyboard_panel = Panel(horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox())
+        self.keyboard_panel = Panel(
+            horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox(
+                gap=UI_MARGIN_S,
+                children=[
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+
+                        ]
+                    )
+                ]
+            )
+        )
+        self.keyboard_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - SENTENCE_BAR_H - 2 * UI_MARGIN_M))
 
         # Selecting coordinates
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
@@ -446,15 +483,21 @@ class TalkState(State):
                 # Left click
                 if self._handle_lmb_click(event=event):
                     continue
-                self.button_hold_start_time = time.time()
-                self.last_clicked_pos = event.pos
+
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    self.button_hold_start_time = time.time()
+                    self.last_clicked_pos = event.pos
+
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
-                # Right click
-                self._handle_rmb_click(event)
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    # Right click
+                    self._handle_rmb_click(event)
+
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                self._handle_lmb_release(event)
-                self.last_clicked_pos = None
-                self.button_hold_start_time = None
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    self._handle_lmb_release(event)
+                    self.last_clicked_pos = None
+                    self.button_hold_start_time = None
 
     def draw(self, screen: Surface) -> None:
         # Retrieve current theme and fill with background colour
@@ -472,7 +515,8 @@ class TalkState(State):
         )
 
         # Draw each of the buttons on the screen
-        self.renderer.draw_buttons(screen)
+        if not self.aac_inst.engine.in_keyboard_mode:
+            self.renderer.draw_buttons(screen)
 
         self.hamburger_button.draw(screen, current_theme=theme)
         if self.hamburger_menu_active:
