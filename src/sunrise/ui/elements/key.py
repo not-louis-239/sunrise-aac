@@ -37,6 +37,10 @@ class KBState:
     shifting: bool = False
     caps_lock: bool = False
 
+    def reset(self) -> None:
+        self.shifting = False
+        self.caps_lock = False
+
 
 class KBAction(Enum):
     SHIFT = auto()

@@ -20,6 +20,8 @@ DELETE_DELAY = 0.5
 DELETE_INTERVAL = 0.075
 MOVE_HOLD_DELAY = 0.5  # seconds to hold down a button to enter move mode
 
+DOUBLE_CLICK_MAX_DELAY = 0.3
+
 FPS = 60
 
 # Image file types

@@ -96,13 +96,16 @@ class InputBox(Widget):
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 self.active = self.rect.collidepoint(event.pos)
+                self.cursor_flash_time = 0
             elif event.type == pg.KEYDOWN:
                 if self.active:
                     if event.key == pg.K_BACKSPACE:
                         self.text = self.text[:-1]
+                        self.cursor_flash_time = 0
                     elif event.key not in (pg.K_RETURN, pg.K_ESCAPE, pg.K_TAB):
                         # Append character
                         self.text += event.unicode
+                        self.cursor_flash_time = 0
 
         # Handle delete
         if keys[pg.K_BACKSPACE] and self.active:
@@ -110,6 +113,7 @@ class InputBox(Widget):
             if self.delete_timer <= 0:
                 self.text = self.text[:-1]
                 self.delete_timer += DELETE_INTERVAL
+                self.cursor_flash_time = 0
         else:
             # If delete is not held down, reset the delete timer
             self.delete_timer = DELETE_DELAY

@@ -164,6 +164,10 @@ def clear_sentence_bar(self: AACEngine) -> None:
 def backspace_sentence_bar(self: AACEngine) -> None:
     """Remove the last word from the sentence bar."""
     if self.sentence_bar:
+        if len(parts := self.sentence_bar[-1].current_string.split()) > 1:
+            self.sentence_bar[-1].current_string = " ".join(parts[:-1])
+            self.sentence_bar[-1].transformations.clear()
+            return
         self.sentence_bar.pop()
 
 @AACEngine.register("speak_sentence_bar")
