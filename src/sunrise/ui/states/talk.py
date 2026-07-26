@@ -36,7 +36,7 @@ from sunrise.core.constants import (
 )
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import HBox, VBox, Panel, RectangularUIButton
+from sunrise.ui.elements import HBox, VBox, Panel, RectangularUIButton, KBState
 from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
@@ -313,6 +313,7 @@ class TalkState(State):
         self.hamburger_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, *self.hamburger_panel.preferred_size()))
 
         # Keyboard
+        self.keyboard_state = KBState()
         self.keyboard_panel = Panel(
             horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox(
                 gap=UI_MARGIN_S,
@@ -320,7 +321,7 @@ class TalkState(State):
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-                            
+
                         ]
                     ),
                     HBox(
