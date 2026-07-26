@@ -130,6 +130,25 @@ class AACEngine:
             else:
                 func(self)
 
+    def type_keyboard_char(self, char: str) -> None:
+        if not self.sentence_bar:
+            self.sentence_bar.append(Word(char))
+            return
+
+        self.sentence_bar[-1].current_string += char
+        self.sentence_bar[-1].transformations.clear()
+
+    def backspace_keyboard(self) -> None:
+        if not self.sentence_bar:
+            return
+
+        self.sentence_bar[-1].current_string = self.sentence_bar[-1].current_string[:-1]
+        self.sentence_bar[-1].transformations.clear()
+
+        if not self.sentence_bar[-1].current_string:
+            del self.sentence_bar[-1]
+
+
 # Now for registry functions
 @AACEngine.register("clear_sentence_bar")
 def clear_sentence_bar(self: AACEngine) -> None:

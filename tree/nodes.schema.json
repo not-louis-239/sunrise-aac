@@ -45,6 +45,15 @@
                     "type": "string",
                     "description": "The text displayed visually inside the button layout."
                 },
+                "fixed_font_size": {
+                    "anyOf": [
+                        { "type": "null" },
+                        {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    ]
+                },
                 "word": {
                     "anyOf": [
                         { "type": "null" },

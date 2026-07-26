@@ -414,7 +414,7 @@
                     "dest": "FOOD",
                     "func": null,
                     "coords": [
-                        3,
+                        2,
                         4
                     ],
                     "type": "folder",
@@ -428,7 +428,7 @@
                     "dest": "DRINKS",
                     "func": null,
                     "coords": [
-                        4,
+                        3,
                         4
                     ],
                     "type": "folder",
@@ -442,7 +442,7 @@
                     "dest": "PLACES",
                     "func": null,
                     "coords": [
-                        5,
+                        4,
                         4
                     ],
                     "type": "folder",
@@ -456,7 +456,7 @@
                     "dest": "GROUPS",
                     "func": null,
                     "coords": [
-                        9,
+                        8,
                         4
                     ],
                     "type": "folder",
@@ -470,7 +470,7 @@
                     "dest": "ACTIONS",
                     "func": null,
                     "coords": [
-                        8,
+                        7,
                         4
                     ],
                     "type": "folder",
@@ -498,25 +498,11 @@
                     "dest": "EMOTIONS",
                     "func": null,
                     "coords": [
-                        6,
+                        5,
                         4
                     ],
                     "type": "folder",
                     "img": "./folders/emotions.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Weather",
-                    "fixed_font_size": null,
-                    "word": null,
-                    "dest": "WEATHER",
-                    "func": null,
-                    "coords": [
-                        2,
-                        4
-                    ],
-                    "type": "folder",
-                    "img": "./folders/weather.png",
                     "immutable": false
                 },
                 {
@@ -526,7 +512,7 @@
                     "dest": "QUESTIONS",
                     "func": null,
                     "coords": [
-                        7,
+                        6,
                         4
                     ],
                     "type": "folder",
@@ -853,6 +839,20 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/home/none.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Keyboard",
+                    "fixed_font_size": null,
+                    "word": null,
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        4
+                    ],
+                    "type": "system",
+                    "img": "./icons/home/keyboard.png",
                     "immutable": false
                 }
             ]
@@ -3043,6 +3043,20 @@
                     ],
                     "type": "folder",
                     "img": "./folders/directions.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Weather",
+                    "fixed_font_size": null,
+                    "word": null,
+                    "dest": "WEATHER",
+                    "func": null,
+                    "coords": [
+                        5,
+                        0
+                    ],
+                    "type": "folder",
+                    "img": "./folders/weather.png",
                     "immutable": false
                 }
             ]
