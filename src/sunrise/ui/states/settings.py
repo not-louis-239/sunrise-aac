@@ -23,7 +23,7 @@ from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Spacer, Dropdown, CircularUIButton
 from sunrise.ui.themes import THEMES, ThemeKey
-from sunrise.ui.constants import UI_MARGIN, ICON_SIZE, WN_W, WN_H
+from sunrise.ui.constants import UI_MARGIN_M, ICON_SIZE, WN_W, WN_H
 
 
 class SettingsState(State):
@@ -36,28 +36,28 @@ class SettingsState(State):
         self.proceed_button = CircularUIButton(r=ICON_SIZE // 2, font=self.aac_inst.assets.fonts.ui_text_font_m, img_path=self.aac_inst.assets.images.proceed_icon, k_fg=ThemeKey.FG_SUCCESS, border_w=0)
 
         # Theme dropdown
-        self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
+        self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN_M)
         self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.visuals.theme_idx].display_name)
 
         # Assemble the panel
         self.panel = Panel(
-            horiz_padding=UI_MARGIN,
-            vert_padding=UI_MARGIN,
+            horiz_padding=UI_MARGIN_M,
+            vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             Label(text="Settings", font=self.aac_inst.assets.fonts.title_font),
                             Spacer(flex=1)
                         ]
                     ),
                     VBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             HBox(
-                                gap=UI_MARGIN,
+                                gap=UI_MARGIN_M,
                                 children=[
                                     SBox(
                                         child=Label(text="Theme", font=self.aac_inst.assets.fonts.ui_text_font_m),
@@ -70,7 +70,7 @@ class SettingsState(State):
                     ),
                     Spacer(flex=1),
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             Spacer(flex=1),
                             self.proceed_button
@@ -80,7 +80,7 @@ class SettingsState(State):
             )
         )
 
-        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.panel.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
 
     def _proceed(self) -> None:
         self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)

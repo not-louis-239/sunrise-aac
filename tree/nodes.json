@@ -846,7 +846,7 @@
                     "fixed_font_size": null,
                     "word": null,
                     "dest": null,
-                    "func": null,
+                    "func": "activate_keyboard",
                     "coords": [
                         9,
                         4

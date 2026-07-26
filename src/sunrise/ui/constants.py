@@ -22,8 +22,8 @@
 WN_W, WN_H = 1280, 720
 
 # UI margin presets
-UI_MARGIN = int(WN_W * 0.012)
-BUTTON_GRID_MARGIN = int(WN_W * 0.01)  # specifically for the buttons in the TALK state
+UI_MARGIN_M = int(WN_W * 0.012)
+UI_MARGIN_S = int(WN_W * 0.01)
 
 # TODO: thinking of migrating to a system where instead of coords like (5, 2), buttons store a fixed
 # position ID like "42", which would make it easier to resize the button grid
@@ -39,7 +39,7 @@ DEFAULT_MESSAGE_DURATION = 2.0  # seconds for which to show ambient messages or 
 
 # Sizes
 SENTENCE_BAR_H = 80
-BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN) / GRID_H * 0.65)
+BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN_M) / GRID_H * 0.65)
 ICON_SIZE = int(WN_W * 0.04)  # size for UI icons
 
 # Allowed button types - Only these button types will have a supporting colour.

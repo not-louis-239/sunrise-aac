@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 from typing import TYPE_CHECKING
 import time
 
@@ -40,8 +41,8 @@ from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
     BUTTON_IMAGE_SIZE,
-    UI_MARGIN,
-    BUTTON_GRID_MARGIN,
+    UI_MARGIN_M,
+    UI_MARGIN_S,
     BORDER_WIDTH,
     ICON_SIZE,
     GRID_W,
@@ -70,8 +71,8 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
 
     x, y = screen_coords
 
-    min_x = UI_MARGIN
-    min_y = SENTENCE_BAR_H + UI_MARGIN
+    min_x = UI_MARGIN_M
+    min_y = SENTENCE_BAR_H + UI_MARGIN_M
 
     # Calculate individual button dimensions
     area_w = WN_W - min_x
@@ -92,7 +93,7 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
     button_start_y = min_y + by * button_h
 
     # Check if the click fell into the padding gap at the right or bottom of the button
-    if (x >= button_start_x + (button_w - UI_MARGIN)) or (y >= button_start_y + (button_h - UI_MARGIN)):
+    if (x >= button_start_x + (button_w - UI_MARGIN_M)) or (y >= button_start_y + (button_h - UI_MARGIN_M)):
         return None
 
     # Safety check to ensure floating-point rounding didn't push us out of bounds
@@ -154,8 +155,8 @@ class _Renderer:
         bx, by = button.coords
         bx, by = bx % GRID_W, by % GRID_H  # normalise negative coordinates
 
-        min_x = BUTTON_GRID_MARGIN
-        min_y = SENTENCE_BAR_H + BUTTON_GRID_MARGIN
+        min_x = UI_MARGIN_S
+        min_y = SENTENCE_BAR_H + UI_MARGIN_S
 
         # The size of the button area, minus the left/top margins
         area_w = WN_W - min_x
@@ -166,7 +167,7 @@ class _Renderer:
 
         screen_x = min_x + bx * button_w
         screen_y = min_y + by * button_h
-        return pg.Rect(screen_x, screen_y, button_w - BUTTON_GRID_MARGIN, button_h - BUTTON_GRID_MARGIN)
+        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN_S, button_h - UI_MARGIN_S)
 
     def _draw_button(self, screen: pg.Surface, button: Button) -> None:
         # Draw button rect
@@ -217,7 +218,7 @@ class _Renderer:
             size = button.fixed_font_size
         else:
             size = self.assets.fonts.default_talk_button_font_size
-            while self._font_cache[size].size(button.label)[0] > rect.width - BUTTON_GRID_MARGIN and size > 1:
+            while self._font_cache[size].size(button.label)[0] > rect.width - UI_MARGIN_S and size > 1:
                 size -= 1
 
         draw_text(
@@ -271,14 +272,14 @@ class _Renderer:
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
-        max_width = WN_W - 3 * UI_MARGIN - ICON_SIZE
+        max_width = WN_W - 3 * UI_MARGIN_M - ICON_SIZE
         text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-255:], True, theme[ThemeKey.FG])
         if (big_width := text_surf.get_width()) > max_width:
             excess = big_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, text_surf.get_rect(left=2 * UI_MARGIN + ICON_SIZE, centery=SENTENCE_BAR_H / 2))
+        screen.blit(text_surf, text_surf.get_rect(left=2 * UI_MARGIN_M + ICON_SIZE, centery=SENTENCE_BAR_H / 2))
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():
@@ -296,21 +297,25 @@ class TalkState(State):
         self.button_hold_start_time: float | None = None
         self.last_clicked_pos: tuple[int, int] | None = None
 
-        # changing this to a CircularUIButton with equivalent radius seems to work
+        # Hamburger buttons
         self.hamburger_button = RectangularUIButton(img_path=UI_IMAGES_DIR / "hamburger.png", font=self.aac_inst.assets.fonts.ui_button_font)
         self.hamburger_button.layout(pg.Rect((SENTENCE_BAR_H - ICON_SIZE) // 2, (SENTENCE_BAR_H - ICON_SIZE) // 2, ICON_SIZE, ICON_SIZE))
         self.hamburger_menu_active = False
 
-        self.settings_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Settings")
-        self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
+        self.settings_button = RectangularUIButton(flex=1, inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Settings")
+        self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
         self.hamburger_panel = Panel(
             child=VBox(
-                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN, gap=UI_MARGIN
+                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN_M, gap=UI_MARGIN_M
             )
         )
 
-        self.hamburger_panel.layout(pg.Rect(UI_MARGIN, SENTENCE_BAR_H + UI_MARGIN, *self.hamburger_panel.preferred_size()))
+        self.hamburger_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, *self.hamburger_panel.preferred_size()))
 
+        # Keyboard
+        self.keyboard_panel = Panel(horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox())
+
+        # Selecting coordinates
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
 
     def clear_move_state(self) -> None:

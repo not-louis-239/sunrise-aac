@@ -52,8 +52,11 @@ class AACEngine:
     INFLECTION_FUNCS: dict[str, lm.Inflection] = {}  # takes the function alias, points to the inflection enum entry
 
     @classmethod
-    def register(cls, func_alias: str, *, inf: lm.Inflection | None = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-        def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def register(
+            cls, func_alias: str, *, inf: lm.Inflection | None = None
+        ) -> Callable[[Callable[[AACEngine], Any]], Callable[[AACEngine], Any]]:
+
+        def decorator(func: Callable[[AACEngine], Any]) -> Callable[[AACEngine], Any]:
             AACEngine.FUNC_REGISTRY[func_alias] = func
             if inf is not None:
                 AACEngine.INFLECTION_FUNCS[func_alias] = inf
@@ -68,6 +71,8 @@ class AACEngine:
         self.history: list[str] = []  # list of folder IDs that the AACEngine has been to
         self.current_node: str = "HOME"
         self.tree: LanguageTree = load_language_tree()
+
+        self.in_keyboard_mode = False
 
     def _reset_history(self) -> None:
         self.current_node = "HOME"
@@ -171,6 +176,10 @@ def speak_sentence_bar(self: AACEngine) -> None:
 def stop_speaking(self: AACEngine) -> None:
     """Stop any currently playing speech immediately."""
     _stop_speaking()
+
+@AACEngine.register("activate_keyboard")
+def activate_keyboard(self: AACEngine) -> None:
+    self.in_keyboard_mode = True
 
 @AACEngine.register("pluralise", inf=lm.Inflection.PLURAL)
 def pluralise(self: AACEngine) -> None:

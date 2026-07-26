@@ -29,7 +29,7 @@ from sunrise.core.lint_language_tree import lint_language_tree, Severity
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.constants import ICON_SIZE, UI_MARGIN, WN_H, WN_W, BORDER_WIDTH
+from sunrise.ui.constants import ICON_SIZE, UI_MARGIN_M, WN_H, WN_W, BORDER_WIDTH
 from sunrise.ui.elements import Panel, HBox, VBox, SBox, Spacer, Icon, Label, HAlign, CircularUIButton, RectangularUIButton, ScrollableDisplay
 
 if TYPE_CHECKING:
@@ -43,7 +43,7 @@ class DoctorState(State):
 
         # Errors VBox
         self.default_errors_display = [Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Warnings will appear here.")]
-        self.errors_vbox = VBox(padding=UI_MARGIN, gap=UI_MARGIN)
+        self.errors_vbox = VBox(padding=UI_MARGIN_M, gap=UI_MARGIN_M)
         self.errors_scroller = ScrollableDisplay(flex=1, child=self.errors_vbox)
 
         # Errors/warnings display
@@ -53,10 +53,10 @@ class DoctorState(State):
         self.errors_warnings_counter = HBox(
             children=[
                 Icon(img_path=self.aac_inst.assets.images.exit_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_ERROR),
-                Spacer(min_w=UI_MARGIN),
+                Spacer(min_w=UI_MARGIN_M),
                 SBox(forced_width=100, child=self.num_errors_label, h_align=HAlign.LEFT),
                 Icon(img_path=self.aac_inst.assets.images.warning_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_WARNING),
-                Spacer(min_w=UI_MARGIN),
+                Spacer(min_w=UI_MARGIN_M),
                 SBox(forced_width=100, child=self.num_warnings_label, h_align=HAlign.LEFT),
             ]
         )
@@ -68,17 +68,17 @@ class DoctorState(State):
         )
 
         # Button to check the language tree
-        self.check_button = RectangularUIButton(inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Check Language Tree")
-        self.clear_button = RectangularUIButton(inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Clear Caches")
+        self.check_button = RectangularUIButton(inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Check Language Tree")
+        self.clear_button = RectangularUIButton(inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Clear Caches")
 
         self.panel = Panel(
-            horiz_padding=UI_MARGIN,
-            vert_padding=UI_MARGIN,
+            horiz_padding=UI_MARGIN_M,
+            vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             Label(font=self.aac_inst.assets.fonts.title_font, text="Doctor"),
                             Spacer(flex=1),
@@ -86,7 +86,7 @@ class DoctorState(State):
                         ]
                     ),
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             self.check_button,
                             self.errors_warnings_counter,
@@ -99,7 +99,7 @@ class DoctorState(State):
             )
         )
 
-        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.panel.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
         self._reset_error_display()
 
     def _reset_error_display(self) -> None:
@@ -108,7 +108,7 @@ class DoctorState(State):
         self.num_errors_label.k_fg = ThemeKey.FG_DISABLED
         self.num_warnings_label.set_text("-")
         self.num_warnings_label.k_fg = ThemeKey.FG_DISABLED
-        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.panel.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
 
     def _refresh_error_display(self) -> None:
         """Check the language tree and update the errors display with appropriate elements, then
@@ -123,7 +123,7 @@ class DoctorState(State):
         for problem in problems:
             label = Label(
                 font=self.aac_inst.assets.fonts.ui_text_font_s,
-                inset=UI_MARGIN,
+                inset=UI_MARGIN_M,
                 border_w=BORDER_WIDTH,
                 k_bg=ThemeKey.BG_ERROR if problem.severity == Severity.ERROR else ThemeKey.BG_WARNING,
                 k_border=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
@@ -146,7 +146,7 @@ class DoctorState(State):
         self.num_warnings_label.set_text(str(num_warnings))
         self.num_warnings_label.k_fg = ThemeKey.FG if num_warnings else ThemeKey.FG_DISABLED
 
-        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.panel.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
