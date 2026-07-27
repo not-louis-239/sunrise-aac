@@ -230,9 +230,6 @@ class ModifyState(State):
         else:
             self.proceed_button.k_fg = ThemeKey.FG_SUCCESS
 
-        # TODO: stop validating every frame
-        # it works for now because validation is quick (≤0.1ms/f), but doing this every frame can eat into frame rate potentially
-
     def _validate_fields(self) -> bool:
         """Validate input fields and return True if they are all correct, else False.
         Set and remove error messages as applicable."""

@@ -26,11 +26,6 @@ UI_MARGIN_L = int(WN_W * 0.05)
 UI_MARGIN_M = int(WN_W * 0.012)
 UI_MARGIN_S = int(WN_W * 0.01)
 
-# TODO: thinking of migrating to a system where instead of coords like (5, 2), buttons store a fixed
-# position ID like "42", which would make it easier to resize the button grid
-# extra pages per node could also help with usability, if that were a thing then
-# each node's button grid would technically be 3d
-
 # Other visual settings
 GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
 BORDER_WIDTH = 2        # border width for UI elements

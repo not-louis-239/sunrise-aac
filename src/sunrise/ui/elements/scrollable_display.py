@@ -1,10 +1,5 @@
 # vertically scrollable display
 
-# TODO: one day we could merge this under Panel, such that if the content
-# is too large to fit on the screen, then make it scrollable
-# perhaps with `allow_horiz_scroll` and `allow_vert_scroll` parameters
-# which, if enabled, would allow scrolling if content got too big
-
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 

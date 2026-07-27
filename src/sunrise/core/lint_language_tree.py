@@ -80,9 +80,6 @@ def lint_language_tree(lt: LanguageTree) -> list[Problem]:
         node = lt.nodes[node_id]  # not using .get() here so Pyright won't complain, we know that it points to a valid node
         seen_coords = universal_button_coords.copy()
 
-        # TODO: clicking on a warning or error takes you to the problematic button
-        # this would be a nice QoL feature
-
         for button in node.buttons:
             # No function set
             if not button.word and not button.dest and not button.func:
