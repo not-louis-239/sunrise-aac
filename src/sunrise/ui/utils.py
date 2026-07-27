@@ -158,3 +158,17 @@ def lerp_colours(c1: Colour, c2: Colour, t: float) -> Colour:
         int(c1[1] * (1 - t) + c2[1] * t),
         int(c1[2] * (1 - t) + c2[2] * t),
     )
+
+
+def resize_to_fit(dims: tuple[float, float], bounding_box: tuple[float, float]) -> tuple[float, float]:
+    """Calculates the largest dimensions that are in proportion
+    with `dims` that fits cleanly into the `bounding_box`."""
+
+    x1, y1 = dims
+    x2, y2 = bounding_box
+
+    x_ratio = x2 / x1
+    y_ratio = y2 / y1
+
+    scale_factor = min(x_ratio, y_ratio)
+    return x1 * scale_factor, y1 * scale_factor

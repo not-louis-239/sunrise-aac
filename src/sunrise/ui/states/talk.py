@@ -338,8 +338,8 @@ class TalkState(State):
         # Keyboard
         self.kb_state = KBState()
         self.kb_shift_buttons = [
-            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT),
-            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT)
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", kb_action=KBAction.SHIFT),
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", kb_action=KBAction.SHIFT)
         ]
         self.kb_last_shift_press_time: float | None = None
 
@@ -455,15 +455,25 @@ class TalkState(State):
 
         self.renderer.update(dt_s)
 
+        if self.kb_state.caps_lock:
+            shift_icon = self.aac_inst.assets.images.caps_lock_icon
+        elif self.kb_state.shifting:
+            shift_icon = self.aac_inst.assets.images.shift_on_icon
+        else:
+            shift_icon = self.aac_inst.assets.images.shift_off_icon
+
+        for button in self.kb_shift_buttons:
+            button.img_path = shift_icon
+
     def _handle_onscreen_keypress(self, key: Key) -> None:
         match key.kb_action:
-            case KBAction.BACKSPACE:
-                self.aac_inst.engine.backspace_keyboard()
-                self.renderer.cursor_flash_time = 0
-
             case KBAction.RETURN:
                 self.aac_inst.engine.in_keyboard_mode = False
                 self.kb_state.reset()
+
+            case KBAction.BACKSPACE:
+                self.aac_inst.engine.backspace_keyboard()
+                self.renderer.cursor_flash_time = 0
 
             case KBAction.SHIFT:
                 if self.kb_state.caps_lock:

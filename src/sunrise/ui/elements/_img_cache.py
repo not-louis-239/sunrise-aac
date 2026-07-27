@@ -37,8 +37,14 @@ class _ImageCache:
         self.base_cache: dict[Path, pg.Surface] = {}  # the untinted, unscaled original image - not to be modified after it is set
         self.tint_scale_cache: _TintSizeCache = {}
 
+    def get_base_cache(self, fp: Path) -> pg.Surface:
+        if fp not in self.base_cache:
+            self.base_cache[fp] = pg.image.load(fp).convert_alpha()
+        return self.base_cache[fp]
+
     def get_tinted_scaled_img(self, fp: Path, colour: Colour, size: IntCoord2) -> pg.Surface:
-        """Get an image tinted and scaled to a specific colour and size."""
+        """Get an image from the path `fp`, tinted and scaled to a specific
+        `colour` and `size`."""
 
         key: _TintSizeCtx = (fp, colour, size)
 
