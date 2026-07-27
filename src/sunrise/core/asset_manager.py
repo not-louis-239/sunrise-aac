@@ -1,4 +1,4 @@
-# asset_manager.py - Asset Manager
+# asset manager module
 
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
@@ -45,15 +45,15 @@ class Fonts:
         self.talk_button_font_path: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
         self._ui_font_path: Path = FONTS_DIR / "AtkinsonHyperlegible-Regular.ttf"
 
-        self.sentence_bar_font = pg.font.Font(self._ui_font_path, 35)
-
         self.default_talk_button_font_size = 21  # the separate size is needed somewhere so that's why it's stored as a separate attr
 
-
+        self.title_font = pg.font.Font(self._ui_font_path, 45)
+        self.sentence_bar_font = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_m = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_s = pg.font.Font(self._ui_font_path, 22)
-        self.title_font = pg.font.Font(self._ui_font_path, 45)
         self.ui_button_font = pg.font.Font(self._ui_font_path, 40)
+
+        self.diagnostics_font = pg.font.Font(self._ui_font_path, 28)
 
 class Images:
     def __init__(self) -> None:

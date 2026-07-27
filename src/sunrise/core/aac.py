@@ -34,6 +34,7 @@ from sunrise.ui.states import (
     DoctorState
 )
 from sunrise.ui.states.base_states import StateID
+from sunrise.core.diagnostics import DiagnosticsManager
 
 
 class AAC:
@@ -49,6 +50,8 @@ class AAC:
         )
 
         # then everything else
+        self.diagnostics_manager = DiagnosticsManager(self)
+
         self.bus = Bus()
         self.bus.subscribe(EventID.STATE_CHANGE, self.change_state)
 
@@ -61,6 +64,7 @@ class AAC:
             StateID.SETTINGS: SettingsState(self),
             StateID.DOCTOR: DoctorState(self)
         }
+
         self.state: StateID = StateID.TALK
 
     def get_current_theme(self) -> Theme:
