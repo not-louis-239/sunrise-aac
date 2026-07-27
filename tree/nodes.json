@@ -1644,7 +1644,7 @@
                 {
                     "label": "Year",
                     "fixed_font_size": null,
-                    "word": null,
+                    "word": "year",
                     "dest": null,
                     "func": null,
                     "coords": [
@@ -2898,7 +2898,7 @@
                         1
                     ],
                     "type": "social",
-                    "img": "./icons/extra_words/what's_up?.png",
+                    "img": "./icons/extra_words/whats_up.png",
                     "immutable": false
                 },
                 {
@@ -2912,7 +2912,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/extra_words/?.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -2926,7 +2926,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/extra_words/!.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -2940,7 +2940,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/extra_words/..png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -2954,7 +2954,7 @@
                         0
                     ],
                     "type": "syntax",
-                    "img": "./icons/extra_words/,.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -3540,7 +3540,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": "./icons/directions/90.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -3554,7 +3554,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": "./icons/directions/180.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -3568,7 +3568,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": "./icons/directions/360.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -3582,7 +3582,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": "./icons/directions/30.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
