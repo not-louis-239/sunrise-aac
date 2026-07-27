@@ -22,7 +22,7 @@ from pygame.key import ScancodeWrapper
 from sunrise.core.asset_manager import Assets
 from sunrise.core.data_manager import load_config, save_config
 from sunrise.core.engine import AACEngine
-from sunrise.ui.visuals import AACVisuals
+from sunrise.ui.config import AACConfig
 from sunrise.core.bus import Bus, EventID
 from sunrise.ui.themes import THEMES, Theme
 from sunrise.ui.states import (
@@ -43,8 +43,10 @@ class AAC:
 
         # then config
         config = load_config()
-        self.visuals = AACVisuals()
-        self.visuals.theme_idx = config['theme_idx']
+        self.config = AACConfig(
+            config['theme_idx'],
+            config['speak_keyboard_chars']
+        )
 
         # then everything else
         self.bus = Bus()
@@ -62,7 +64,7 @@ class AAC:
         self.state: StateID = StateID.TALK
 
     def get_current_theme(self) -> Theme:
-        return THEMES[self.visuals.theme_idx]
+        return THEMES[self.config.theme_idx]
 
     def change_state(self, new_state: StateID) -> None:
        self.state = new_state

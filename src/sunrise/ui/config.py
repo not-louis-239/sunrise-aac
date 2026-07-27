@@ -17,6 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-class AACVisuals:
-    def __init__(self) -> None:
-        self.theme_idx: int = 0
+from dataclasses import dataclass
+
+
+@dataclass
+class AACConfig:
+    theme_idx: int = 0
+    speak_keyboard_chars: bool = False

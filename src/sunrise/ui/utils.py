@@ -143,3 +143,18 @@ def wrap_text(text: str, font: pg.font.Font, maxwidth: int) -> list[str]:
         lines.append(current_line)
 
     return lines
+
+
+def lerp(a: float, b: float, t: float) -> float:
+    return a + (b - a) * t
+
+
+def lerp_colours(c1: Colour, c2: Colour, t: float) -> Colour:
+    if not 0 <= t <= 1:
+        raise ValueError(f"invalid lerp weight: {t} (must be between 0 and 1)")
+
+    return (
+        int(c1[0] * (1 - t) + c2[0] * t),
+        int(c1[1] * (1 - t) + c2[1] * t),
+        int(c1[2] * (1 - t) + c2[2] * t),
+    )

@@ -21,7 +21,7 @@ from pygame.key import ScancodeWrapper
 
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
-from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Spacer, Dropdown, CircularUIButton
+from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Switch, Spacer, Dropdown, CircularUIButton
 from sunrise.ui.themes import THEMES, ThemeKey
 from sunrise.ui.constants import UI_MARGIN_M, ICON_SIZE, WN_W, WN_H
 
@@ -37,7 +37,9 @@ class SettingsState(State):
 
         # Theme dropdown
         self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN_M)
-        self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.visuals.theme_idx].display_name)
+        self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.config.theme_idx].display_name)
+
+        self.speak_keyboard_chars_switch = Switch(enabled=self.aac_inst.config.speak_keyboard_chars)
 
         # Assemble the panel
         self.panel = Panel(
@@ -65,6 +67,16 @@ class SettingsState(State):
                                     ),
                                     self.theme_dropdown,
                                 ]
+                            ),
+                            HBox(
+                                gap=UI_MARGIN_M,
+                                children=[
+                                    SBox(
+                                        child=Label(text="Speak Keyboard Characters", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                                        v_align=VAlign.CENTRE
+                                    ),
+                                    self.speak_keyboard_chars_switch,
+                                ]
                             )
                         ]
                     ),
@@ -88,6 +100,7 @@ class SettingsState(State):
     def update(self, dt_s: float) -> None:
         self.theme_dropdown.update(dt_s)
         self.theme_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
+        self.speak_keyboard_chars_switch.update(dt_s)
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
@@ -98,7 +111,12 @@ class SettingsState(State):
 
                 # some settings can be applied immediately, such as theme changes
                 if self.theme_dropdown.handle_left_click(event):
-                    self.aac_inst.visuals.theme_idx = self.theme_dropdown.selected_value
+                    self.aac_inst.config.theme_idx = self.theme_dropdown.selected_value
+                    continue
+
+                if self.speak_keyboard_chars_switch.check_click(event.pos):
+                    self.speak_keyboard_chars_switch.toggle()
+                    self.aac_inst.config.speak_keyboard_chars = self.speak_keyboard_chars_switch.enabled
 
             if event.type == pg.MOUSEWHEEL:
                 self.theme_dropdown.handle_scroll(event)

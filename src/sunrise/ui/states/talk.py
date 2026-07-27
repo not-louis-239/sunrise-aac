@@ -337,6 +337,10 @@ class TalkState(State):
 
         # Keyboard
         self.kb_state = KBState()
+        self.kb_shift_buttons = [
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT),
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT)
+        ]
         self.kb_last_shift_press_time: float | None = None
 
         self.kb_panel = Panel(
@@ -402,7 +406,7 @@ class TalkState(State):
                     HBox(
                         gap=UI_MARGIN_S,
                         children=[
-                            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT),
+                            self.kb_shift_buttons[0],
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='z', shift_char='Z'),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='x', shift_char='X'),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='c', shift_char='C'),
@@ -413,7 +417,7 @@ class TalkState(State):
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=',', shift_char='<', ignore_caps_lock=True),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='.', shift_char='>', ignore_caps_lock=True),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='/', shift_char='?', ignore_caps_lock=True),
-                            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Shift", kb_action=KBAction.SHIFT),
+                            self.kb_shift_buttons[1]
                         ]
                     ),
                     HBox(
@@ -465,11 +469,13 @@ class TalkState(State):
                 if self.kb_state.caps_lock:
                     self.kb_state.reset()
                 elif not self.kb_last_shift_press_time:
-                    speak("shift")
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak("shift")
                     self.kb_last_shift_press_time = time.time()
                     self.kb_state.shifting = True
                 elif time.time() - self.kb_last_shift_press_time < DOUBLE_CLICK_MAX_DELAY:
-                    speak("caps lock")
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak("caps lock")
                     self.kb_last_shift_press_time = None
                     self.kb_state.caps_lock = True
                     self.kb_state.shifting = False
@@ -485,7 +491,8 @@ class TalkState(State):
                     char = key.char
 
                 if char is not None:
-                    speak(char.lower())
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak(char.lower())
                     self.renderer.cursor_flash_time = 0
                     self.aac_inst.engine.type_keyboard_char(char)
 

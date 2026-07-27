@@ -28,6 +28,7 @@ if TYPE_CHECKING:
 
 class Config(TypedDict):
     theme_idx: int
+    speak_keyboard_chars: bool
 
 
 def load_config() -> Config:
@@ -49,18 +50,20 @@ def load_config() -> Config:
 
     # Process the loaded config data
     data: Config = {
-        "theme_idx": raw_config.get("theme_idx", 0)  # Default to 0 ("Light") if not found
+        "theme_idx": raw_config.get("theme_idx", 0),  # Default to 0 ("Light") if not found
+        "speak_keyboard_chars": raw_config.get("speak_keyboard_chars", True)
     }
 
     return data
 
 def save_config(aac_inst: AAC) -> None:
     serialised: Config = {
-        "theme_idx": aac_inst.visuals.theme_idx
+        "theme_idx": aac_inst.config.theme_idx,
+        "speak_keyboard_chars": aac_inst.config.speak_keyboard_chars
     }
 
     try:
-        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)  
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
         with open(CONFIG_FILE, "w") as f:
             json.dump(serialised, f, indent=4)
     except Exception as e:
