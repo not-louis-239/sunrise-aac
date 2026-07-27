@@ -31,7 +31,7 @@ from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.elements.ui_buttons import CircularUIButton
 from sunrise.core.constants import ALLOWED_IMAGE_SUFFIXES
-from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN_M, ICON_SIZE
+from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN_M, ICON_SIZE, GRID_W, GRID_H
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -271,6 +271,16 @@ class ModifyState(State):
         else:
             self.label_input_box.clear_error_msg()
 
+        # Validate that the button won't overlap another button in the destination node
+        if (
+            (node := self.aac_inst.engine.tree.get(self.node_input_box.text.strip())) is not None
+            and self.target_coords in [button.coords for button in node.buttons if button is not self.button_to_modify]
+        ):
+            all_valid = False
+            self.coords_label.k_fg = ThemeKey.FG_ERROR
+        else:
+            self.coords_label.k_fg = ThemeKey.FG
+
         # Check that font size is a valid font
         if self.font_size_input_box.text.isdigit() or not self.font_size_input_box.text:
             self.font_size_input_box.clear_error_msg()
@@ -279,8 +289,12 @@ class ModifyState(State):
             self.font_size_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"Invalid font size '{self.font_size_input_box.text}'")
 
         # Warn if the user is attempting to place a button in a node that either doesn't exist or has no references to it.
+        # Error out if the user attempts to put a button in a full node - this assumes there are no overlapping buttons
         node_norm = self.node_input_box.text.strip()
-        if node_norm not in self.aac_inst.engine.tree.nodes.keys() or node_norm not in self.aac_inst.engine.tree.get_reachable_node_ids():
+        if (node := self.aac_inst.engine.tree.get(node_norm)) is not None and len([b for b in self.aac_inst.engine.buttons_for_node(node_norm) if b is not self.button_to_modify]) >= GRID_W * GRID_H:
+            all_valid = False
+            self.node_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"Node '{node_norm}' is full")
+        elif node_norm not in self.aac_inst.engine.tree.nodes.keys() or node_norm not in self.aac_inst.engine.tree.get_reachable_node_ids():
             self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{node_norm}'")
         else:
             self.node_input_box.clear_error_msg()
@@ -359,6 +373,7 @@ class ModifyState(State):
         if self.select_coords_button.check_click(event.pos):
             self.aac_inst.bus.emit(EventID.SET_SELECTING_COORDS_FLAG)
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
+            self.aac_inst.engine.current_node = self.node_input_box.text.strip()
             return
 
         # Close button

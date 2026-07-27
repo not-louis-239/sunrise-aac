@@ -78,14 +78,12 @@ class AACEngine:
         self.current_node = "HOME"
         self.history.clear()
 
-    def current_buttons(self) -> list[Button]:
-        """Get the current buttons for the engine's current node,
-        accounting for the universal node.
-        If a node cannot be found in the language tree, it skips attempting
-        to find buttons for the current node."""
+    def buttons_for_node(self, node_id: str) -> list[Button]:
+        """Get all the buttons for a specific node ID, considering
+        the UNIVERSAL node."""
 
         universal_node = self.tree.get("UNIVERSAL")
-        node = self.tree.get(self.current_node)
+        node = self.tree.get(node_id)
 
         buttons: list[Button] = []
 
@@ -95,6 +93,14 @@ class AACEngine:
             buttons.extend(node.buttons)
 
         return buttons
+
+    def current_buttons(self) -> list[Button]:
+        """Get the current buttons for the engine's current node,
+        accounting for the universal node.
+        If a node cannot be found in the language tree, it skips attempting
+        to find buttons for the current node."""
+
+        return self.buttons_for_node(self.current_node)
 
     def get_node_for_button(self, button: Button) -> str | None:
         for node_name in self.tree.nodes.keys():
