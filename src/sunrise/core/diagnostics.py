@@ -80,7 +80,9 @@ class IntervalContainer:
     def avg_freq_from_last(self, t: float) -> float:
         """Get the average frequency at which time intervals have been
         recorded in the last `t` seconds.
-        Note that this is not the same as the average duration of each interval."""
+        Note that this is not the same as the average duration of each interval.
+        If the first interval was from less than `t` seconds ago, this
+        function gets the average frequency of intervals since the first interval."""
 
         recent = self.get_intervals_from_last(t)
 
@@ -125,6 +127,25 @@ class DiagnosticsManager:
             # Draw text just below the line
             text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{fps_value} FPS", True, fg_colour)
             surface.blit(text_surf, (0, fps_height))
+
+        # Draw measurements
+        durs = self.interval_container.get_durations()
+
+        min_dur = min(durs, default=0)
+        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{min_dur * 1000:.2f} ms min", True, current_theme[ThemeKey.FG])
+        surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2 - 200))
+
+        mean_dur = sum(durs) / len(durs) if len(durs) else 0
+        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{mean_dur * 1000:.2f} ms avg", True, current_theme[ThemeKey.FG])
+        surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2))
+
+        max_dur = max(durs, default=0)
+        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{max_dur * 1000:.2f} ms max", True, current_theme[ThemeKey.FG])
+        surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2 + 200))
+
+        fps = self.interval_container.avg_freq_from_last(5)
+        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{fps:.2f} fps", True, current_theme[ThemeKey.FG])
+        surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, right=WN_W - 10))
 
     def draw_interval_graph(self, surface: Surface, current_theme: Theme) -> None:
         self._draw_graph(surface, current_theme)
