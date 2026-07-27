@@ -22,33 +22,34 @@ from pathlib import Path
 import pygame as pg
 
 from sunrise.core.custom_types import Colour, IntCoord2
-from sunrise.ui.utils import make_tinted_surface
+from sunrise.ui.utils import make_tinted_scaled_surface
 
 
-type _TintSizeCtx = tuple[Colour, IntCoord2]
+type _TintSizeCtx = tuple[Path, Colour, IntCoord2]    # file path, tint, scale
 type _TintSizeCache = dict[_TintSizeCtx, pg.Surface]  # {(colour, size): tinted_surface}
 
 
-class ImageContainer:
+class ImageCache:
     """Class for storing a base image, plus tinted and scaled versions.
     Derivatives of the original image are cached to avoid wasteful recalculations."""
 
-    def __init__(self, img_path: Path):
-        self.img_path = img_path
+    def __init__(self):
+        self.base_cache: dict[Path, pg.Surface] = {}  # the untinted, unscaled original image - not to be modified after it is set
+        self.tint_scale_cache: _TintSizeCache = {}
 
-        self._base_cache: pg.Surface = pg.image.load(str(self.img_path)).convert_alpha()  # the untinted, unscaled original image - not to be modified after it is set
-        self._start_size = self._base_cache.get_size()
-        self._tint_size_cache: _TintSizeCache = {}
-
-    def get_tinted_scaled_img(self, colour: Colour, size: IntCoord2) -> pg.Surface:
+    def get_tinted_scaled_img(self, fp: Path, colour: Colour, size: IntCoord2) -> pg.Surface:
         """Get an image tinted and scaled to a specific colour and size."""
 
-        key: _TintSizeCtx = (colour, size)
+        key: _TintSizeCtx = (fp, colour, size)
 
-        if key not in self._tint_size_cache:
-            self._tint_size_cache[key] = make_tinted_surface(
-                surface=self._base_cache, colour=colour,
-                size=size if size != self._start_size else None  # skip resizing if the requested size is the same as the original size
+        if key not in self.tint_scale_cache:
+            # Get the base cache first
+            if fp not in self.base_cache:
+                self.base_cache[fp] = pg.image.load(fp).convert_alpha()
+
+            self.tint_scale_cache[key] = make_tinted_scaled_surface(
+                surface=self.base_cache[fp], colour=colour,
+                size=size if size != self.base_cache[fp].get_size() else None  # skip resizing if the requested size is the same as the original size
             )
 
-        return self._tint_size_cache[key]
+        return self.tint_scale_cache[key]

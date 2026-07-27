@@ -28,7 +28,7 @@ from pygame.font import Font
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
 
-from ._img_container import ImageContainer
+from ._img_cache import ImageCache
 from .widget import Widget
 
 
@@ -58,10 +58,14 @@ class _UIButton(Widget):
         self.k_border = k_border
         self.border_w = border_w
 
-        self.img_container: ImageContainer | None = (
-            ImageContainer(img_path=img_path)
+        self.img_path = img_path
+        self.img_container: ImageCache | None = (
+            ImageCache(img_path=img_path)
             if img_path is not None else None
         )
+
+    def set_icon_path(self, img_path: Path | None) -> None:
+        ...
 
     def _preferred_icon_size(self) -> tuple[int, int]:
         return self.fixed_size or self.rect.size

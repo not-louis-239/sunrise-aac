@@ -22,7 +22,7 @@ from enum import StrEnum
 
 import pygame as pg
 
-from sunrise.ui.utils import make_tinted_surface
+from sunrise.ui.utils import make_tinted_scaled_surface
 from sunrise.core.paths import FONTS_DIR, UI_IMAGES_DIR
 from sunrise.ui.themes import THEMES, Theme
 from sunrise.ui.constants import ICON_SIZE

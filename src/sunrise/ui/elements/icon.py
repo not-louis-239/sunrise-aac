@@ -23,7 +23,7 @@ import pygame as pg
 
 from .widget import Widget
 from sunrise.core.custom_types import IntCoord2
-from sunrise.ui.elements._img_container import ImageContainer
+from sunrise.ui.elements._img_cache import ImageCache
 from sunrise.ui.themes import Theme, ThemeKey
 
 
@@ -32,7 +32,7 @@ class Icon(Widget):
             self, *, img_path: Path, size: tuple[int, int], k_fg: ThemeKey
         ) -> None:
         super().__init__()
-        self.img_container = ImageContainer(img_path=img_path)
+        self.img_container = ImageCache(img_path=img_path)
 
         # remembers its original dimensions - do not touch after creation please
         self.native_size: Final[IntCoord2] = size
