@@ -25,7 +25,7 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
-from sunrise.core.lint_language_tree import lint_language_tree, Severity
+from sunrise.core.lint_language_tree import lint_language_tree, Severity, Problem
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.themes import ThemeKey
@@ -42,6 +42,7 @@ class DoctorState(State):
         super().__init__(aac_inst)
 
         # Errors VBox
+        self.problems: dict[Problem, Label] = {}
         self.default_errors_display = [Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text="Warnings will appear here.")]
         self.errors_vbox = VBox(padding=UI_MARGIN_M, gap=UI_MARGIN_M)
         self.errors_scroller = ScrollableDisplay(flex=1, child=self.errors_vbox)
@@ -103,6 +104,7 @@ class DoctorState(State):
         self._reset_error_display()
 
     def _reset_error_display(self) -> None:
+        self.problems.clear()
         self.errors_vbox.children = self.default_errors_display  # type: ignore
         self.num_errors_label.set_text("-")
         self.num_errors_label.k_fg = ThemeKey.FG_DISABLED
@@ -129,7 +131,9 @@ class DoctorState(State):
                 k_border=ThemeKey.FG_ERROR if problem.severity == Severity.ERROR else ThemeKey.FG_WARNING,
                 text=str(problem)
             )
+
             new_labels.append(label)
+            self.problems[problem] = label
 
             if problem.severity == Severity.ERROR:
                 num_errors += 1
@@ -158,6 +162,25 @@ class DoctorState(State):
                     self._refresh_error_display()
                 if self.clear_button.check_click(event.pos):
                     self.aac_inst.assets.images.cache.clear()
+
+                # Clicking on an error leads directly to the offending
+                # button, if it is specific to a button
+                if self.errors_scroller.rect.collidepoint(event.pos):
+                    for problem, label in self.problems.items():
+                        mx, my = event.pos
+                        x = mx - self.errors_scroller.rect.left - self.errors_scroller.padding
+                        y = my - self.errors_scroller.rect.top - self.errors_scroller.padding + self.errors_scroller.scroll_physics.y
+
+                        if (
+                            label.rect.collidepoint(x, y)
+                            and problem.button_label and problem.node_id
+                        ):
+                            if node := self.aac_inst.engine.tree.get(problem.node_id):
+                                if button := next((b for b in node.buttons if b.label == problem.button_label), None):
+                                    self._reset_error_display()
+                                    self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.INSPECT)
+                                    self.aac_inst.bus.emit(EventID.SET_INSPECT_BUTTON, button=button, node_label=problem.node_id)
+                                    break
 
             if event.type == pg.MOUSEWHEEL:
                 self.errors_scroller.handle_scroll(event)

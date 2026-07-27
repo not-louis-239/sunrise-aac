@@ -97,7 +97,7 @@ class AACEngine:
         return buttons
 
     def get_node_for_button(self, button: Button) -> str | None:
-        for node_name in ["UNIVERSAL", self.current_node]:
+        for node_name in self.tree.nodes.keys():
             node = self.tree.get(node_name)
             if node and button in node.buttons:
                 return node_name

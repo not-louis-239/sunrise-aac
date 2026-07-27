@@ -236,9 +236,9 @@ class InspectState(State):
                 if (
                     self.button is not None
                     and (node_str := self.aac_inst.engine.get_node_for_button(self.button)) is not None
-                    and self.button in (node_buttons := self.aac_inst.engine.tree.nodes[node_str].buttons)
+                    and self.button in self.aac_inst.engine.tree.nodes[node_str].buttons
                 ):
-                    node_buttons.remove(self.button)
+                    self.aac_inst.engine.tree.nodes[node_str].buttons.remove(self.button)
                     save_language_tree(lt=self.aac_inst.engine.tree)
             if self.no_button.check_click(event.pos):
                 self.in_delete_confirmation = False
@@ -252,11 +252,13 @@ class InspectState(State):
         # modify, move, delete
         if self.modify_button.check_click(event.pos):
             if not self.button.immutable:
-                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.aac_inst.engine.current_node, coords=self.button.coords)
+                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.node_label, coords=self.button.coords)
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+
         if self.delete_button.check_click(event.pos):
             if not self.button.immutable:
                 self.in_delete_confirmation = True
+
         if self.move_button.check_click(event.pos):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
             self.aac_inst.bus.emit(EventID.SET_MOVE_STATE, button=self.button)

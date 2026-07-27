@@ -1276,7 +1276,7 @@
                 {
                     "label": "Far",
                     "fixed_font_size": null,
-                    "word": null,
+                    "word": "far",
                     "dest": null,
                     "func": null,
                     "coords": [
@@ -3526,7 +3526,7 @@
                         4
                     ],
                     "type": "syntax",
-                    "img": "./icons/directions/45.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
