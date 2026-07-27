@@ -29,7 +29,7 @@ type _TintSizeCtx = tuple[Path, Colour, IntCoord2]    # file path, tint, scale
 type _TintSizeCache = dict[_TintSizeCtx, pg.Surface]  # {(colour, size): tinted_surface}
 
 
-class ImageCache:
+class _ImageCache:
     """Class for storing a base image, plus tinted and scaled versions.
     Derivatives of the original image are cached to avoid wasteful recalculations."""
 
@@ -53,3 +53,6 @@ class ImageCache:
             )
 
         return self.tint_scale_cache[key]
+
+
+img_cache = _ImageCache()

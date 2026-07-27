@@ -28,7 +28,7 @@ from pygame.font import Font
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
 
-from ._img_cache import ImageCache
+from ._img_cache import img_cache
 from .widget import Widget
 
 
@@ -59,13 +59,6 @@ class _UIButton(Widget):
         self.border_w = border_w
 
         self.img_path = img_path
-        self.img_container: ImageCache | None = (
-            ImageCache(img_path=img_path)
-            if img_path is not None else None
-        )
-
-    def set_icon_path(self, img_path: Path | None) -> None:
-        ...
 
     def _preferred_icon_size(self) -> tuple[int, int]:
         return self.fixed_size or self.rect.size
@@ -96,8 +89,8 @@ class RectangularUIButton(_UIButton):
         pg.draw.rect(surface, current_theme[k_bg], self.rect)
 
         # Draw icon
-        if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self._preferred_icon_size())
+        if self.img_path is not None:
+            img_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[k_fg], self._preferred_icon_size())
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw border
@@ -144,8 +137,8 @@ class CircularUIButton(_UIButton):
         pg.draw.circle(surface, current_theme[k_bg], self.rect.center, self.r)
 
         # Draw icon, but bound to the button circle
-        if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self.preferred_size())
+        if self.img_path is not None:
+            img_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[k_fg], self.preferred_size())
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw the text

@@ -23,7 +23,7 @@ import pygame as pg
 
 from .widget import Widget
 from sunrise.core.custom_types import IntCoord2
-from sunrise.ui.elements._img_cache import ImageCache
+from sunrise.ui.elements._img_cache import img_cache
 from sunrise.ui.themes import Theme, ThemeKey
 
 
@@ -32,7 +32,7 @@ class Icon(Widget):
             self, *, img_path: Path, size: tuple[int, int], k_fg: ThemeKey
         ) -> None:
         super().__init__()
-        self.img_container = ImageCache(img_path=img_path)
+        self.img_path = img_path
 
         # remembers its original dimensions - do not touch after creation please
         self.native_size: Final[IntCoord2] = size
@@ -73,5 +73,5 @@ class Icon(Widget):
         self.rect.center = rect.center
 
     def draw(self, surface: pg.Surface, current_theme: Theme) -> None:
-        tinted_surf = self.img_container.get_tinted_scaled_img(current_theme[self.k_fg], self.size)  # ignoring alpha here for simplicity
+        tinted_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[self.k_fg], self.size)  # ignoring alpha here for simplicity
         surface.blit(tinted_surf, self.rect.topleft)

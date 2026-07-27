@@ -27,6 +27,7 @@ from pygame.font import Font
 
 from sunrise.ui.constants import BORDER_WIDTH, UI_MARGIN_S
 from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.elements._img_cache import img_cache
 
 from .ui_buttons import RectangularUIButton
 
@@ -98,8 +99,8 @@ class Key(RectangularUIButton):
         pg.draw.rect(surface, current_theme[self.k_bg], self.rect)
 
         # Draw icon if applicable
-        if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[self.k_fg], self._preferred_icon_size())
+        if self.img_path is not None:
+            img_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[self.k_fg], self._preferred_icon_size())
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw border
