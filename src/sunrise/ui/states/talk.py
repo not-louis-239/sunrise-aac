@@ -468,17 +468,20 @@ class TalkState(State):
             case KBAction.SHIFT:
                 if self.kb_state.caps_lock:
                     self.kb_state.reset()
+
                 elif not self.kb_last_shift_press_time:
                     if self.aac_inst.config.speak_keyboard_chars:
                         speak("shift")
                     self.kb_last_shift_press_time = time.time()
                     self.kb_state.shifting = True
+
                 elif time.time() - self.kb_last_shift_press_time < DOUBLE_CLICK_MAX_DELAY:
                     if self.aac_inst.config.speak_keyboard_chars:
                         speak("caps lock")
                     self.kb_last_shift_press_time = None
                     self.kb_state.caps_lock = True
                     self.kb_state.shifting = False
+
                 else:
                     self.kb_last_shift_press_time = None
                     self.kb_state.reset()
