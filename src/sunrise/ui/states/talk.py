@@ -363,7 +363,7 @@ class TalkState(State):
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='0', shift_char=')', ignore_caps_lock=True),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='-', shift_char='_', ignore_caps_lock=True),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='=', shift_char='+', ignore_caps_lock=True),
-                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Bksp", kb_action=KBAction.BACKSPACE),
+                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", img_path=self.aac_inst.assets.images.backspace_icon, kb_action=KBAction.BACKSPACE),
                         ]
                     ),
                     HBox(
@@ -400,7 +400,7 @@ class TalkState(State):
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='l', shift_char='L'),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=';', shift_char=':', ignore_caps_lock=True),
                             Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\'', shift_char='"', ignore_caps_lock=True),
-                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Done", kb_action=KBAction.RETURN),
+                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Done", k_bg=ThemeKey.FG_SUCCESS, kb_action=KBAction.RETURN),
                         ]
                     ),
                     HBox(

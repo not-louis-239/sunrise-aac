@@ -69,6 +69,7 @@ class Images:
         self.shift_off_icon: Path = UI_IMAGES_DIR / "shift_off.png"
         self.shift_on_icon: Path = UI_IMAGES_DIR / "shift_on.png"
         self.caps_lock_icon: Path = UI_IMAGES_DIR / "caps_lock.png"
+        self.backspace_icon: Path = UI_IMAGES_DIR / "backspace.png"
 
         self.property_icons: dict[PropertyIconID, Path] = {
             PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",
