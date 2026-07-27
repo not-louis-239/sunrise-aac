@@ -40,6 +40,7 @@ class SettingsState(State):
         self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.config.theme_idx].display_name)
 
         self.speak_keyboard_chars_switch = Switch(enabled=self.aac_inst.config.speak_keyboard_chars)
+        self.show_perf_diagnostics_switch = Switch(enabled=self.aac_inst.config.show_perf_diagnostics)
 
         # Assemble the panel
         self.panel = Panel(
@@ -77,6 +78,16 @@ class SettingsState(State):
                                     ),
                                     self.speak_keyboard_chars_switch,
                                 ]
+                            ),
+                            HBox(
+                                gap=UI_MARGIN_M,
+                                children=[
+                                    SBox(
+                                        child=Label(text="Show Performance Diagnostics", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                                        v_align=VAlign.CENTRE
+                                    ),
+                                    self.show_perf_diagnostics_switch,
+                                ]
                             )
                         ]
                     ),
@@ -101,6 +112,7 @@ class SettingsState(State):
         self.theme_dropdown.update(dt_s)
         self.theme_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
         self.speak_keyboard_chars_switch.update(dt_s)
+        self.show_perf_diagnostics_switch.update(dt_s)
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
@@ -117,6 +129,10 @@ class SettingsState(State):
                 if self.speak_keyboard_chars_switch.check_click(event.pos):
                     self.speak_keyboard_chars_switch.toggle()
                     self.aac_inst.config.speak_keyboard_chars = self.speak_keyboard_chars_switch.enabled
+
+                if self.show_perf_diagnostics_switch.check_click(event.pos):
+                    self.show_perf_diagnostics_switch.toggle()
+                    self.aac_inst.config.show_perf_diagnostics = self.show_perf_diagnostics_switch.enabled
 
             if event.type == pg.MOUSEWHEEL:
                 self.theme_dropdown.handle_scroll(event)

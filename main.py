@@ -61,11 +61,12 @@ def main():
             aac.take_input(keys=keys, events=events, dt_s=dt_s)
             aac.draw(screen)
 
-            aac.diagnostics_manager.draw_interval_graph(screen, aac.get_current_theme())
+            if aac.config.show_perf_diagnostics:
+                aac.diagnostics_manager.draw_interval_graph(screen, aac.get_current_theme())
 
             pg.display.flip()
-            t_f = time.perf_counter()
 
+            t_f = time.perf_counter()
             aac.diagnostics_manager.interval_container.record_interval(t_i=t_i, t_f=t_f)
             aac.diagnostics_manager.interval_container.prune(MAX_HISTORY_LEN)
 
