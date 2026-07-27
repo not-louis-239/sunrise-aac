@@ -43,7 +43,7 @@ from .base_states import State, StateID
 from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
 from sunrise.core.language_tree import Button, save_language_tree
-from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN, ICON_SIZE
+from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_M, ICON_SIZE
 from sunrise.ui.themes import ThemeKey
 
 
@@ -70,16 +70,16 @@ class InspectState(State):
         ## Confirmation Dialog
 
         # Yes and No buttons
-        self.yes_button = RectangularUIButton(text="Yes", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, flex=1, k_fg=ThemeKey.FG_ERROR)
-        self.no_button = RectangularUIButton(text="No", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, flex=1)
+        self.yes_button = RectangularUIButton(text="Yes", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_M, flex=1, k_fg=ThemeKey.FG_ERROR)
+        self.no_button = RectangularUIButton(text="No", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_M, flex=1)
 
         # "Are you sure?" popup
         self.confirmation_title = Label(font=self.aac_inst.assets.fonts.title_font, text="Are you sure?")  # placeholder text, this will get set in another method
         self.confirm_dialog = Panel(
-            horiz_padding=UI_MARGIN,
-            vert_padding=UI_MARGIN,
+            horiz_padding=UI_MARGIN_M,
+            vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     HBox(
                         children=[
@@ -90,7 +90,7 @@ class InspectState(State):
                     ),
                     Spacer(flex=1),
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             self.yes_button,
                             self.no_button
@@ -106,16 +106,16 @@ class InspectState(State):
         self.title = Label(font=self.aac_inst.assets.fonts.title_font, flex=1)
 
         # Close/continue buttons
-        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, inset=UI_MARGIN, img_path=self.aac_inst.assets.images.exit_icon, k_fg=ThemeKey.FG_ERROR, border_w=0)
+        self.close_button = CircularUIButton(font=self.aac_inst.assets.fonts.ui_button_font, r=ICON_SIZE // 2, inset=UI_MARGIN_M, img_path=self.aac_inst.assets.images.exit_icon, k_fg=ThemeKey.FG_ERROR, border_w=0)
 
         # Move, modify, delete buttons
-        self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, flex=1)
-        self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, flex=1)
-        self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN, flex=1, k_fg=ThemeKey.FG_ERROR)
+        self.move_button = RectangularUIButton(text="Move", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_M, flex=1)
+        self.modify_button = RectangularUIButton(text="Modify", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_M, flex=1)
+        self.delete_button = RectangularUIButton(text="Delete", font=self.aac_inst.assets.fonts.ui_button_font, inset=UI_MARGIN_M, flex=1, k_fg=ThemeKey.FG_ERROR)
 
         self.property_hboxes: list[HBox] = [
             HBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     _make_icon(self, prop=prop),
                     SBox(
@@ -141,16 +141,16 @@ class InspectState(State):
 
         # Putting together the main panel
         self.popup = Panel(
-            horiz_padding=UI_MARGIN,
-            vert_padding=UI_MARGIN,
+            horiz_padding=UI_MARGIN_M,
+            vert_padding=UI_MARGIN_M,
 
             # Main VBox
             child=VBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     # Header HBox
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             self.title,
                             self.close_button,
@@ -159,7 +159,7 @@ class InspectState(State):
 
                     # Content VBox
                     VBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=self.property_hboxes  # type: ignore
                     ),
 
@@ -168,7 +168,7 @@ class InspectState(State):
 
                     # Buttons HBox
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             self.move_button,
                             self.modify_button,
@@ -182,8 +182,8 @@ class InspectState(State):
         self._layout_widgets()
 
     def _layout_widgets(self) -> None:
-        self.popup.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
-        self.confirm_dialog.layout(pg.Rect(UI_MARGIN, WN_H // 2 - 120, WN_W - 2 * UI_MARGIN, 240))
+        self.popup.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
+        self.confirm_dialog.layout(pg.Rect(UI_MARGIN_M, WN_H // 2 - 120, WN_W - 2 * UI_MARGIN_M, 240))
 
     def _refresh_labels(self) -> None:
         button = self.button
@@ -236,9 +236,9 @@ class InspectState(State):
                 if (
                     self.button is not None
                     and (node_str := self.aac_inst.engine.get_node_for_button(self.button)) is not None
-                    and self.button in (node_buttons := self.aac_inst.engine.tree.nodes[node_str].buttons)
+                    and self.button in self.aac_inst.engine.tree.nodes[node_str].buttons
                 ):
-                    node_buttons.remove(self.button)
+                    self.aac_inst.engine.tree.nodes[node_str].buttons.remove(self.button)
                     save_language_tree(lt=self.aac_inst.engine.tree)
             if self.no_button.check_click(event.pos):
                 self.in_delete_confirmation = False
@@ -252,11 +252,13 @@ class InspectState(State):
         # modify, move, delete
         if self.modify_button.check_click(event.pos):
             if not self.button.immutable:
-                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.aac_inst.engine.current_node, coords=self.button.coords)
+                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.node_label, coords=self.button.coords)
                 self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+
         if self.delete_button.check_click(event.pos):
             if not self.button.immutable:
                 self.in_delete_confirmation = True
+
         if self.move_button.check_click(event.pos):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
             self.aac_inst.bus.emit(EventID.SET_MOVE_STATE, button=self.button)

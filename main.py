@@ -19,6 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import time
 import sys
 from pathlib import Path
 
@@ -31,6 +32,8 @@ from sunrise.core.constants import FPS
 from sunrise.core.aac import AAC
 from sunrise.core.language_tree import save_language_tree
 from sunrise.core.error_logger import write_error_log
+from sunrise.core.diagnostics import MAX_HISTORY_LEN
+
 
 def main():
     pg.init()
@@ -53,10 +56,20 @@ def main():
                     aac.quit()
                     running = False
 
+            t_i = time.perf_counter()
             aac.update(dt_s=dt_s)
             aac.take_input(keys=keys, events=events, dt_s=dt_s)
             aac.draw(screen)
+
+            if aac.config.show_perf_diagnostics:
+                aac.diagnostics_manager.draw_interval_graph(screen, aac.get_current_theme())
+
             pg.display.flip()
+
+            t_f = time.perf_counter()
+            aac.diagnostics_manager.interval_container.record_interval(t_i=t_i, t_f=t_f)
+            aac.diagnostics_manager.interval_container.prune(MAX_HISTORY_LEN)
+
     except KeyboardInterrupt:
         save_language_tree(aac.engine.tree)
         aac.quit()

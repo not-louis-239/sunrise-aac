@@ -27,7 +27,7 @@ class _DropdownDisplayStatus(StrEnum):
 class Dropdown[T](Widget):
     def __init__(
             self, *,
-            flex: int = 0,
+            flex: float = 0,
             options: dict[str, T],  # {label: value}
             font: pg.font.Font,
             inset: int = 0,

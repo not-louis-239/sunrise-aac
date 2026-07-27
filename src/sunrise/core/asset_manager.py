@@ -1,4 +1,4 @@
-# asset_manager.py - Asset Manager
+# asset manager module
 
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
@@ -22,7 +22,7 @@ from enum import StrEnum
 
 import pygame as pg
 
-from sunrise.ui.utils import make_tinted_surface
+from sunrise.ui.utils import make_tinted_scaled_surface
 from sunrise.core.paths import FONTS_DIR, UI_IMAGES_DIR
 from sunrise.ui.themes import THEMES, Theme
 from sunrise.ui.constants import ICON_SIZE
@@ -45,15 +45,15 @@ class Fonts:
         self.talk_button_font_path: Path = FONTS_DIR / "ComicNeue-Bold.ttf"
         self._ui_font_path: Path = FONTS_DIR / "AtkinsonHyperlegible-Regular.ttf"
 
-        self.sentence_bar_font = pg.font.Font(self._ui_font_path, 35)
-
         self.default_talk_button_font_size = 21  # the separate size is needed somewhere so that's why it's stored as a separate attr
 
-
+        self.title_font = pg.font.Font(self._ui_font_path, 45)
+        self.sentence_bar_font = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_m = pg.font.Font(self._ui_font_path, 35)
         self.ui_text_font_s = pg.font.Font(self._ui_font_path, 22)
-        self.title_font = pg.font.Font(self._ui_font_path, 45)
         self.ui_button_font = pg.font.Font(self._ui_font_path, 40)
+
+        self.diagnostics_font = pg.font.Font(self._ui_font_path, 28)
 
 class Images:
     def __init__(self) -> None:
@@ -65,6 +65,11 @@ class Images:
         self.proceed_icon: Path = UI_IMAGES_DIR / "proceed.png"
         self.lock_icon: Path = UI_IMAGES_DIR / "lock.png"
         self.warning_icon: Path = UI_IMAGES_DIR / "warning.png"
+
+        self.shift_off_icon: Path = UI_IMAGES_DIR / "shift_off.png"
+        self.shift_on_icon: Path = UI_IMAGES_DIR / "shift_on.png"
+        self.caps_lock_icon: Path = UI_IMAGES_DIR / "caps_lock.png"
+        self.backspace_icon: Path = UI_IMAGES_DIR / "backspace.png"
 
         self.property_icons: dict[PropertyIconID, Path] = {
             PropertyIconID.TEXT: UI_IMAGES_DIR / "text.png",

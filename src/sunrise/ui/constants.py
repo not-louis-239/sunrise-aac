@@ -22,13 +22,9 @@
 WN_W, WN_H = 1280, 720
 
 # UI margin presets
-UI_MARGIN = int(WN_W * 0.012)
-BUTTON_GRID_MARGIN = int(WN_W * 0.01)  # specifically for the buttons in the TALK state
-
-# TODO: thinking of migrating to a system where instead of coords like (5, 2), buttons store a fixed
-# position ID like "42", which would make it easier to resize the button grid
-# extra pages per node could also help with usability, if that were a thing then
-# each node's button grid would technically be 3d
+UI_MARGIN_L = int(WN_W * 0.05)
+UI_MARGIN_M = int(WN_W * 0.012)
+UI_MARGIN_S = int(WN_W * 0.01)
 
 # Other visual settings
 GRID_W, GRID_H = 10, 6  # size of the talk grid in buttons
@@ -39,7 +35,7 @@ DEFAULT_MESSAGE_DURATION = 2.0  # seconds for which to show ambient messages or 
 
 # Sizes
 SENTENCE_BAR_H = 80
-BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN) / GRID_H * 0.65)
+BUTTON_IMAGE_SIZE = int((WN_H - SENTENCE_BAR_H - UI_MARGIN_M) / GRID_H * 0.65)
 ICON_SIZE = int(WN_W * 0.04)  # size for UI icons
 
 # Allowed button types - Only these button types will have a supporting colour.

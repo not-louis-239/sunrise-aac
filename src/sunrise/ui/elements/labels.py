@@ -25,7 +25,7 @@ from .widget import Widget
 
 class Label(Widget):
     def __init__(
-            self, *, flex: int = 0, text: str = "", font: pg.font.Font, inset: int = 0,
+            self, *, flex: float = 0, text: str = "", font: pg.font.Font, inset: int = 0,
             k_fg: ThemeKey = ThemeKey.FG, k_bg: ThemeKey | None = None, k_border: ThemeKey = ThemeKey.BORDER, border_w: int = 0
         ) -> None:
         super().__init__(flex=flex)

@@ -1,3 +1,5 @@
+# talk state module
+
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 
@@ -14,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 from typing import TYPE_CHECKING
 import time
 
@@ -25,6 +28,7 @@ from pygame.key import ScancodeWrapper
 from crystallinium.text_utils import draw_text
 
 from .base_states import State
+from sunrise.core.speak import speak
 from sunrise.ui.states.base_states import StateID
 from sunrise.core.bus import EventID
 from sunrise.core.language_tree import Button, save_language_tree
@@ -32,16 +36,20 @@ from sunrise.core.paths import UI_IMAGES_DIR, get_image_path
 from sunrise.core.asset_manager import Assets
 from sunrise.core.constants import (
     MOVE_HOLD_DELAY,
+    DOUBLE_CLICK_MAX_DELAY
 )
 
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import VBox, Panel, RectangularUIButton
+from sunrise.ui.elements import HBox, VBox, Spacer, Panel, Key, KBState, KBAction, RectangularUIButton
 from sunrise.ui.utils import AmbientMessage
 from sunrise.ui.constants import (
     SENTENCE_BAR_H,
+    CURSOR_FLASH_INTERVAL,
+    CURSOR_WIDTH,
     BUTTON_IMAGE_SIZE,
-    UI_MARGIN,
-    BUTTON_GRID_MARGIN,
+    UI_MARGIN_L,
+    UI_MARGIN_M,
+    UI_MARGIN_S,
     BORDER_WIDTH,
     ICON_SIZE,
     GRID_W,
@@ -49,6 +57,7 @@ from sunrise.ui.constants import (
     WN_W,
     WN_H
 )
+
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -70,8 +79,8 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
 
     x, y = screen_coords
 
-    min_x = UI_MARGIN
-    min_y = SENTENCE_BAR_H + UI_MARGIN
+    min_x = UI_MARGIN_M
+    min_y = SENTENCE_BAR_H + UI_MARGIN_M
 
     # Calculate individual button dimensions
     area_w = WN_W - min_x
@@ -92,7 +101,7 @@ def _screen_to_grid_coord(screen_coords: tuple[int, int]) -> tuple[int, int] | N
     button_start_y = min_y + by * button_h
 
     # Check if the click fell into the padding gap at the right or bottom of the button
-    if (x >= button_start_x + (button_w - UI_MARGIN)) or (y >= button_start_y + (button_h - UI_MARGIN)):
+    if (x >= button_start_x + (button_w - UI_MARGIN_M)) or (y >= button_start_y + (button_h - UI_MARGIN_M)):
         return None
 
     # Safety check to ensure floating-point rounding didn't push us out of bounds
@@ -117,6 +126,7 @@ def _get_button_at_pos(buttons: list[Button], grid_coords: tuple[int, int]) -> B
 
 class _Renderer:
     def __init__(self, assets: Assets, aac_inst: AAC):
+        self.cursor_flash_time: float = 0
         self.aac_inst = aac_inst
         self.assets = assets
         self.ambient_msg = AmbientMessage()
@@ -125,6 +135,9 @@ class _Renderer:
             n: pg.font.Font(self.assets.fonts.talk_button_font_path, n)
             for n in range(1, self.assets.fonts.default_talk_button_font_size + 1)
         }
+
+    def update(self, dt_s: float) -> None:
+        self.cursor_flash_time = (self.cursor_flash_time + dt_s) % CURSOR_FLASH_INTERVAL
 
     def retrieve_img(self, rel_path: str) -> Surface | None:
         """Load an image from an images manager and
@@ -154,8 +167,8 @@ class _Renderer:
         bx, by = button.coords
         bx, by = bx % GRID_W, by % GRID_H  # normalise negative coordinates
 
-        min_x = BUTTON_GRID_MARGIN
-        min_y = SENTENCE_BAR_H + BUTTON_GRID_MARGIN
+        min_x = UI_MARGIN_S
+        min_y = SENTENCE_BAR_H + UI_MARGIN_S
 
         # The size of the button area, minus the left/top margins
         area_w = WN_W - min_x
@@ -166,7 +179,7 @@ class _Renderer:
 
         screen_x = min_x + bx * button_w
         screen_y = min_y + by * button_h
-        return pg.Rect(screen_x, screen_y, button_w - BUTTON_GRID_MARGIN, button_h - BUTTON_GRID_MARGIN)
+        return pg.Rect(screen_x, screen_y, button_w - UI_MARGIN_S, button_h - UI_MARGIN_S)
 
     def _draw_button(self, screen: pg.Surface, button: Button) -> None:
         # Draw button rect
@@ -217,7 +230,7 @@ class _Renderer:
             size = button.fixed_font_size
         else:
             size = self.assets.fonts.default_talk_button_font_size
-            while self._font_cache[size].size(button.label)[0] > rect.width - BUTTON_GRID_MARGIN and size > 1:
+            while self._font_cache[size].size(button.label)[0] > rect.width - UI_MARGIN_S and size > 1:
                 size -= 1
 
         draw_text(
@@ -271,14 +284,25 @@ class _Renderer:
         # this is arbitrary but we expect here that a little kid might
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
-        max_width = WN_W - 3 * UI_MARGIN - ICON_SIZE
+        max_width = WN_W - 3 * UI_MARGIN_M - ICON_SIZE
         text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-255:], True, theme[ThemeKey.FG])
-        if (big_width := text_surf.get_width()) > max_width:
-            excess = big_width - max_width
+        text_left_x = 2 * UI_MARGIN_M + ICON_SIZE
+        text_surf_width = text_surf.get_width()
+
+        if text_surf_width > max_width:
+            excess = text_surf_width - max_width
             crop_rect = pg.Rect(excess, 0, max_width, text_surf.get_height())
             text_surf = text_surf.subsurface(crop_rect)
 
-        screen.blit(text_surf, text_surf.get_rect(left=2 * UI_MARGIN + ICON_SIZE, centery=SENTENCE_BAR_H / 2))
+        screen.blit(text_surf, text_surf.get_rect(left=text_left_x, centery=SENTENCE_BAR_H / 2))
+
+        # Draw a cursor if in keyboard mode
+        if self.aac_inst.engine.in_keyboard_mode:
+            if self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
+                cursor_x = text_left_x + text_surf_width
+                cursor_top_y = SENTENCE_BAR_H / 2 - text_surf.get_height() // 2
+                cursor_bot_y = SENTENCE_BAR_H / 2 + text_surf.get_height() // 2
+                pg.draw.line(screen, theme[ThemeKey.FG], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():
@@ -296,21 +320,118 @@ class TalkState(State):
         self.button_hold_start_time: float | None = None
         self.last_clicked_pos: tuple[int, int] | None = None
 
-        # changing this to a CircularUIButton with equivalent radius seems to work
+        # Hamburger buttons
         self.hamburger_button = RectangularUIButton(img_path=UI_IMAGES_DIR / "hamburger.png", font=self.aac_inst.assets.fonts.ui_button_font)
         self.hamburger_button.layout(pg.Rect((SENTENCE_BAR_H - ICON_SIZE) // 2, (SENTENCE_BAR_H - ICON_SIZE) // 2, ICON_SIZE, ICON_SIZE))
         self.hamburger_menu_active = False
 
-        self.settings_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Settings")
-        self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
+        self.settings_button = RectangularUIButton(flex=1, inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Settings")
+        self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
         self.hamburger_panel = Panel(
             child=VBox(
-                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN, gap=UI_MARGIN
+                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN_M, gap=UI_MARGIN_M
             )
         )
 
-        self.hamburger_panel.layout(pg.Rect(UI_MARGIN, SENTENCE_BAR_H + UI_MARGIN, *self.hamburger_panel.preferred_size()))
+        self.hamburger_panel.layout(pg.Rect(UI_MARGIN_M, SENTENCE_BAR_H + UI_MARGIN_M, *self.hamburger_panel.preferred_size()))
 
+        # Keyboard
+        self.kb_state = KBState()
+        self.kb_shift_buttons = [
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", kb_action=KBAction.SHIFT),
+            Key(flex=2, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", kb_action=KBAction.SHIFT)
+        ]
+        self.kb_last_shift_press_time: float | None = None
+
+        self.kb_panel = Panel(
+            horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox(
+                gap=UI_MARGIN_S,
+                children=[
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='`', shift_char='~', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='1', shift_char='!', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='2', shift_char='@', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='3', shift_char='#', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='4', shift_char='$', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='5', shift_char='%', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='6', shift_char='^', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='7', shift_char='&', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='8', shift_char='*', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='9', shift_char='(', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='0', shift_char=')', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='-', shift_char='_', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='=', shift_char='+', ignore_caps_lock=True),
+                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", img_path=self.aac_inst.assets.images.backspace_icon, kb_action=KBAction.BACKSPACE),
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            Spacer(flex=1.5),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='q', shift_char='Q'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='w', shift_char='W'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='e', shift_char='E'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='r', shift_char='R'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='t', shift_char='T'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='y', shift_char='Y'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='u', shift_char='U'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='i', shift_char='I'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='o', shift_char='O'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='p', shift_char='P'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='[', shift_char='{', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=']', shift_char='}', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\\', shift_char='|', ignore_caps_lock=True),
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            Spacer(flex=1.8),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='a', shift_char='A'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='s', shift_char='S'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='d', shift_char='D'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='f', shift_char='F'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='g', shift_char='G'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='h', shift_char='H'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='j', shift_char='J'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='k', shift_char='K'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='l', shift_char='L'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=';', shift_char=':', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\'', shift_char='"', ignore_caps_lock=True),
+                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Done", k_bg=ThemeKey.FG_SUCCESS, kb_action=KBAction.RETURN),
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            self.kb_shift_buttons[0],
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='z', shift_char='Z'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='x', shift_char='X'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='c', shift_char='C'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='v', shift_char='V'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='b', shift_char='B'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='n', shift_char='N'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='m', shift_char='M'),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=',', shift_char='<', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='.', shift_char='>', ignore_caps_lock=True),
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='/', shift_char='?', ignore_caps_lock=True),
+                            self.kb_shift_buttons[1]
+                        ]
+                    ),
+                    HBox(
+                        gap=UI_MARGIN_S,
+                        children=[
+                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Space", char=' ')
+                        ]
+                    )
+                ]
+            )
+        )
+        self.kb_panel.layout(pg.Rect(UI_MARGIN_L, SENTENCE_BAR_H + UI_MARGIN_L, WN_W - 2 * UI_MARGIN_L, min(WN_H - SENTENCE_BAR_H - 2 * UI_MARGIN_L, self.kb_panel.preferred_size()[1])))
+
+        # Selecting coordinates
         self.is_selecting_coords: bool = False  # flag to store when the user is selecting coords from ModifyState
 
     def clear_move_state(self) -> None:
@@ -331,6 +452,62 @@ class TalkState(State):
             self.renderer.ambient_msg.update(dt_s=dt_s)
         else:
             self.renderer.ambient_msg.clear()
+
+        self.renderer.update(dt_s)
+
+        if self.kb_state.caps_lock:
+            shift_icon = self.aac_inst.assets.images.caps_lock_icon
+        elif self.kb_state.shifting:
+            shift_icon = self.aac_inst.assets.images.shift_on_icon
+        else:
+            shift_icon = self.aac_inst.assets.images.shift_off_icon
+
+        for button in self.kb_shift_buttons:
+            button.img_path = shift_icon
+
+    def _handle_onscreen_keypress(self, key: Key) -> None:
+        match key.kb_action:
+            case KBAction.RETURN:
+                self.aac_inst.engine.in_keyboard_mode = False
+                self.kb_state.reset()
+
+            case KBAction.BACKSPACE:
+                self.aac_inst.engine.backspace_keyboard()
+                self.renderer.cursor_flash_time = 0
+
+            case KBAction.SHIFT:
+                if self.kb_state.caps_lock:
+                    self.kb_state.reset()
+
+                elif not self.kb_last_shift_press_time:
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak("shift")
+                    self.kb_last_shift_press_time = time.time()
+                    self.kb_state.shifting = True
+
+                elif time.time() - self.kb_last_shift_press_time < DOUBLE_CLICK_MAX_DELAY:
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak("caps lock")
+                    self.kb_last_shift_press_time = None
+                    self.kb_state.caps_lock = True
+                    self.kb_state.shifting = False
+
+                else:
+                    self.kb_last_shift_press_time = None
+                    self.kb_state.reset()
+
+            case None:
+                if self.kb_state.caps_lock and not key.ignore_caps_lock or self.kb_state.shifting:
+                    char = key.shift_char
+                    self.kb_state.shifting = False
+                else:
+                    char = key.char
+
+                if char is not None:
+                    if self.aac_inst.config.speak_keyboard_chars:
+                        speak(char.lower())
+                    self.renderer.cursor_flash_time = 0
+                    self.aac_inst.engine.type_keyboard_char(char)
 
     def _handle_lmb_click(self, event: pg.event.Event) -> bool:
         """Handles a LMB click for things for which clicks can be used instead of releases,
@@ -358,6 +535,15 @@ class TalkState(State):
 
             if is_inside_hamburger_panel:
                 return True  # block clicks that are inside the panel but don't do anything
+
+        if self.aac_inst.engine.in_keyboard_mode:
+            assert isinstance(self.kb_panel.child, VBox)
+            for row in (row for row in self.kb_panel.child.children if isinstance(row, HBox)):
+                for key in (key for key in row.children if isinstance(key, Key)):
+                    if key.check_click(event.pos):
+                        self._handle_onscreen_keypress(key)
+                        return True
+
         return False
 
     def _handle_rmb_click(self, event: pg.event.Event) -> None:
@@ -441,15 +627,21 @@ class TalkState(State):
                 # Left click
                 if self._handle_lmb_click(event=event):
                     continue
-                self.button_hold_start_time = time.time()
-                self.last_clicked_pos = event.pos
+
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    self.button_hold_start_time = time.time()
+                    self.last_clicked_pos = event.pos
+
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
-                # Right click
-                self._handle_rmb_click(event)
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    # Right click
+                    self._handle_rmb_click(event)
+
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                self._handle_lmb_release(event)
-                self.last_clicked_pos = None
-                self.button_hold_start_time = None
+                if not self.aac_inst.engine.in_keyboard_mode:
+                    self._handle_lmb_release(event)
+                    self.last_clicked_pos = None
+                    self.button_hold_start_time = None
 
     def draw(self, screen: Surface) -> None:
         # Retrieve current theme and fill with background colour
@@ -467,7 +659,10 @@ class TalkState(State):
         )
 
         # Draw each of the buttons on the screen
-        self.renderer.draw_buttons(screen)
+        if self.aac_inst.engine.in_keyboard_mode:
+            self.kb_panel.draw(surface=screen, current_theme=theme)
+        else:
+            self.renderer.draw_buttons(screen)
 
         self.hamburger_button.draw(screen, current_theme=theme)
         if self.hamburger_menu_active:

@@ -1,4 +1,4 @@
-# TODO: make an algorithm that detects unreachable nodes:
+# this is an algorithm that detects unreachable nodes:
 #  - nodes that have no buttons that point to them as a destination
 #  - and even if a button points to it as a destination, if the button itself is in an unreachable node,
 #    then that button doesn't count as a reference

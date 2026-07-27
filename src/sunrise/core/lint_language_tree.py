@@ -41,6 +41,9 @@ class Problem:
         else:
             return self.desc
 
+    def __hash__(self) -> int:
+        return hash((self.severity.value, self.desc, self.node_id, self.button_label))
+
 
 def lint_language_tree(lt: LanguageTree) -> list[Problem]:
     """
@@ -68,15 +71,14 @@ def lint_language_tree(lt: LanguageTree) -> list[Problem]:
     reachable_node_ids = lt.get_reachable_node_ids()
     unreachable_node_ids = set(lt.nodes.keys()) - reachable_node_ids
     for node_id in unreachable_node_ids:
-        problems.append(Problem(Severity.WARNING, f"Unreachable node '{node_id}'", node_id=node_id))
+        if (node := lt.get(node_id)) is not None:
+            for button in node.buttons:
+                problems.append(Problem(Severity.WARNING, f"Unreachable node '{node_id}'", node_id=node_id, button_label=button.label))
 
     # Check for OOB positions and overlaps
     for node_id in reachable_node_ids - {"UNIVERSAL"}:
         node = lt.nodes[node_id]  # not using .get() here so Pyright won't complain, we know that it points to a valid node
         seen_coords = universal_button_coords.copy()
-
-        # TODO: clicking on a warning or error takes you to the problematic button
-        # this would be a nice QoL feature
 
         for button in node.buttons:
             # No function set

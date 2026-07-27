@@ -18,7 +18,8 @@
 
 
 import json
-from typing import TYPE_CHECKING, TypedDict
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from .paths import CONFIG_FILE
 
@@ -26,8 +27,11 @@ if TYPE_CHECKING:
     from sunrise.core.aac import AAC
 
 
-class Config(TypedDict):
-    theme_idx: int
+@dataclass
+class Config:
+    theme_idx: int = 0
+    speak_keyboard_chars: bool = False
+    show_perf_diagnostics: bool = False
 
 
 def load_config() -> Config:
@@ -48,19 +52,23 @@ def load_config() -> Config:
         raw_config = {}
 
     # Process the loaded config data
-    data: Config = {
-        "theme_idx": raw_config.get("theme_idx", 0)  # Default to 0 ("Light") if not found
-    }
+    data: Config = Config(
+        theme_idx=raw_config.get("theme_idx", 0),
+        speak_keyboard_chars=raw_config.get("speak_keyboard_chars", True),
+        show_perf_diagnostics=raw_config.get("show_perf_diagnostics", False)
+    )
 
     return data
 
 def save_config(aac_inst: AAC) -> None:
-    serialised: Config = {
-        "theme_idx": aac_inst.visuals.theme_idx
+    serialised = {
+        "theme_idx": aac_inst.config.theme_idx,
+        "speak_keyboard_chars": aac_inst.config.speak_keyboard_chars,
+        "show_perf_diagnostics": aac_inst.config.show_perf_diagnostics
     }
 
     try:
-        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)  
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
         with open(CONFIG_FILE, "w") as f:
             json.dump(serialised, f, indent=4)
     except Exception as e:

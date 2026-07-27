@@ -22,7 +22,7 @@ from pygame.key import ScancodeWrapper
 from sunrise.core.asset_manager import Assets
 from sunrise.core.data_manager import load_config, save_config
 from sunrise.core.engine import AACEngine
-from sunrise.ui.visuals import AACVisuals
+from sunrise.core.data_manager import Config
 from sunrise.core.bus import Bus, EventID
 from sunrise.ui.themes import THEMES, Theme
 from sunrise.ui.states import (
@@ -34,6 +34,7 @@ from sunrise.ui.states import (
     DoctorState
 )
 from sunrise.ui.states.base_states import StateID
+from sunrise.core.diagnostics import DiagnosticsManager
 
 
 class AAC:
@@ -42,11 +43,11 @@ class AAC:
         self.assets = Assets()
 
         # then config
-        config = load_config()
-        self.visuals = AACVisuals()
-        self.visuals.theme_idx = config['theme_idx']
+        self.config = load_config()
 
         # then everything else
+        self.diagnostics_manager = DiagnosticsManager(self)
+
         self.bus = Bus()
         self.bus.subscribe(EventID.STATE_CHANGE, self.change_state)
 
@@ -59,10 +60,11 @@ class AAC:
             StateID.SETTINGS: SettingsState(self),
             StateID.DOCTOR: DoctorState(self)
         }
+
         self.state: StateID = StateID.TALK
 
     def get_current_theme(self) -> Theme:
-        return THEMES[self.visuals.theme_idx]
+        return THEMES[self.config.theme_idx]
 
     def change_state(self, new_state: StateID) -> None:
        self.state = new_state

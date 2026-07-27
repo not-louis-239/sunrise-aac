@@ -52,8 +52,11 @@ class AACEngine:
     INFLECTION_FUNCS: dict[str, lm.Inflection] = {}  # takes the function alias, points to the inflection enum entry
 
     @classmethod
-    def register(cls, func_alias: str, *, inf: lm.Inflection | None = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-        def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def register(
+            cls, func_alias: str, *, inf: lm.Inflection | None = None
+        ) -> Callable[[Callable[[AACEngine], Any]], Callable[[AACEngine], Any]]:
+
+        def decorator(func: Callable[[AACEngine], Any]) -> Callable[[AACEngine], Any]:
             AACEngine.FUNC_REGISTRY[func_alias] = func
             if inf is not None:
                 AACEngine.INFLECTION_FUNCS[func_alias] = inf
@@ -69,18 +72,18 @@ class AACEngine:
         self.current_node: str = "HOME"
         self.tree: LanguageTree = load_language_tree()
 
+        self.in_keyboard_mode = False
+
     def _reset_history(self) -> None:
         self.current_node = "HOME"
         self.history.clear()
 
-    def current_buttons(self) -> list[Button]:
-        """Get the current buttons for the engine's current node,
-        accounting for the universal node.
-        If a node cannot be found in the language tree, it skips attempting
-        to find buttons for the current node."""
+    def buttons_for_node(self, node_id: str) -> list[Button]:
+        """Get all the buttons for a specific node ID, considering
+        the UNIVERSAL node."""
 
         universal_node = self.tree.get("UNIVERSAL")
-        node = self.tree.get(self.current_node)
+        node = self.tree.get(node_id)
 
         buttons: list[Button] = []
 
@@ -91,8 +94,16 @@ class AACEngine:
 
         return buttons
 
+    def current_buttons(self) -> list[Button]:
+        """Get the current buttons for the engine's current node,
+        accounting for the universal node.
+        If a node cannot be found in the language tree, it skips attempting
+        to find buttons for the current node."""
+
+        return self.buttons_for_node(self.current_node)
+
     def get_node_for_button(self, button: Button) -> str | None:
-        for node_name in ["UNIVERSAL", self.current_node]:
+        for node_name in self.tree.nodes.keys():
             node = self.tree.get(node_name)
             if node and button in node.buttons:
                 return node_name
@@ -130,6 +141,25 @@ class AACEngine:
             else:
                 func(self)
 
+    def type_keyboard_char(self, char: str) -> None:
+        if not self.sentence_bar:
+            self.sentence_bar.append(Word(char))
+            return
+
+        self.sentence_bar[-1].current_string += char
+        self.sentence_bar[-1].transformations.clear()
+
+    def backspace_keyboard(self) -> None:
+        if not self.sentence_bar:
+            return
+
+        self.sentence_bar[-1].current_string = self.sentence_bar[-1].current_string[:-1]
+        self.sentence_bar[-1].transformations.clear()
+
+        if not self.sentence_bar[-1].current_string:
+            del self.sentence_bar[-1]
+
+
 # Now for registry functions
 @AACEngine.register("clear_sentence_bar")
 def clear_sentence_bar(self: AACEngine) -> None:
@@ -140,6 +170,10 @@ def clear_sentence_bar(self: AACEngine) -> None:
 def backspace_sentence_bar(self: AACEngine) -> None:
     """Remove the last word from the sentence bar."""
     if self.sentence_bar:
+        if len(parts := self.sentence_bar[-1].current_string.split()) > 1:
+            self.sentence_bar[-1].current_string = " ".join(parts[:-1])
+            self.sentence_bar[-1].transformations.clear()
+            return
         self.sentence_bar.pop()
 
 @AACEngine.register("speak_sentence_bar")
@@ -152,6 +186,10 @@ def speak_sentence_bar(self: AACEngine) -> None:
 def stop_speaking(self: AACEngine) -> None:
     """Stop any currently playing speech immediately."""
     _stop_speaking()
+
+@AACEngine.register("activate_keyboard")
+def activate_keyboard(self: AACEngine) -> None:
+    self.in_keyboard_mode = True
 
 @AACEngine.register("pluralise", inf=lm.Inflection.PLURAL)
 def pluralise(self: AACEngine) -> None:

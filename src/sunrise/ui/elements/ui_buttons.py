@@ -27,15 +27,16 @@ from pygame.font import Font
 
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.utils import resize_to_fit
 
-from ._img_container import ImageContainer
+from ._img_cache import img_cache
 from .widget import Widget
 
 
 class _UIButton(Widget):
     def __init__(
             self, *,
-            flex: int = 0, text: str = "", font: pg.font.Font, inset: int = 0,
+            flex: float = 0, text: str = "", font: pg.font.Font, inset: int = 0,
             fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
@@ -58,13 +59,7 @@ class _UIButton(Widget):
         self.k_border = k_border
         self.border_w = border_w
 
-        self.img_container: ImageContainer | None = (
-            ImageContainer(img_path=img_path)
-            if img_path is not None else None
-        )
-
-    def _preferred_icon_size(self) -> tuple[int, int]:
-        return self.fixed_size or self.rect.size
+        self.img_path = img_path
 
     def _get_text_size(self) -> tuple[int, int]:
         text_size = self.font.size(self.text)
@@ -92,8 +87,9 @@ class RectangularUIButton(_UIButton):
         pg.draw.rect(surface, current_theme[k_bg], self.rect)
 
         # Draw icon
-        if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self._preferred_icon_size())
+        if self.img_path is not None:
+            img_dims = resize_to_fit((img_cache.get_base_cache(self.img_path).get_size()), (self.rect.w, self.rect.h))
+            img_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[k_fg], (int(img_dims[0]), int(img_dims[1])))
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw border
@@ -106,7 +102,7 @@ class RectangularUIButton(_UIButton):
 class CircularUIButton(_UIButton):
     def __init__(
             self, *,
-            r: int = 0, flex: int = 0, text: str = "", font: Font, inset: int = 0,
+            r: int = 0, flex: float = 0, text: str = "", font: Font, inset: int = 0,
             fixed_size: tuple[int, int] | None = None, img_path: Path | None = None,
             k_fg: ThemeKey = ThemeKey.FG, k_fg_active: ThemeKey = ThemeKey.FG_ACTIVE,
             k_bg: ThemeKey = ThemeKey.BG, k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
@@ -140,8 +136,8 @@ class CircularUIButton(_UIButton):
         pg.draw.circle(surface, current_theme[k_bg], self.rect.center, self.r)
 
         # Draw icon, but bound to the button circle
-        if self.img_container is not None:
-            img_surf = self.img_container.get_tinted_scaled_img(current_theme[k_fg], self.preferred_size())
+        if self.img_path is not None:
+            img_surf = img_cache.get_tinted_scaled_img(self.img_path, current_theme[k_fg], self.preferred_size())
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw the text

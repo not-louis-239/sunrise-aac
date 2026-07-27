@@ -81,7 +81,7 @@ def crop_text_to_fit(text: str, font: pg.font.Font, maxwidth: int) -> str:
     return known_good
 
 
-def make_tinted_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | None = None) -> pg.Surface:
+def make_tinted_scaled_surface(surface: pg.Surface, colour: Colour, size: IntCoord2 | None = None) -> pg.Surface:
     """Tints the given surface with a given colour and resizes it using
     pg.transform.scale() if a size is provided."""
     tinted = surface.copy()
@@ -143,3 +143,32 @@ def wrap_text(text: str, font: pg.font.Font, maxwidth: int) -> list[str]:
         lines.append(current_line)
 
     return lines
+
+
+def lerp(a: float, b: float, t: float) -> float:
+    return a + (b - a) * t
+
+
+def lerp_colours(c1: Colour, c2: Colour, t: float) -> Colour:
+    if not 0 <= t <= 1:
+        raise ValueError(f"invalid lerp weight: {t} (must be between 0 and 1)")
+
+    return (
+        int(c1[0] * (1 - t) + c2[0] * t),
+        int(c1[1] * (1 - t) + c2[1] * t),
+        int(c1[2] * (1 - t) + c2[2] * t),
+    )
+
+
+def resize_to_fit(dims: tuple[float, float], bounding_box: tuple[float, float]) -> tuple[float, float]:
+    """Calculates the largest dimensions that are in proportion
+    with `dims` that fits cleanly into the `bounding_box`."""
+
+    x1, y1 = dims
+    x2, y2 = bounding_box
+
+    x_ratio = x2 / x1
+    y_ratio = y2 / y1
+
+    scale_factor = min(x_ratio, y_ratio)
+    return x1 * scale_factor, y1 * scale_factor

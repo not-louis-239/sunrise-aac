@@ -30,7 +30,9 @@ from . import (
     panel,
     scrollable_display,
     spacer,
-    ui_buttons
+    switch,
+    ui_buttons,
+    key
 )
 
 HBox = alignment_boxes.HBox
@@ -50,6 +52,12 @@ Dropdown = dropdown.Dropdown
 CircularUIButton = ui_buttons.CircularUIButton
 RectangularUIButton = ui_buttons.RectangularUIButton
 
+Switch = switch.Switch
+
 HAlign = alignment_boxes.HAlign
 VAlign = alignment_boxes.VAlign
 ScrollableDisplay = scrollable_display.ScrollableDisplay
+
+Key = key.Key
+KBState = key.KBState
+KBAction = key.KBAction

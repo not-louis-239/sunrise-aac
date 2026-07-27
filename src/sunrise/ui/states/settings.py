@@ -21,9 +21,9 @@ from pygame.key import ScancodeWrapper
 
 from sunrise.core.bus import EventID
 from sunrise.ui.states.base_states import State, StateID
-from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Spacer, Dropdown, CircularUIButton
+from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Switch, Spacer, Dropdown, CircularUIButton
 from sunrise.ui.themes import THEMES, ThemeKey
-from sunrise.ui.constants import UI_MARGIN, ICON_SIZE, WN_W, WN_H
+from sunrise.ui.constants import UI_MARGIN_M, ICON_SIZE, WN_W, WN_H
 
 
 class SettingsState(State):
@@ -36,28 +36,31 @@ class SettingsState(State):
         self.proceed_button = CircularUIButton(r=ICON_SIZE // 2, font=self.aac_inst.assets.fonts.ui_text_font_m, img_path=self.aac_inst.assets.images.proceed_icon, k_fg=ThemeKey.FG_SUCCESS, border_w=0)
 
         # Theme dropdown
-        self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN)
-        self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.visuals.theme_idx].display_name)
+        self.theme_dropdown = Dropdown(options={theme.display_name: idx for idx, theme in enumerate(THEMES)}, font=self.aac_inst.assets.fonts.ui_text_font_m, inset=UI_MARGIN_M)
+        self.theme_dropdown.set_from_option_str(THEMES[self.aac_inst.config.theme_idx].display_name)
+
+        self.speak_keyboard_chars_switch = Switch(enabled=self.aac_inst.config.speak_keyboard_chars)
+        self.show_perf_diagnostics_switch = Switch(enabled=self.aac_inst.config.show_perf_diagnostics)
 
         # Assemble the panel
         self.panel = Panel(
-            horiz_padding=UI_MARGIN,
-            vert_padding=UI_MARGIN,
+            horiz_padding=UI_MARGIN_M,
+            vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN,
+                gap=UI_MARGIN_M,
                 children=[
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             Label(text="Settings", font=self.aac_inst.assets.fonts.title_font),
                             Spacer(flex=1)
                         ]
                     ),
                     VBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             HBox(
-                                gap=UI_MARGIN,
+                                gap=UI_MARGIN_M,
                                 children=[
                                     SBox(
                                         child=Label(text="Theme", font=self.aac_inst.assets.fonts.ui_text_font_m),
@@ -65,12 +68,32 @@ class SettingsState(State):
                                     ),
                                     self.theme_dropdown,
                                 ]
+                            ),
+                            HBox(
+                                gap=UI_MARGIN_M,
+                                children=[
+                                    SBox(
+                                        child=Label(text="Speak Keyboard Characters", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                                        v_align=VAlign.CENTRE
+                                    ),
+                                    self.speak_keyboard_chars_switch,
+                                ]
+                            ),
+                            HBox(
+                                gap=UI_MARGIN_M,
+                                children=[
+                                    SBox(
+                                        child=Label(text="Show Performance Diagnostics", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                                        v_align=VAlign.CENTRE
+                                    ),
+                                    self.show_perf_diagnostics_switch,
+                                ]
                             )
                         ]
                     ),
                     Spacer(flex=1),
                     HBox(
-                        gap=UI_MARGIN,
+                        gap=UI_MARGIN_M,
                         children=[
                             Spacer(flex=1),
                             self.proceed_button
@@ -80,7 +103,7 @@ class SettingsState(State):
             )
         )
 
-        self.panel.layout(pg.Rect(UI_MARGIN, UI_MARGIN, WN_W - 2 * UI_MARGIN, WN_H - 2 * UI_MARGIN))
+        self.panel.layout(pg.Rect(UI_MARGIN_M, UI_MARGIN_M, WN_W - 2 * UI_MARGIN_M, WN_H - 2 * UI_MARGIN_M))
 
     def _proceed(self) -> None:
         self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
@@ -88,6 +111,8 @@ class SettingsState(State):
     def update(self, dt_s: float) -> None:
         self.theme_dropdown.update(dt_s)
         self.theme_dropdown.update_hover_state(mouse_pos=pg.mouse.get_pos())
+        self.speak_keyboard_chars_switch.update(dt_s)
+        self.show_perf_diagnostics_switch.update(dt_s)
 
     def take_input(self, keys: ScancodeWrapper, events: list[Event], dt_s: float) -> None:
         for event in events:
@@ -98,7 +123,16 @@ class SettingsState(State):
 
                 # some settings can be applied immediately, such as theme changes
                 if self.theme_dropdown.handle_left_click(event):
-                    self.aac_inst.visuals.theme_idx = self.theme_dropdown.selected_value
+                    self.aac_inst.config.theme_idx = self.theme_dropdown.selected_value
+                    continue
+
+                if self.speak_keyboard_chars_switch.check_click(event.pos):
+                    self.speak_keyboard_chars_switch.toggle()
+                    self.aac_inst.config.speak_keyboard_chars = self.speak_keyboard_chars_switch.enabled
+
+                if self.show_perf_diagnostics_switch.check_click(event.pos):
+                    self.show_perf_diagnostics_switch.toggle()
+                    self.aac_inst.config.show_perf_diagnostics = self.show_perf_diagnostics_switch.enabled
 
             if event.type == pg.MOUSEWHEEL:
                 self.theme_dropdown.handle_scroll(event)

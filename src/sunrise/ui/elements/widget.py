@@ -27,7 +27,7 @@ from sunrise.ui.themes import Theme
 
 
 class Widget(ABC):
-    def __init__(self, *, flex: int = 0) -> None:
+    def __init__(self, *, flex: float = 0) -> None:
         # Where am I relative to the last `rect` from the last `layout()` call?
         # x, y = where am I relative to my parent's rect
         # w, h = how big do I get to be?

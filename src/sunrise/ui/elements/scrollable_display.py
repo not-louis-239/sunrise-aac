@@ -1,10 +1,5 @@
 # vertically scrollable display
 
-# TODO: one day we could merge this under Panel, such that if the content
-# is too large to fit on the screen, then make it scrollable
-# perhaps with `allow_horiz_scroll` and `allow_vert_scroll` parameters
-# which, if enabled, would allow scrolling if content got too big
-
 # repo at: https://github.com/not-louis-239/sunrise-aac
 # Copyright (C) 2026 Louis Masarei-Boulton <243234869+not-louis-239@users.noreply.github.com>
 
@@ -37,7 +32,7 @@ class ScrollableDisplay(Widget):
     Its height depends on the preferred size of the contents inside of the display."""
     def __init__(
             self, *,
-            flex: int = 0, gap: int = 0, child: Widget, padding: int = 0,
+            flex: float = 0, gap: int = 0, child: Widget, padding: int = 0,
             k_border: ThemeKey = ThemeKey.BORDER, border_w: int = BORDER_WIDTH
         ) -> None:
         super().__init__(flex=flex)
