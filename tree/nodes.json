@@ -236,7 +236,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/for.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -250,7 +250,7 @@
                         3
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/a.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -264,7 +264,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/the.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -292,7 +292,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/on.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -320,7 +320,7 @@
                         3
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/at.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -334,7 +334,7 @@
                         2
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/and.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -348,7 +348,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/an.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -558,7 +558,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": null,
+                    "img": "./icons/home/me.png",
                     "immutable": false
                 },
                 {
@@ -572,7 +572,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/to.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -684,7 +684,7 @@
                         0
                     ],
                     "type": "pronoun",
-                    "img": "./icons/home/you.png",
+                    "img": "./icons/home/you_plural.png",
                     "immutable": false
                 },
                 {
@@ -782,7 +782,7 @@
                         1
                     ],
                     "type": "syntax",
-                    "img": "./icons/home/of.png",
+                    "img": null,
                     "immutable": false
                 },
                 {
@@ -1285,6 +1285,48 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/places/far.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Leave",
+                    "fixed_font_size": null,
+                    "word": "leave",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        0,
+                        2
+                    ],
+                    "type": "verb",
+                    "img": "./icons/directions/leave.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Depart",
+                    "fixed_font_size": null,
+                    "word": "depart",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        2
+                    ],
+                    "type": "verb",
+                    "img": "./icons/directions/leave.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Arrive",
+                    "fixed_font_size": null,
+                    "word": "arrive",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        1,
+                        3
+                    ],
+                    "type": "verb",
+                    "img": "./icons/directions/arrive.png",
                     "immutable": false
                 }
             ]
@@ -1936,7 +1978,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
+                        4,
                         0
                     ],
                     "type": "noun",
@@ -1950,7 +1992,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
+                        5,
                         0
                     ],
                     "type": "noun",
@@ -1964,7 +2006,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
+                        6,
                         0
                     ],
                     "type": "noun",
@@ -1978,11 +2020,25 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        6,
+                        7,
                         0
                     ],
                     "type": "noun",
                     "img": "./icons/people/baker.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Student",
+                    "fixed_font_size": null,
+                    "word": "student",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        3,
+                        0
+                    ],
+                    "type": "noun",
+                    "img": "./icons/people/student.png",
                     "immutable": false
                 }
             ]
@@ -2084,7 +2140,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": "./icons/feelings/bored.png",
+                    "img": "./icons/emotions/bored.png",
                     "immutable": false
                 },
                 {
@@ -2098,7 +2154,7 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": "./icons/feelings/confused.png",
+                    "img": "./icons/emotions/confused.png",
                     "immutable": false
                 },
                 {
@@ -2112,7 +2168,21 @@
                         0
                     ],
                     "type": "descriptor",
-                    "img": "./icons/feelings/disgusted.png",
+                    "img": "./icons/emotions/disgusted.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Calm",
+                    "fixed_font_size": null,
+                    "word": "calm",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        0
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/emotions/calm.png",
                     "immutable": false
                 }
             ]
@@ -3494,8 +3564,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        2,
-                        4
+                        1,
+                        3
                     ],
                     "type": "descriptor",
                     "img": "./icons/directions/anticlockwise.png",
@@ -3522,7 +3592,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        4,
+                        3,
                         4
                     ],
                     "type": "syntax",
@@ -3536,7 +3606,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        5,
+                        4,
                         4
                     ],
                     "type": "syntax",
@@ -3550,7 +3620,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        6,
+                        5,
                         4
                     ],
                     "type": "syntax",
@@ -3564,7 +3634,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        7,
+                        6,
                         4
                     ],
                     "type": "syntax",
@@ -3578,7 +3648,7 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        3,
+                        2,
                         4
                     ],
                     "type": "syntax",
@@ -3690,8 +3760,8 @@
                     "dest": null,
                     "func": null,
                     "coords": [
-                        9,
-                        3
+                        7,
+                        4
                     ],
                     "type": "noun",
                     "img": "./icons/directions/distance.png",
@@ -3709,48 +3779,6 @@
                     ],
                     "type": "noun",
                     "img": "./icons/directions/destination.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Depart",
-                    "fixed_font_size": null,
-                    "word": "depart",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        1,
-                        2
-                    ],
-                    "type": "verb",
-                    "img": "./icons/directions/leave.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Arrive",
-                    "fixed_font_size": null,
-                    "word": "arrive",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        1,
-                        3
-                    ],
-                    "type": "verb",
-                    "img": "./icons/directions/arrive.png",
-                    "immutable": false
-                },
-                {
-                    "label": "Leave",
-                    "fixed_font_size": null,
-                    "word": "leave",
-                    "dest": null,
-                    "func": null,
-                    "coords": [
-                        0,
-                        2
-                    ],
-                    "type": "verb",
-                    "img": "./icons/directions/leave.png",
                     "immutable": false
                 },
                 {
@@ -3891,6 +3919,20 @@
                     ],
                     "type": "descriptor",
                     "img": "./icons/directions/short.png",
+                    "immutable": false
+                },
+                {
+                    "label": "Narrow",
+                    "fixed_font_size": null,
+                    "word": "narrow",
+                    "dest": null,
+                    "func": null,
+                    "coords": [
+                        9,
+                        3
+                    ],
+                    "type": "descriptor",
+                    "img": "./icons/directions/narrow.png",
                     "immutable": false
                 }
             ]
