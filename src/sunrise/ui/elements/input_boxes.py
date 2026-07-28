@@ -30,7 +30,7 @@ from sunrise.ui.utils import wrap_text
 class InputBox(Widget):
     def __init__(
             self, *,
-            flex: float = 0, min_size: tuple[int, int] = (0, 0), font: pg.font.Font, inset: int,
+            flex: float = 0, font: pg.font.Font, inset: int,
             k_bg: ThemeKey = ThemeKey.BG,
             k_bg_active: ThemeKey = ThemeKey.BG_ACTIVE,
             k_fg: ThemeKey = ThemeKey.FG,
@@ -50,7 +50,6 @@ class InputBox(Widget):
 
         super().__init__(flex=flex)
         self.text: str = ""
-        self.min_size = min_size
         self.font = font  # needed so that it can auto-adjust text width while drawing
         self.inset = inset
         self.active = False
@@ -119,7 +118,7 @@ class InputBox(Widget):
             self.delete_timer = DELETE_DELAY
 
     def preferred_size(self) -> tuple[int, int]:
-        return self.min_size
+        return (0, self.font.get_height() + 2 * self.inset)
 
     def layout(self, rect) -> None:
         self.rect = rect
