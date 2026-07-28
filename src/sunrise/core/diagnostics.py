@@ -28,6 +28,7 @@ from pygame import Surface
 
 from sunrise.ui.constants import WN_W, WN_H
 from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.utils import lerp_colours
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -37,7 +38,7 @@ _FPS_LINE_VALUES = [60, 30]
 _DIAGNOSTICS_HEIGHT_PX_PER_S = 5_000
 _MAX_GRAPH_HEIGHT = _DIAGNOSTICS_HEIGHT_PX_PER_S * 1 / min(fps for fps in _FPS_LINE_VALUES)
 
-MAX_HISTORY_LEN = 100
+MAX_HISTORY_LEN = 200
 _BAR_WIDTH = math.ceil(WN_W / MAX_HISTORY_LEN)
 
 
@@ -111,10 +112,22 @@ class DiagnosticsManager:
     def _draw_graph(self, surface: Surface, current_theme: Theme) -> None:
         surface.blit(self.static_bg_surface, (0, WN_H - _MAX_GRAPH_HEIGHT))
 
+        ok_colour = current_theme[ThemeKey.FG_SUCCESS]
+        warn_colour = current_theme[ThemeKey.FG_WARNING]
+        err_colour = current_theme[ThemeKey.FG_ERROR]
+
         for i, interval in enumerate(self.interval_container.intervals):
             bar_h = _DIAGNOSTICS_HEIGHT_PX_PER_S * interval.duration
             bar_left_x = WN_W * i / MAX_HISTORY_LEN
-            pg.draw.rect(surface, current_theme[ThemeKey.FG_SUCCESS], (bar_left_x, WN_H - bar_h, _BAR_WIDTH, bar_h))
+
+            if interval.duration > 0.05:
+                colour = err_colour
+            elif interval.duration > 0.025:
+                colour = lerp_colours(warn_colour, err_colour, (interval.duration - 0.025) / 0.025)
+            else:
+                colour = lerp_colours(ok_colour, warn_colour, interval.duration / 0.025)
+
+            pg.draw.rect(surface, colour, (bar_left_x, WN_H - bar_h, _BAR_WIDTH, bar_h))
 
     def _draw_diagnostic_markers(self, surface: Surface, current_theme: Theme):
         fg_colour = current_theme[ThemeKey.FG]
