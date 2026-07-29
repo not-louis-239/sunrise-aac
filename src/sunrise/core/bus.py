@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import weakref
 import sys
-from typing import Callable, Any
+import weakref
+from collections.abc import Callable
 from enum import StrEnum
+from typing import Any
 
 
 class EventID(StrEnum):

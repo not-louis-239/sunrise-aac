@@ -22,16 +22,38 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
-from sunrise.ui.themes import ThemeKey
-from sunrise.core.paths import get_image_path
-from sunrise.ui.elements import Panel, Label, HBox, VBox, SBox, Icon, Spacer, InputBox, ErrorSeverity, HAlign, VAlign, Dropdown, RectangularUIButton
 from sunrise.core.asset_manager import PropertyIconID
-from sunrise.core.language_tree import Button
 from sunrise.core.bus import EventID
-from sunrise.ui.states.base_states import State, StateID
-from sunrise.ui.elements.ui_buttons import CircularUIButton
 from sunrise.core.constants import ALLOWED_IMAGE_SUFFIXES
-from sunrise.ui.constants import ALLOWED_BUTTON_TYPES, WN_W, WN_H, UI_MARGIN_M, ICON_SIZE, GRID_W, GRID_H
+from sunrise.core.language_tree import Button
+from sunrise.core.paths import get_image_path
+from sunrise.ui.constants import (
+    ALLOWED_BUTTON_TYPES,
+    GRID_H,
+    GRID_W,
+    ICON_SIZE,
+    UI_MARGIN_M,
+    WN_H,
+    WN_W,
+)
+from sunrise.ui.elements import (
+    Dropdown,
+    ErrorSeverity,
+    HAlign,
+    HBox,
+    Icon,
+    InputBox,
+    Label,
+    Panel,
+    RectangularUIButton,
+    SBox,
+    Spacer,
+    VAlign,
+    VBox,
+)
+from sunrise.ui.elements.ui_buttons import CircularUIButton
+from sunrise.ui.states.base_states import State, StateID
+from sunrise.ui.themes import ThemeKey
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -291,7 +313,7 @@ class ModifyState(State):
         if (node := self.aac_inst.engine.tree.get(node_norm)) is not None and len([b for b in self.aac_inst.engine.buttons_for_node(node_norm) if b is not self.button_to_modify]) >= GRID_W * GRID_H:
             all_valid = False
             self.node_input_box.set_error_msg(severity=ErrorSeverity.ERROR, msg=f"Node '{node_norm}' is full")
-        elif node_norm not in self.aac_inst.engine.tree.nodes.keys() or node_norm not in self.aac_inst.engine.tree.get_reachable_node_ids():
+        elif node_norm not in self.aac_inst.engine.tree.nodes or node_norm not in self.aac_inst.engine.tree.get_reachable_node_ids():
             self.node_input_box.set_error_msg(severity=ErrorSeverity.WARNING, msg=f"Unreachable node: '{node_norm}'")
         else:
             self.node_input_box.clear_error_msg()
@@ -323,9 +345,11 @@ class ModifyState(State):
             if self.orig_node_id != node_norm:
                 # Remove from old node
                 old_node_label = self.aac_inst.engine.get_node_for_button(self.button_to_modify)
-                if old_node_label is not None:
-                    if old_node := self.aac_inst.engine.tree.get(old_node_label):
-                        old_node.buttons.remove(self.button_to_modify)
+                if (
+                    old_node_label is not None
+                    and (old_node := self.aac_inst.engine.tree.get(old_node_label))
+                ):
+                    old_node.buttons.remove(self.button_to_modify)
 
                 # Add to new node
                 new_node = self.aac_inst.engine.tree.add_node(node_norm)

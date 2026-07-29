@@ -17,11 +17,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import sunrise.core.linguistic_manipulation as lm
-from sunrise.core.speak import speak, stop_speaking as _stop_speaking
 from sunrise.core.language_tree import Button, LanguageTree, load_language_tree
+from sunrise.core.speak import speak
+from sunrise.core.speak import stop_speaking as _stop_speaking
 
 
 class Word:
@@ -103,7 +105,7 @@ class AACEngine:
         return self.buttons_for_node(self.current_node)
 
     def get_node_for_button(self, button: Button) -> str | None:
-        for node_name in self.tree.nodes.keys():
+        for node_name in self.tree.nodes:
             node = self.tree.get(node_name)
             if node and button in node.buttons:
                 return node_name

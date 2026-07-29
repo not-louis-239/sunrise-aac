@@ -18,13 +18,14 @@
 
 
 import pygame as pg
-from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
-from sunrise.ui.constants import BORDER_WIDTH, CURSOR_WIDTH, CURSOR_FLASH_INTERVAL
-from sunrise.core.problem_severity import Severity
 
-from .widget import Widget
+from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
+from sunrise.core.problem_severity import Severity
+from sunrise.ui.constants import BORDER_WIDTH, CURSOR_FLASH_INTERVAL, CURSOR_WIDTH
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import wrap_text
+
+from .widget import Widget
 
 
 class InputBox(Widget):

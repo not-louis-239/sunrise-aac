@@ -18,8 +18,8 @@
 
 import pygame as pg
 
-from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.themes import Theme, ThemeKey
 
 from .widget import Widget
 

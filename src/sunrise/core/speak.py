@@ -20,8 +20,8 @@
 # type: ignore
 
 import queue
-import time
 import threading
+import time
 
 import pyttsx3
 

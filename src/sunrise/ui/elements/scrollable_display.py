@@ -20,11 +20,11 @@
 
 import pygame as pg
 
-from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.elements._dummy_surface import DUMMY_SURFACE
 from sunrise.ui.elements._scroll_physics import ScrollPhysics
 from sunrise.ui.elements.widget import Widget
-from sunrise.ui.elements._dummy_surface import DUMMY_SURFACE
-from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.themes import Theme, ThemeKey
 
 
 class ScrollableDisplay(Widget):

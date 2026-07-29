@@ -19,20 +19,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import time
 import sys
+import time
 from pathlib import Path
 
 import pygame as pg
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-from sunrise.ui.constants import WN_W, WN_H
-from sunrise.core.constants import FPS
 from sunrise.core.aac import AAC
-from sunrise.core.language_tree import save_language_tree
-from sunrise.core.error_logger import write_error_log
+from sunrise.core.constants import FPS
 from sunrise.core.diagnostics import MAX_HISTORY_LEN
+from sunrise.core.error_logger import write_error_log
+from sunrise.core.language_tree import save_language_tree
+from sunrise.ui.constants import WN_H, WN_W
 
 
 def main():

@@ -4,8 +4,8 @@
 #    then that button doesn't count as a reference
 
 
-from dataclasses import dataclass, field
 from collections import deque
+from dataclasses import dataclass, field
 
 
 @dataclass

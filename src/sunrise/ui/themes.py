@@ -15,8 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from dataclasses import asdict, dataclass
 from enum import StrEnum
-from dataclasses import dataclass, asdict
 
 from sunrise.core.custom_types import Colour
 
@@ -146,7 +146,7 @@ for theme in THEMES:
         bad.append((theme, missing_keys))
 
 if bad:
-    err_msg = f"The following themes are missing required keys:\n\n"
+    err_msg = "The following themes are missing required keys:\n\n"
 
     for theme, missing in bad:
         err_msg += f"{theme.display_name}:\n"

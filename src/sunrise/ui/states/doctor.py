@@ -25,12 +25,24 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
-from sunrise.core.lint_language_tree import lint_language_tree, Severity, Problem
 from sunrise.core.bus import EventID
+from sunrise.core.lint_language_tree import Problem, Severity, lint_language_tree
+from sunrise.ui.constants import BORDER_WIDTH, ICON_SIZE, UI_MARGIN_M, WN_H, WN_W
+from sunrise.ui.elements import (
+    CircularUIButton,
+    HAlign,
+    HBox,
+    Icon,
+    Label,
+    Panel,
+    RectangularUIButton,
+    SBox,
+    ScrollableDisplay,
+    Spacer,
+    VBox,
+)
 from sunrise.ui.states.base_states import State, StateID
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.constants import ICON_SIZE, UI_MARGIN_M, WN_H, WN_W, BORDER_WIDTH
-from sunrise.ui.elements import Panel, HBox, VBox, SBox, Spacer, Icon, Label, HAlign, CircularUIButton, RectangularUIButton, ScrollableDisplay
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -174,13 +186,13 @@ class DoctorState(State):
                         if (
                             label.rect.collidepoint(x, y)
                             and problem.button_label and problem.node_id
+                            and (node := self.aac_inst.engine.tree.get(problem.node_id))
+                            and (button := next((b for b in node.buttons if b.label == problem.button_label), None))
                         ):
-                            if node := self.aac_inst.engine.tree.get(problem.node_id):
-                                if button := next((b for b in node.buttons if b.label == problem.button_label), None):
-                                    self._reset_error_display()
-                                    self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.INSPECT)
-                                    self.aac_inst.bus.emit(EventID.SET_INSPECT_BUTTON, button=button, node_label=problem.node_id)
-                                    break
+                            self._reset_error_display()
+                            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.INSPECT)
+                            self.aac_inst.bus.emit(EventID.SET_INSPECT_BUTTON, button=button, node_label=problem.node_id)
+                            break
 
             if event.type == pg.MOUSEWHEEL:
                 self.errors_scroller.handle_scroll(event)

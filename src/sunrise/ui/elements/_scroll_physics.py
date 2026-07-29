@@ -20,7 +20,6 @@
 
 import pygame as pg
 
-
 SCROLL_IMPULSE = 50    # pix/s
 SCROLL_FRICTION = 0.935  # proportion of velocity dissipated per second
 EPS = 1e-6

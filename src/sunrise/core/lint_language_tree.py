@@ -19,11 +19,11 @@
 
 from dataclasses import dataclass
 
-from sunrise.core.problem_severity import Severity
+from sunrise.core.constants import ALLOWED_IMAGE_SUFFIXES
 from sunrise.core.language_tree import LanguageTree
 from sunrise.core.paths import get_image_path
-from sunrise.core.constants import ALLOWED_IMAGE_SUFFIXES
-from sunrise.ui.constants import GRID_W, GRID_H
+from sunrise.core.problem_severity import Severity
+from sunrise.ui.constants import GRID_H, GRID_W
 
 
 @dataclass(frozen=True)
@@ -83,7 +83,7 @@ def lint_language_tree(lt: LanguageTree) -> list[Problem]:
         for button in node.buttons:
             # No function set
             if not button.word and not button.dest and not button.func:
-                problems.append(Problem(Severity.WARNING, f"No word, destination or function set", node_id=node_id, button_label=button.label))
+                problems.append(Problem(Severity.WARNING, "No word, destination or function set", node_id=node_id, button_label=button.label))
 
             # Grid position out of bounds
             x, y = button.coords

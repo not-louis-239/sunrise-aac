@@ -17,47 +17,51 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import TYPE_CHECKING
 import time
+from typing import TYPE_CHECKING
 
 import pygame as pg
+from crystallinium.text_utils import draw_text
 from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
-from crystallinium.text_utils import draw_text
-
-from .base_states import State
-from sunrise.core.speak import speak
-from sunrise.ui.states.base_states import StateID
+from sunrise.core.asset_manager import Assets
 from sunrise.core.bus import EventID
+from sunrise.core.constants import DOUBLE_CLICK_MAX_DELAY, MOVE_HOLD_DELAY
 from sunrise.core.language_tree import Button, save_language_tree
 from sunrise.core.paths import UI_IMAGES_DIR, get_image_path
-from sunrise.core.asset_manager import Assets
-from sunrise.core.constants import (
-    MOVE_HOLD_DELAY,
-    DOUBLE_CLICK_MAX_DELAY
-)
-
-from sunrise.ui.themes import ThemeKey
-from sunrise.ui.elements import HBox, VBox, Spacer, Panel, Key, KBState, KBAction, RectangularUIButton
-from sunrise.ui.utils import AmbientMessage
+from sunrise.core.speak import speak
 from sunrise.ui.constants import (
-    SENTENCE_BAR_H,
+    BORDER_WIDTH,
+    BUTTON_IMAGE_SIZE,
     CURSOR_FLASH_INTERVAL,
     CURSOR_WIDTH,
-    BUTTON_IMAGE_SIZE,
+    GRID_H,
+    GRID_W,
+    ICON_SIZE,
+    SENTENCE_BAR_H,
     UI_MARGIN_L,
     UI_MARGIN_M,
     UI_MARGIN_S,
-    BORDER_WIDTH,
-    ICON_SIZE,
-    GRID_W,
-    GRID_H,
+    WN_H,
     WN_W,
-    WN_H
 )
+from sunrise.ui.elements import (
+    HBox,
+    KBAction,
+    KBState,
+    Key,
+    Panel,
+    RectangularUIButton,
+    Spacer,
+    VBox,
+)
+from sunrise.ui.states.base_states import StateID
+from sunrise.ui.themes import ThemeKey
+from sunrise.ui.utils import AmbientMessage
 
+from .base_states import State
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -297,12 +301,11 @@ class _Renderer:
         screen.blit(text_surf, text_surf.get_rect(left=text_left_x, centery=SENTENCE_BAR_H / 2))
 
         # Draw a cursor if in keyboard mode
-        if self.aac_inst.engine.in_keyboard_mode:
-            if self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
-                cursor_x = text_left_x + text_surf_width
-                cursor_top_y = SENTENCE_BAR_H / 2 - text_surf.get_height() // 2
-                cursor_bot_y = SENTENCE_BAR_H / 2 + text_surf.get_height() // 2
-                pg.draw.line(screen, theme[ThemeKey.FG], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)
+        if self.aac_inst.engine.in_keyboard_mode and self.cursor_flash_time < CURSOR_FLASH_INTERVAL * 0.5:
+            cursor_x = text_left_x + text_surf_width
+            cursor_top_y = SENTENCE_BAR_H / 2 - text_surf.get_height() // 2
+            cursor_bot_y = SENTENCE_BAR_H / 2 + text_surf.get_height() // 2
+            pg.draw.line(screen, theme[ThemeKey.FG], (cursor_x, cursor_top_y), (cursor_x, cursor_bot_y), width=CURSOR_WIDTH)
 
     def draw_buttons(self, screen: pg.Surface) -> None:
         for button in self.aac_inst.engine.current_buttons():

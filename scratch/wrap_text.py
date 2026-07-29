@@ -21,7 +21,6 @@ import re
 
 import pygame as pg
 
-
 _TOKEN_SPLIT_RE = r"(\s+)"
 
 

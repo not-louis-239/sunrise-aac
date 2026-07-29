@@ -20,10 +20,21 @@ from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
 from sunrise.core.bus import EventID
+from sunrise.ui.constants import ICON_SIZE, UI_MARGIN_M, WN_H, WN_W
+from sunrise.ui.elements import (
+    CircularUIButton,
+    Dropdown,
+    HBox,
+    Label,
+    Panel,
+    SBox,
+    Spacer,
+    Switch,
+    VAlign,
+    VBox,
+)
 from sunrise.ui.states.base_states import State, StateID
-from sunrise.ui.elements import Panel, HBox, SBox, VAlign, VBox, Label, Switch, Spacer, Dropdown, CircularUIButton
 from sunrise.ui.themes import THEMES, ThemeKey
-from sunrise.ui.constants import UI_MARGIN_M, ICON_SIZE, WN_W, WN_H
 
 
 class SettingsState(State):

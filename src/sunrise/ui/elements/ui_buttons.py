@@ -25,8 +25,8 @@ from pathlib import Path
 import pygame as pg
 from pygame.font import Font
 
-from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import resize_to_fit
 
 from ._img_cache import img_cache

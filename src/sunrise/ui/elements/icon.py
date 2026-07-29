@@ -17,14 +17,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from typing import Final
 from pathlib import Path
+from typing import Final
+
 import pygame as pg
 
-from .widget import Widget
 from sunrise.core.custom_types import IntCoord2
 from sunrise.ui.elements._img_cache import img_cache
 from sunrise.ui.themes import Theme, ThemeKey
+
+from .widget import Widget
 
 
 class Icon(Widget):

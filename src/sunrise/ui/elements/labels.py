@@ -20,6 +20,7 @@ import pygame as pg
 
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import crop_text_to_fit
+
 from .widget import Widget
 
 

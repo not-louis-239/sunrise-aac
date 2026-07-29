@@ -18,8 +18,8 @@
 
 
 import re
+from collections.abc import Callable
 from enum import StrEnum
-from typing import Callable
 
 from sunrise.core.paths import LANGFILES_DIR
 
@@ -169,9 +169,13 @@ def agenticise_word(word: str) -> str:
     if lower.endswith("e"):
         return _apply_case(word, word + "r")
 
-    if lower.endswith(("p", "t", "m", "n", "r", "g", "b", "d")) and len(lower) > 1:
-        if lower[-2] in "aeiou" and (len(lower) < 3 or lower[-3] not in "aeiou"):
-            return _apply_case(word, word + word[-1] + "er")
+    if (
+        lower.endswith(("p", "t", "m", "n", "r", "g", "b", "d"))
+        and len(lower) > 1
+        and lower[-2] in "aeiou"
+        and (len(lower) < 3 or lower[-3] not in "aeiou")
+    ):
+        return _apply_case(word, word + word[-1] + "er")
 
     return _apply_case(word, word + "er")
 

@@ -26,9 +26,9 @@ from pygame import Rect
 from pygame.font import Font
 
 from sunrise.ui.constants import BORDER_WIDTH, UI_MARGIN_S
+from sunrise.ui.elements._img_cache import img_cache
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import resize_to_fit
-from sunrise.ui.elements._img_cache import img_cache
 
 from .ui_buttons import RectangularUIButton
 

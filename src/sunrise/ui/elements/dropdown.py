@@ -1,17 +1,17 @@
-from typing import TypeVar, Sequence
+from collections.abc import Sequence
 from enum import StrEnum
+from typing import TypeVar
 
 import pygame as pg
 from pygame import Surface
 
-from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH, WN_H
-from sunrise.ui.utils import crop_text_to_fit
 from sunrise.ui.elements._scroll_physics import ScrollPhysics
+from sunrise.ui.themes import Theme, ThemeKey
+from sunrise.ui.utils import crop_text_to_fit
 
-from .widget import Widget
 from ._dummy_surface import DUMMY_SURFACE
-
+from .widget import Widget
 
 DROPDOWN_TRIANGLE_SIZE = 20
 
@@ -207,7 +207,7 @@ class Dropdown[T](Widget):
         """Set `self`'s option from an option string.
         If the option is not in `self`'s options, defaults to index 0."""
 
-        if opt_label not in self.options.keys():
+        if opt_label not in self.options:
             self.chosen_idx = 0
             return
 

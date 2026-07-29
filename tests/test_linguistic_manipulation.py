@@ -1,11 +1,11 @@
 import unittest
 
 from sunrise.core.linguistic_manipulation import (
+    Inflection,
     apply_inflection,
     gerundise_word,
     past_tense_word,
     pluralise_word,
-    Inflection
 )
 
 

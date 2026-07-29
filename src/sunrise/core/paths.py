@@ -41,6 +41,6 @@ def get_image_path(rel_path: str) -> Path:
     Relative path is relative to assets/images, e.g. './food/apple.png'.
     This doesn't check for if the path is actually valid."""
 
-    clean_rel_path = rel_path[2:] if rel_path.startswith("./") else rel_path
+    clean_rel_path = rel_path.removeprefix("./")
     path = IMAGES_DIR / clean_rel_path
     return path

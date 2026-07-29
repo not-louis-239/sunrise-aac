@@ -18,14 +18,13 @@
 
 
 import re
-
-import pygame as pg
 from dataclasses import dataclass
 
-from sunrise.ui.themes import ThemeKey
-from sunrise.ui.constants import DEFAULT_MESSAGE_DURATION
-from sunrise.core.custom_types import Colour, IntCoord2
+import pygame as pg
 
+from sunrise.core.custom_types import Colour, IntCoord2
+from sunrise.ui.constants import DEFAULT_MESSAGE_DURATION
+from sunrise.ui.themes import ThemeKey
 
 _TOKEN_SPLIT_RE = r"(\s+)"
 

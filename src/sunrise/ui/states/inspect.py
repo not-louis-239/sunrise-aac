@@ -24,28 +24,26 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.key import ScancodeWrapper
 
-from crystallinium.text_utils import draw_text
-
-from sunrise.ui.elements import (
-    Panel,
-    HBox,
-    VBox,
-    SBox,
-    Icon,
-    Spacer,
-    Label,
-    HAlign,
-    VAlign,
-    RectangularUIButton,
-    CircularUIButton
-)
-from .base_states import State, StateID
-from sunrise.core.bus import EventID
 from sunrise.core.asset_manager import PropertyIconID
+from sunrise.core.bus import EventID
 from sunrise.core.language_tree import Button, save_language_tree
-from sunrise.ui.constants import WN_W, WN_H, UI_MARGIN_M, ICON_SIZE
+from sunrise.ui.constants import ICON_SIZE, UI_MARGIN_M, WN_H, WN_W
+from sunrise.ui.elements import (
+    CircularUIButton,
+    HAlign,
+    HBox,
+    Icon,
+    Label,
+    Panel,
+    RectangularUIButton,
+    SBox,
+    Spacer,
+    VAlign,
+    VBox,
+)
 from sunrise.ui.themes import ThemeKey
 
+from .base_states import State, StateID
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -250,14 +248,12 @@ class InspectState(State):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)
 
         # modify, move, delete
-        if self.modify_button.check_click(event.pos):
-            if not self.button.immutable:
-                self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.node_label, coords=self.button.coords)
-                self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
+        if self.modify_button.check_click(event.pos) and not self.button.immutable:
+            self.aac_inst.bus.emit(EventID.SET_MODIFY_BUTTON, button=self.button, node_id=self.node_label, coords=self.button.coords)
+            self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.MODIFY)
 
-        if self.delete_button.check_click(event.pos):
-            if not self.button.immutable:
-                self.in_delete_confirmation = True
+        if self.delete_button.check_click(event.pos) and not self.button.immutable:
+            self.in_delete_confirmation = True
 
         if self.move_button.check_click(event.pos):
             self.aac_inst.bus.emit(EventID.STATE_CHANGE, new_state=StateID.TALK)

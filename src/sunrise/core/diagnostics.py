@@ -18,15 +18,15 @@
 
 
 
-import time
 import math
-from typing import TYPE_CHECKING
+import time
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import pygame as pg
 from pygame import Surface
 
-from sunrise.ui.constants import WN_W, WN_H
+from sunrise.ui.constants import WN_H, WN_W
 from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import lerp_colours
 

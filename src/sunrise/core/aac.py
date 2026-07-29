@@ -20,21 +20,20 @@ import pygame as pg
 from pygame.key import ScancodeWrapper
 
 from sunrise.core.asset_manager import Assets
-from sunrise.core.data_manager import load_config, save_config
-from sunrise.core.engine import AACEngine
-from sunrise.core.data_manager import Config
 from sunrise.core.bus import Bus, EventID
-from sunrise.ui.themes import THEMES, Theme
+from sunrise.core.data_manager import load_config, save_config
+from sunrise.core.diagnostics import DiagnosticsManager
+from sunrise.core.engine import AACEngine
 from sunrise.ui.states import (
-    State,
+    DoctorState,
     InspectState,
     ModifyState,
-    TalkState,
     SettingsState,
-    DoctorState
+    State,
+    TalkState,
 )
 from sunrise.ui.states.base_states import StateID
-from sunrise.core.diagnostics import DiagnosticsManager
+from sunrise.ui.themes import THEMES, Theme
 
 
 class AAC:

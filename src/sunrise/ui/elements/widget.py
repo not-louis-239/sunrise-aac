@@ -72,4 +72,4 @@ class Widget(ABC):
     def draw_overlay(self, surface: pg.Surface, current_theme: Theme) -> None:
         """Draw my transient UI elements above the normal layer, such as dropdown menus.
         Not all UI elements would need this, obviously."""
-        return None
+        return

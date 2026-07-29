@@ -26,13 +26,13 @@ from . import (
     dropdown,
     icon,
     input_boxes,
+    key,
     labels,
     panel,
     scrollable_display,
     spacer,
     switch,
     ui_buttons,
-    key
 )
 
 HBox = alignment_boxes.HBox

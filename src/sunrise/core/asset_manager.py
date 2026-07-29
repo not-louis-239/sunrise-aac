@@ -17,15 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from pathlib import Path
 from enum import StrEnum
+from pathlib import Path
 
 import pygame as pg
 
-from sunrise.ui.utils import make_tinted_scaled_surface
 from sunrise.core.paths import FONTS_DIR, UI_IMAGES_DIR
-from sunrise.ui.themes import THEMES, Theme
-from sunrise.ui.constants import ICON_SIZE
 
 
 class PropertyIconID(StrEnum):

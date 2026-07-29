@@ -24,7 +24,6 @@ import pygame as pg
 from sunrise.core.custom_types import Colour, IntCoord2
 from sunrise.ui.utils import make_tinted_scaled_surface
 
-
 type _TintSizeCtx = tuple[Path, Colour, IntCoord2]    # file path, tint, scale
 type _TintSizeCache = dict[_TintSizeCtx, pg.Surface]  # {(colour, size): tinted_surface}
 

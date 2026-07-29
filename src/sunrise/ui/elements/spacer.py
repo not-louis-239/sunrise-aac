@@ -19,8 +19,9 @@
 
 from pygame import Rect, Surface
 
-from .widget import Widget
 from sunrise.ui.themes import Theme
+
+from .widget import Widget
 
 
 class Spacer(Widget):

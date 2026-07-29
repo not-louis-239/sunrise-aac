@@ -20,11 +20,11 @@
 import pygame as pg
 from pygame import Rect, Surface
 
-from .widget import Widget
-from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.constants import BORDER_WIDTH
+from sunrise.ui.themes import Theme, ThemeKey
 from sunrise.ui.utils import lerp, lerp_colours
 
+from .widget import Widget
 
 SWITCH_DIMS = (80, 40)
 SWITCH_BUTTON_SIZE = (24, 24)

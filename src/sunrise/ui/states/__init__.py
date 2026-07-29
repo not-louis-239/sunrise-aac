@@ -16,15 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from . import (
-    base_states,
-    inspect,
-    modify,
-    talk,
-    settings,
-    doctor
-)
-
+from . import base_states, doctor, inspect, modify, settings, talk
 
 State = base_states.State
 StateID = base_states.StateID

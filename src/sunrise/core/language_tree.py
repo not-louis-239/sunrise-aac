@@ -17,16 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import json
 from collections import deque
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
-import json
 
-from sunrise.ui.constants import ALLOWED_BUTTON_TYPES
 from sunrise.core.paths import NODES_FILE
-from sunrise.core.terminal_formatting import COL_ERR, COL_WARN, COL_INFO, COL_END
-
 
 _TYPE_DISPLAY_COL = "\033[93m"
 _WORD_DISPLAY_COL = "\033[32m"
