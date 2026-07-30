@@ -23,7 +23,7 @@ from sunrise.core.constants import DELETE_DELAY, DELETE_INTERVAL
 from sunrise.core.problem_severity import Severity
 from sunrise.ui.constants import BORDER_WIDTH, CURSOR_FLASH_INTERVAL, CURSOR_WIDTH
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import wrap_text
+from sunrise.ui.utils import get_text_surf, wrap_text
 
 from .widget import Widget
 
@@ -135,7 +135,7 @@ class InputBox(Widget):
 
         # Text - rendering only last 255 chars for performance
         text = self.sentinel_text if not self.text else self.text[-255:]
-        text_surf = self.font.render(text, True, current_theme[k_fg])
+        text_surf = get_text_surf(self.font, text, current_theme[k_fg])
         text_visual_width = self.rect.width - 2 * self.inset
 
         # Draw the text aligned to left-centre
@@ -214,7 +214,7 @@ class InputBox(Widget):
 
         # Draw text
         for lineno, line in enumerate(lines):
-            surface.blit(self.font.render(line, True, fg_colour), (start_x, start_y + font_h * lineno))
+            surface.blit(get_text_surf(self.font, line, fg_colour), (start_x, start_y + font_h * lineno))
 
         # Draw the border
         pg.draw.rect(surface, border_colour, tooltip_rect, width=self.border_w)

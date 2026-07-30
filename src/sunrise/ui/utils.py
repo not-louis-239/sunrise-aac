@@ -19,6 +19,7 @@
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 
 import pygame as pg
 
@@ -171,3 +172,10 @@ def resize_to_fit(dims: tuple[float, float], bounding_box: tuple[float, float]) 
 
     scale_factor = min(x_ratio, y_ratio)
     return x1 * scale_factor, y1 * scale_factor
+
+
+@lru_cache(maxsize=1024)
+def get_text_surf(font: pg.font.Font, text: str, colour: Colour):
+    """Just a wrapper around pg.font.Font().render() with caching.
+    Maybe this will slightly improve performance"""
+    return font.render(text, True, colour)

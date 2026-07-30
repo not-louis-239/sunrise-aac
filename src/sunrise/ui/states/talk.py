@@ -59,7 +59,7 @@ from sunrise.ui.elements import (
 )
 from sunrise.ui.states.base_states import StateID
 from sunrise.ui.themes import ThemeKey
-from sunrise.ui.utils import AmbientMessage
+from sunrise.ui.utils import AmbientMessage, get_text_surf
 
 from .base_states import State
 
@@ -289,7 +289,7 @@ class _Renderer:
         # spam the buttons on the AAC thousands of times
         # if not optimised, this could cause severe lag
         max_width = WN_W - 3 * UI_MARGIN_M - ICON_SIZE
-        text_surf = self.assets.fonts.sentence_bar_font.render(sentence_bar_text[-255:], True, theme[ThemeKey.FG])
+        text_surf = get_text_surf(self.assets.fonts.sentence_bar_font, sentence_bar_text[-255:], theme[ThemeKey.FG])
         text_left_x = 2 * UI_MARGIN_M + ICON_SIZE
         text_surf_width = text_surf.get_width()
 

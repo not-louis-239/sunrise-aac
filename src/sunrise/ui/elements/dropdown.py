@@ -8,7 +8,7 @@ from pygame import Surface
 from sunrise.ui.constants import BORDER_WIDTH, WN_H
 from sunrise.ui.elements._scroll_physics import ScrollPhysics
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import crop_text_to_fit
+from sunrise.ui.utils import crop_text_to_fit, get_text_surf
 
 from ._dummy_surface import DUMMY_SURFACE
 from .widget import Widget
@@ -168,7 +168,7 @@ class Dropdown[T](Widget):
 
             # Draw text aligned to left-centre
             text = crop_text_to_fit(label or self.sentinel, self.font, self.rect.width - self.inset * 2)
-            text_surface = self.font.render(text, True, current_theme[self.k_fg_hover_options if i == self.hovered_idx else self.k_fg])
+            text_surface = get_text_surf(self.font, text, current_theme[self.k_fg_hover_options if i == self.hovered_idx else self.k_fg])
             self.options_surface.blit(text_surface, (self.inset, row_rect.top + (row_rect.height - text_surface.get_height()) // 2))
 
         self.last_theme = current_theme
@@ -289,7 +289,7 @@ class Dropdown[T](Widget):
 
         # Draw the selected option
         text = crop_text_to_fit(self.selected_label or self.sentinel, self.font, self.rect.width - self.inset * 2)
-        text_surface = self.font.render(text, True, fg_colour)
+        text_surface = get_text_surf(self.font, text, fg_colour)
         surface.blit(text_surface, (self.rect.left + self.inset, self.rect.top + (self.rect.height - text_surface.get_height()) // 2))
 
         # Draw the dropdown triangle

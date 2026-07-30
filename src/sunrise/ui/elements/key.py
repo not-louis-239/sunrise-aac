@@ -28,7 +28,7 @@ from pygame.font import Font
 from sunrise.ui.constants import BORDER_WIDTH, UI_MARGIN_S
 from sunrise.ui.elements._img_cache import img_cache
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import resize_to_fit
+from sunrise.ui.utils import get_text_surf, resize_to_fit
 
 from .ui_buttons import RectangularUIButton
 
@@ -116,5 +116,5 @@ class Key(RectangularUIButton):
         else:
             text = self.char
 
-        text_surface = self.font.render(text, True, current_theme[self.k_fg])
+        text_surface = get_text_surf(self.font, text or "", current_theme[self.k_fg])
         surface.blit(text_surface, text_surface.get_rect(center=self.rect.center))

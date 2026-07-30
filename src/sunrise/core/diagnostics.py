@@ -28,7 +28,7 @@ from pygame import Surface
 
 from sunrise.ui.constants import WN_H, WN_W
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import lerp_colours
+from sunrise.ui.utils import get_text_surf, lerp_colours
 
 if TYPE_CHECKING:
     from sunrise.core.aac import AAC
@@ -138,26 +138,26 @@ class DiagnosticsManager:
             pg.draw.line(surface, fg_colour, (0, fps_height), (WN_W, fps_height), width=2)
 
             # Draw text just below the line
-            text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{fps_value} FPS", True, fg_colour)
+            text_surf = get_text_surf(self.aac_inst.assets.fonts.diagnostics_font, f"{fps_value} FPS", fg_colour)
             surface.blit(text_surf, (0, fps_height))
 
         # Draw measurements
         durs = self.interval_container.get_durations()
 
         min_dur = min(durs, default=0)
-        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{min_dur * 1000:.2f} ms min", True, current_theme[ThemeKey.FG])
+        text_surf = get_text_surf(self.aac_inst.assets.fonts.diagnostics_font, f"{min_dur * 1000:.2f} ms min", current_theme[ThemeKey.FG])
         surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2 - 200))
 
         mean_dur = sum(durs) / len(durs) if len(durs) else 0
-        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{mean_dur * 1000:.2f} ms avg", True, current_theme[ThemeKey.FG])
+        text_surf = get_text_surf(self.aac_inst.assets.fonts.diagnostics_font, f"{mean_dur * 1000:.2f} ms avg", current_theme[ThemeKey.FG])
         surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2))
 
         max_dur = max(durs, default=0)
-        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{max_dur * 1000:.2f} ms max", True, current_theme[ThemeKey.FG])
+        text_surf = get_text_surf(self.aac_inst.assets.fonts.diagnostics_font, f"{max_dur * 1000:.2f} ms max", current_theme[ThemeKey.FG])
         surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, centerx=WN_W // 2 + 200))
 
         fps = self.interval_container.avg_freq_from_last(5)
-        text_surf = self.aac_inst.assets.fonts.diagnostics_font.render(f"{fps:.2f} fps", True, current_theme[ThemeKey.FG])
+        text_surf = get_text_surf(self.aac_inst.assets.fonts.diagnostics_font, f"{fps:.2f} fps", current_theme[ThemeKey.FG])
         surface.blit(text_surf, text_surf.get_rect(top=WN_H - _MAX_GRAPH_HEIGHT, right=WN_W - 10))
 
     def draw_interval_graph(self, surface: Surface, current_theme: Theme) -> None:

@@ -19,7 +19,7 @@
 import pygame as pg
 
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import crop_text_to_fit
+from sunrise.ui.utils import crop_text_to_fit, get_text_surf
 
 from .widget import Widget
 
@@ -59,7 +59,7 @@ class Label(Widget):
 
         # Draw text aligned within `self`'s rect
         text = crop_text_to_fit(self.text, self.font, self.rect.width - 2 * self.inset)
-        font_surface = self.font.render(text, True, current_theme[self.k_fg])
+        font_surface = get_text_surf(self.font, text, current_theme[self.k_fg])
         surface.blit(font_surface, self.rect.inflate(-2 * self.inset, -2 * self.inset))
 
         # Draw border if applicable

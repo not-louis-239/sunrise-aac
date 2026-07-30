@@ -27,7 +27,7 @@ from pygame.font import Font
 
 from sunrise.ui.constants import BORDER_WIDTH
 from sunrise.ui.themes import Theme, ThemeKey
-from sunrise.ui.utils import resize_to_fit
+from sunrise.ui.utils import get_text_surf, resize_to_fit
 
 from ._img_cache import img_cache
 from .widget import Widget
@@ -96,7 +96,7 @@ class RectangularUIButton(_UIButton):
         pg.draw.rect(surface, current_theme[self.k_border], self.rect, width=self.border_w)
 
         # Draw text
-        text_surface = self.font.render(self.text, True, current_theme[k_fg])
+        text_surface = get_text_surf(self.font, self.text, current_theme[k_fg])
         surface.blit(text_surface, text_surface.get_rect(center=self.rect.center))
 
 class CircularUIButton(_UIButton):
@@ -141,7 +141,7 @@ class CircularUIButton(_UIButton):
             surface.blit(img_surf, img_surf.get_rect(center=self.rect.center))
 
         # Draw the text
-        text_surf = self.font.render(self.text, True, current_theme[k_fg])
+        text_surf = get_text_surf(self.font, self.text, current_theme[k_fg])
         surface.blit(text_surf, text_surf.get_rect(center=self.rect.center))
 
         # Draw the border if applicable
