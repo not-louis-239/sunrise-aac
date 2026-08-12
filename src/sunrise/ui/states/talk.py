@@ -332,7 +332,7 @@ class TalkState(State):
         self.doctor_button = RectangularUIButton(flex=1, inset=UI_MARGIN_M, font=self.aac_inst.assets.fonts.ui_button_font, text="Doctor")
         self.hamburger_panel = Panel(
             child=VBox(
-                children=[self.settings_button, self.doctor_button], padding=UI_MARGIN_M, gap=UI_MARGIN_M
+                self.settings_button, self.doctor_button, padding=UI_MARGIN_M, gap=UI_MARGIN_M
             )
         )
 
@@ -348,88 +348,76 @@ class TalkState(State):
 
         self.kb_panel = Panel(
             horiz_padding=UI_MARGIN_S, vert_padding=UI_MARGIN_S, child=VBox(
-                gap=UI_MARGIN_S,
-                children=[
-                    HBox(
-                        gap=UI_MARGIN_S,
-                        children=[
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='`', shift_char='~', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='1', shift_char='!', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='2', shift_char='@', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='3', shift_char='#', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='4', shift_char='$', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='5', shift_char='%', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='6', shift_char='^', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='7', shift_char='&', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='8', shift_char='*', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='9', shift_char='(', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='0', shift_char=')', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='-', shift_char='_', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='=', shift_char='+', ignore_caps_lock=True),
-                            Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", img_path=self.aac_inst.assets.images.backspace_icon, kb_action=KBAction.BACKSPACE),
-                        ]
-                    ),
-                    HBox(
-                        gap=UI_MARGIN_S,
-                        children=[
-                            Spacer(flex=1.5),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='q', shift_char='Q'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='w', shift_char='W'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='e', shift_char='E'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='r', shift_char='R'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='t', shift_char='T'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='y', shift_char='Y'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='u', shift_char='U'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='i', shift_char='I'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='o', shift_char='O'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='p', shift_char='P'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='[', shift_char='{', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=']', shift_char='}', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\\', shift_char='|', ignore_caps_lock=True),
-                        ]
-                    ),
-                    HBox(
-                        gap=UI_MARGIN_S,
-                        children=[
-                            Spacer(flex=1.8),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='a', shift_char='A'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='s', shift_char='S'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='d', shift_char='D'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='f', shift_char='F'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='g', shift_char='G'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='h', shift_char='H'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='j', shift_char='J'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='k', shift_char='K'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='l', shift_char='L'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=';', shift_char=':', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\'', shift_char='"', ignore_caps_lock=True),
-                            Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Done", k_bg=ThemeKey.FG_SUCCESS, kb_action=KBAction.RETURN),
-                        ]
-                    ),
-                    HBox(
-                        gap=UI_MARGIN_S,
-                        children=[
-                            self.kb_shift_buttons[0],
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='z', shift_char='Z'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='x', shift_char='X'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='c', shift_char='C'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='v', shift_char='V'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='b', shift_char='B'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='n', shift_char='N'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='m', shift_char='M'),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=',', shift_char='<', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='.', shift_char='>', ignore_caps_lock=True),
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='/', shift_char='?', ignore_caps_lock=True),
-                            self.kb_shift_buttons[1]
-                        ]
-                    ),
-                    HBox(
-                        gap=UI_MARGIN_S,
-                        children=[
-                            Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Space", char=' ')
-                        ]
-                    )
-                ]
+                HBox(
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='`', shift_char='~', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='1', shift_char='!', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='2', shift_char='@', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='3', shift_char='#', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='4', shift_char='$', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='5', shift_char='%', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='6', shift_char='^', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='7', shift_char='&', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='8', shift_char='*', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='9', shift_char='(', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='0', shift_char=')', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='-', shift_char='_', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='=', shift_char='+', ignore_caps_lock=True),
+                    Key(flex=1.5, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="", img_path=self.aac_inst.assets.images.backspace_icon, kb_action=KBAction.BACKSPACE),
+                    gap=UI_MARGIN_S,
+                ),
+                HBox(
+                    Spacer(flex=1.5),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='q', shift_char='Q'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='w', shift_char='W'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='e', shift_char='E'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='r', shift_char='R'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='t', shift_char='T'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='y', shift_char='Y'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='u', shift_char='U'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='i', shift_char='I'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='o', shift_char='O'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='p', shift_char='P'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='[', shift_char='{', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=']', shift_char='}', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\\', shift_char='|', ignore_caps_lock=True),
+                    gap=UI_MARGIN_S
+                ),
+                HBox(
+                    Spacer(flex=1.8),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='a', shift_char='A'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='s', shift_char='S'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='d', shift_char='D'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='f', shift_char='F'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='g', shift_char='G'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='h', shift_char='H'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='j', shift_char='J'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='k', shift_char='K'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='l', shift_char='L'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=';', shift_char=':', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='\'', shift_char='"', ignore_caps_lock=True),
+                    Key(flex=1.8, kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Done", k_bg=ThemeKey.FG_SUCCESS, kb_action=KBAction.RETURN),
+                    gap=UI_MARGIN_S,
+                ),
+                HBox(
+                    self.kb_shift_buttons[0],
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='z', shift_char='Z'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='x', shift_char='X'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='c', shift_char='C'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='v', shift_char='V'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='b', shift_char='B'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='n', shift_char='N'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='m', shift_char='M'),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char=',', shift_char='<', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='.', shift_char='>', ignore_caps_lock=True),
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, char='/', shift_char='?', ignore_caps_lock=True),
+                    self.kb_shift_buttons[1],
+                    gap=UI_MARGIN_S
+                ),
+                HBox(
+                    Key(kb_state=self.kb_state, font=self.aac_inst.assets.fonts.ui_button_font, override_display_text="Space", char=' '),
+                    gap=UI_MARGIN_S
+                ),
+                gap=UI_MARGIN_S
             )
         )
         self.kb_panel.layout(pg.Rect(UI_MARGIN_L, SENTENCE_BAR_H + UI_MARGIN_L, WN_W - 2 * UI_MARGIN_L, min(WN_H - SENTENCE_BAR_H - 2 * UI_MARGIN_L, self.kb_panel.preferred_size()[1])))

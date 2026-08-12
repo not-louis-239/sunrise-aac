@@ -116,78 +116,62 @@ class ModifyState(State):
 
             # Main VBox
             child=VBox(
-                gap=UI_MARGIN_M,
-                children=[
-                    # Title HBox
-                    HBox(
-                        children=[
-                            self.title_label,
-                            self.close_button
-                        ]
-                    ),
+                # Title HBox
+                HBox(
+                    self.title_label,
+                    self.close_button
+                ),
 
-                    # Content VBox
-                    VBox(
+                # Content VBox
+                VBox(
+                    # 1st row
+                    HBox(
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.LABEL], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.label_input_box,
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FONT_SIZE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.font_size_input_box,
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.COORDS], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        SBox(child=self.coords_label, forced_width=100, h_align=HAlign.CENTRE, v_align=VAlign.CENTRE),
+                        self.select_coords_button,
+                        gap=UI_MARGIN_M
+                    ),
+                    # 2nd row
+                    HBox(
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.MAP_PIN], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.node_input_box,
+                        Icon(img_path=self.aac_inst.assets.images.proceed_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.DEST], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.dest_input_box,
                         gap=UI_MARGIN_M,
-                        children=[
-                            # 1st row
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.LABEL], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.label_input_box,
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FONT_SIZE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.font_size_input_box,
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.COORDS], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    SBox(child=self.coords_label, forced_width=100, h_align=HAlign.CENTRE, v_align=VAlign.CENTRE),
-                                    self.select_coords_button
-                                ]
-                            ),
-                            # 2nd row
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.MAP_PIN], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.node_input_box,
-                                    Icon(img_path=self.aac_inst.assets.images.proceed_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.DEST], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.dest_input_box
-                                ]
-                            ),
-                            # 3rd row
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.IMAGE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.img_path_input_box,
-                                ]
-                            ),
-                            # 4th row
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.word_input_box,
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TYPE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.type_dropdown,
-                                    Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FUNC], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
-                                    self.func_dropdown
-                                ]
-                            )
-                        ]
                     ),
-
-                    # Spacer
-                    Spacer(flex=1),
-
-                    # Proceed button at bottom
+                    # 3rd row
                     HBox(
-                        children=[
-                            Spacer(flex=1),
-                            self.proceed_button
-                        ]
-                    )
-                ]
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.IMAGE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.img_path_input_box,
+                        gap=UI_MARGIN_M
+                    ),
+                    # 4th row
+                    HBox(
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TEXT], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.word_input_box,
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.TYPE], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.type_dropdown,
+                        Icon(img_path=self.aac_inst.assets.images.property_icons[PropertyIconID.FUNC], size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG),
+                        self.func_dropdown,
+                        gap=UI_MARGIN_M,
+                    ),
+                    gap=UI_MARGIN_M,
+                ),
+
+                # Spacer
+                Spacer(flex=1),
+
+                # Proceed button at bottom
+                HBox(
+                    Spacer(flex=1),
+                    self.proceed_button
+                ),
+                gap=UI_MARGIN_M,
             )
         )
 

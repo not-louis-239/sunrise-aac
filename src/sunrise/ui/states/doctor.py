@@ -64,14 +64,12 @@ class DoctorState(State):
         self.num_warnings_label = Label(font=self.aac_inst.assets.fonts.ui_button_font)
 
         self.errors_warnings_counter = HBox(
-            children=[
-                Icon(img_path=self.aac_inst.assets.images.exit_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_ERROR),
-                Spacer(min_w=UI_MARGIN_M),
-                SBox(forced_width=100, child=self.num_errors_label, h_align=HAlign.LEFT),
-                Icon(img_path=self.aac_inst.assets.images.warning_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_WARNING),
-                Spacer(min_w=UI_MARGIN_M),
-                SBox(forced_width=100, child=self.num_warnings_label, h_align=HAlign.LEFT),
-            ]
+            Icon(img_path=self.aac_inst.assets.images.exit_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_ERROR),
+            Spacer(min_w=UI_MARGIN_M),
+            SBox(forced_width=100, child=self.num_errors_label, h_align=HAlign.LEFT),
+            Icon(img_path=self.aac_inst.assets.images.warning_icon, size=(ICON_SIZE, ICON_SIZE), k_fg=ThemeKey.FG_WARNING),
+            Spacer(min_w=UI_MARGIN_M),
+            SBox(forced_width=100, child=self.num_warnings_label, h_align=HAlign.LEFT),
         )
 
         # Close button
@@ -88,27 +86,21 @@ class DoctorState(State):
             horiz_padding=UI_MARGIN_M,
             vert_padding=UI_MARGIN_M,
             child=VBox(
+                HBox(
+                    Label(font=self.aac_inst.assets.fonts.title_font, text="Doctor"),
+                    Spacer(flex=1),
+                    self.close_button,
+                    gap=UI_MARGIN_M
+                ),
+                HBox(
+                    self.check_button,
+                    self.errors_warnings_counter,
+                    Spacer(flex=1),
+                    self.clear_button,
+                    gap=UI_MARGIN_M,
+                ),
+                self.errors_scroller,
                 gap=UI_MARGIN_M,
-                children=[
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            Label(font=self.aac_inst.assets.fonts.title_font, text="Doctor"),
-                            Spacer(flex=1),
-                            self.close_button
-                        ]
-                    ),
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            self.check_button,
-                            self.errors_warnings_counter,
-                            Spacer(flex=1),
-                            self.clear_button
-                        ]
-                    ),
-                    self.errors_scroller
-                ]
             )
         )
 

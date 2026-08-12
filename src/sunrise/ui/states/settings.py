@@ -58,59 +58,45 @@ class SettingsState(State):
             horiz_padding=UI_MARGIN_M,
             vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN_M,
-                children=[
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            Label(text="Settings", font=self.aac_inst.assets.fonts.title_font),
-                            Spacer(flex=1)
-                        ]
-                    ),
-                    VBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    SBox(
-                                        child=Label(text="Theme", font=self.aac_inst.assets.fonts.ui_text_font_m),
-                                        v_align=VAlign.CENTRE
-                                    ),
-                                    self.theme_dropdown,
-                                ]
-                            ),
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    SBox(
-                                        child=Label(text="Speak Keyboard Characters", font=self.aac_inst.assets.fonts.ui_text_font_m),
-                                        v_align=VAlign.CENTRE
-                                    ),
-                                    self.speak_keyboard_chars_switch,
-                                ]
-                            ),
-                            HBox(
-                                gap=UI_MARGIN_M,
-                                children=[
-                                    SBox(
-                                        child=Label(text="Show Performance Diagnostics", font=self.aac_inst.assets.fonts.ui_text_font_m),
-                                        v_align=VAlign.CENTRE
-                                    ),
-                                    self.show_perf_diagnostics_switch,
-                                ]
-                            )
-                        ]
-                    ),
+                HBox(
+                    Label(text="Settings", font=self.aac_inst.assets.fonts.title_font),
                     Spacer(flex=1),
+                    gap=UI_MARGIN_M
+                ),
+                VBox(
                     HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            Spacer(flex=1),
-                            self.proceed_button
-                        ]
-                    )
-                ]
+                        SBox(
+                            child=Label(text="Theme", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                            v_align=VAlign.CENTRE
+                        ),
+                        self.theme_dropdown,
+                        gap=UI_MARGIN_M
+                    ),
+                    HBox(
+                        SBox(
+                            child=Label(text="Speak Keyboard Characters", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                            v_align=VAlign.CENTRE
+                        ),
+                        self.speak_keyboard_chars_switch,
+                        gap=UI_MARGIN_M
+                    ),
+                    HBox(
+                        SBox(
+                            child=Label(text="Show Performance Diagnostics", font=self.aac_inst.assets.fonts.ui_text_font_m),
+                            v_align=VAlign.CENTRE
+                        ),
+                        self.show_perf_diagnostics_switch,
+                        gap=UI_MARGIN_M
+                    ),
+                    gap=UI_MARGIN_M,
+                ),
+                Spacer(flex=1),
+                HBox(
+                    Spacer(flex=1),
+                    self.proceed_button,
+                    gap=UI_MARGIN_M
+                ),
+                gap=UI_MARGIN_M
             )
         )
 

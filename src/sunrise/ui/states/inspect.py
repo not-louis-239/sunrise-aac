@@ -77,24 +77,18 @@ class InspectState(State):
             horiz_padding=UI_MARGIN_M,
             vert_padding=UI_MARGIN_M,
             child=VBox(
-                gap=UI_MARGIN_M,
-                children=[
-                    HBox(
-                        children=[
-                            Spacer(flex=1),
-                            self.confirmation_title,
-                            Spacer(flex=1)
-                        ]
-                    ),
+                HBox(
                     Spacer(flex=1),
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            self.yes_button,
-                            self.no_button
-                        ]
-                    )
-                ]
+                    self.confirmation_title,
+                    Spacer(flex=1)
+                ),
+                Spacer(flex=1),
+                HBox(
+                    self.yes_button,
+                    self.no_button,
+                    gap=UI_MARGIN_M
+                ),
+                gap=UI_MARGIN_M,
             )
         )
 
@@ -113,21 +107,19 @@ class InspectState(State):
 
         self.property_hboxes: list[HBox] = [
             HBox(
+                _make_icon(self, prop=prop),
+                SBox(
+                    forced_width=180,
+                    h_align=HAlign.LEFT,
+                    v_align=VAlign.CENTRE,
+                    child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text=text),
+                ),
+                SBox(
+                    h_align=HAlign.LEFT,
+                    v_align=VAlign.CENTRE,
+                    child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, flex=1),
+                ),
                 gap=UI_MARGIN_M,
-                children=[
-                    _make_icon(self, prop=prop),
-                    SBox(
-                        forced_width=180,
-                        h_align=HAlign.LEFT,
-                        v_align=VAlign.CENTRE,
-                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, text=text),
-                    ),
-                    SBox(
-                        h_align=HAlign.LEFT,
-                        v_align=VAlign.CENTRE,
-                        child=Label(font=self.aac_inst.assets.fonts.ui_text_font_m, flex=1),
-                    )
-                ]
             ) for prop, text in [
                 (PropertyIconID.TEXT, "word:"),
                 (PropertyIconID.DEST, "dest:"),
@@ -144,36 +136,30 @@ class InspectState(State):
 
             # Main VBox
             child=VBox(
+                # Header HBox
+                HBox(
+                    self.title,
+                    self.close_button,
+                    gap=UI_MARGIN_M
+                ),
+
+                # Content VBox
+                VBox(
+                    *self.property_hboxes,
+                    gap=UI_MARGIN_M,
+                ),
+
+                # Content -> Buttons Spacer
+                Spacer(flex=1),
+
+                # Buttons HBox
+                HBox(
+                    self.move_button,
+                    self.modify_button,
+                    self.delete_button,
+                    gap=UI_MARGIN_M
+                ),
                 gap=UI_MARGIN_M,
-                children=[
-                    # Header HBox
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            self.title,
-                            self.close_button,
-                        ]
-                    ),
-
-                    # Content VBox
-                    VBox(
-                        gap=UI_MARGIN_M,
-                        children=self.property_hboxes  # type: ignore
-                    ),
-
-                    # Content -> Buttons Spacer
-                    Spacer(flex=1),
-
-                    # Buttons HBox
-                    HBox(
-                        gap=UI_MARGIN_M,
-                        children=[
-                            self.move_button,
-                            self.modify_button,
-                            self.delete_button,
-                        ]
-                    )
-                ]
             )
         )
 

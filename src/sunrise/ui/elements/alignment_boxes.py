@@ -40,7 +40,7 @@ class VAlign(StrEnum):
 class _Box(Widget):
     """Generic base class to store attributes common to both `HBox`es and `VBox`es"""
 
-    def __init__(self, *, padding: int = 0, gap: int = 0, children: list[Widget] | None = None) -> None:
+    def __init__(self, *children: Widget, padding: int = 0, gap: int = 0) -> None:
         """Initialises a new box.
         padding = space between the box's edge and the first or last child
         gap     = space between children in the box"""
@@ -203,7 +203,6 @@ class SBox(_Box):
         ) -> None:
         super().__init__()
         self.child = child
-        self.children = [child]
         child.parent = self
 
         self.forced_width = forced_width
